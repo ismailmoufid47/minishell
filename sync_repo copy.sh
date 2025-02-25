@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 REMOTE1="ismailmoufid47"
 REMOTE2="jbelkerf"
 BRANCH="main"
