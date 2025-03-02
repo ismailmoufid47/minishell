@@ -34,7 +34,7 @@ int	main(void)
 		input = readline(get_prompt());
 		if (input == NULL)
 			exit(0);
-			parse(input);
+		parse(input);
 		//print_tree(parse(input));
 	}
 	return (0);
