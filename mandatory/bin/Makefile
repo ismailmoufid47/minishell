@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I ../libft/include 
+CFLAGS = -Wall -Wextra -Werror -I ../../libft/include 
 
 LFLAGS = -L ../../libft -l ft
 
