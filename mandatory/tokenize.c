@@ -21,10 +21,10 @@ int count_tokens(char *cmd)
 				count++;
 				i++;
 			}
-			if (cmd[i] && cmd[i] != ' ')
+			if (cmd[i] != ' ')
 			{
 				count++;
-				while (cmd[i] != ' ' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '|' && cmd[i] != '&' && cmd[i] != ';')
+				while (cmd[i] && cmd[i] != ' ' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '|' && cmd[i] != '&' && cmd[i] != ';')
 					i++;
 			}
 		}
@@ -60,10 +60,10 @@ char **fill_tokens(char **tokens, char *cmd)
 				count++;
 				i++;
 			}
-			if (cmd[i] && cmd[i] != ' ')
+			if (cmd[i] != ' ')
 			{
 				cmd_len = i;
-				while (cmd[i] != ' ' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '|' && cmd[i] != '&' && cmd[i] != ';')
+				while (cmd[i] && cmd[i] != ' ' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '|' && cmd[i] != '&' && cmd[i] != ';')
 					i++;
 				cmd_len = i - cmd_len;
 				tokens[count] = malloc(cmd_len + 1);
@@ -75,6 +75,7 @@ char **fill_tokens(char **tokens, char *cmd)
 			i++;
 	}
 	tokens[count] = NULL;
+	printf("count: %d\n", count);
 	return (tokens);
 }
 
@@ -83,8 +84,10 @@ char **tokenize(char *cmd)
 	int	token_number;
 	char	**tokens;
 
+	printf("cmd: %s\n", cmd);
 	token_number = count_tokens(cmd);
 	tokens = malloc((token_number + 1) * sizeof(char *));
+	printf("token_number: %d\n", token_number);
 	tokens = fill_tokens(tokens, cmd);
     return (tokens);
 }

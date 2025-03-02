@@ -10,7 +10,7 @@ char	*search_and_replace(char *cmd, int start)
 
 	variable_len = 0;
     i = start;
-	while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\n')
+	while (cmd[i] && cmd[i] != ' ' && cmd[i] != '"')
 	{
 		variable_len++;
 		i++;
