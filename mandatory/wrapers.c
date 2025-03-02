@@ -13,3 +13,9 @@ int	open_wraper(char *file, int open_mode, int create_permissions)
 		error("open");
 	return (fd);
 }
+
+void	cd(char *path)
+{
+	if (chdir(path) == -1)
+		error("cd");
+}
