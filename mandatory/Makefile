@@ -11,7 +11,7 @@ LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 
 LIBFT = ../libft/libft.a 
 
-SRC = shell.c wrapers.c errors.c cmdline_utils.c
+SRC = shell.c wrapers.c errors.c cmdline_utils.c expander.c
 
  
 

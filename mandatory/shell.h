@@ -15,12 +15,12 @@
 
 
 # include "../libft/include/libft.h"
+# include <stdlib.h>         // malloc, free, exit, getenv
 # include <unistd.h>         // write, access, open, read, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname
 # include <stdio.h>          // printf
 # include <readline/readline.h> // readline, rl_on_new_line, rl_replace_line, rl_redisplay
 # include <readline/history.h>  // rl_clear_history, add_history
 # include <string.h>         // strerror
-# include <stdlib.h>         // malloc, free, exit, getenv
 # include <signal.h>         // signal, sigaction, sigemptyset, sigaddset, kill
 # include <dirent.h>         // opendir, readdir, closedir
 # include <sys/types.h>      // wait, waitpid, wait3, wait4, stat, lstat, fstat
@@ -60,5 +60,8 @@ void	error(char *error_prefix);
 
 // command line Utils:
 char	*get_prompt(void);
+
+//expander
+char	*expand_env_variable(char *cmd_line);
 
 #endif

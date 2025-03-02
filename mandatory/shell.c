@@ -14,7 +14,7 @@
 
 t_ast *parse(char *cmd_line)
 {
-	
+	cmd_line = expand_env_variable(cmd_line);
 }
 
 int main()
