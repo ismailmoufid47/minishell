@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include "libft/include/libft.h"
+#include "shell.h"
 
 int count_tokens(char *cmd)
 {
@@ -39,7 +38,6 @@ char **fill_tokens(char **tokens, char *cmd)
 {
 	int i;
 	int count;
-	char c;
 	int cmd_len;
 
 	i = 0;
@@ -88,19 +86,5 @@ char **tokenize(char *cmd)
 	token_number = count_tokens(cmd);
 	tokens = malloc((token_number + 1) * sizeof(char *));
 	tokens = fill_tokens(tokens, cmd);
-
-}
-
-#include <stdio.h>
-
-int main()
-{
-	int i = 0;
-	char **tokens = tokenize("(cmd1||cmd2) ; cmd3;");
-
-	while (tokens[i])
-	{
-		printf("%i --> %s\n", i, tokens[i]);
-		i++;
-	}
+    return (tokens);
 }

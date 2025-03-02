@@ -64,4 +64,7 @@ char	*get_prompt(void);
 //expander
 char	*expand_env_variable(char *cmd_line);
 
+//tokenize
+char **tokenize(char *cmd);
+
 #endif
