@@ -1,9 +1,8 @@
-
 #include "shell.h"
 
-void print_tokens(char **tokens)
+void	print_tokens(char **tokens)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (tokens[i])
@@ -28,7 +27,7 @@ t_ast	*parse(char *cmd_line)
 int	main(void)
 {
 	char	*input;
-	t_ast	*root;
+	// t_ast	*root;
 
 	while (1)
 	{
