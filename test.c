@@ -1,52 +1,106 @@
-#include <stdio.h>
+#include <stdlib.h>
 #include "libft/include/libft.h"
 
-char	*search_and_replace(char *cmd, int start)
+int count_tokens(char *cmd)
 {
-	int variable_len;
-	char	variable_name[1024];
-	char	*var;
-	char	*result;
-    int i;
-
-	variable_len = 0;
-    i = start;
-	while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\n')
-	{
-		variable_len++;
-		i++;
-	}
-	ft_strlcpy(variable_name, cmd + start, variable_len + 1);
-	var = getenv(variable_name);
-    cmd[start - 1] = '\0';
-	result = ft_strjoin(cmd, var);
-	result = ft_strjoin(result, cmd + start + variable_len);
-    return (result);
-}
-
-char	*expand_env_variable(char *cmd_line)
-{
-	int	i;
+	int i;
+	int count;
 
 	i = 0;
-	while (cmd_line[i])
+	count = 0;
+	while (cmd[i])
 	{
-		if (cmd_line[i] == '$')
+		if (cmd[i] != ' ')
 		{
-			cmd_line = search_and_replace(cmd_line, i + 1);
-			i = 0;
+			if ((cmd[i] == '|' && cmd[i] == cmd[i + 1]) || (cmd[i] == '&' && cmd[i] == cmd[i + 1]))
+			{
+				count++;
+				i += 2;
+			}
+			if (cmd[i] == '(' || cmd[i] == ')' || cmd[i] == '|' || cmd[i] == '&' || cmd[i] == ';')
+			{
+				count++;
+				i++;
+			}
+			if (cmd[i] && cmd[i] != ' ')
+			{
+				count++;
+				while (cmd[i] != ' ' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '|' && cmd[i] != '&' && cmd[i] != ';')
+					i++;
+			}
 		}
-		i++;
+		if (cmd[i] == ' ')
+			i++;
 	}
-    return (cmd_line);
+	return (count);
 }
+
+char **fill_tokens(char **tokens, char *cmd)
+{
+	int i;
+	int count;
+	char c;
+	int cmd_len;
+
+	i = 0;
+	count = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] != ' ')
+		{
+			if ((cmd[i] == '|' && cmd[i] == cmd[i + 1]) || (cmd[i] == '&' && cmd[i] == cmd[i + 1]))
+			{
+				tokens[count] = malloc(3);
+				ft_strlcpy(tokens[count], cmd + i, 3);
+				count++;
+				i += 2;
+			}
+			if (cmd[i] == '(' || cmd[i] == ')' || cmd[i] == '|' || cmd[i] == '&' || cmd[i] == ';')
+			{
+				tokens[count] = malloc(2);
+				ft_strlcpy(tokens[count], cmd + i, 2);
+				count++;
+				i++;
+			}
+			if (cmd[i] && cmd[i] != ' ')
+			{
+				cmd_len = i;
+				while (cmd[i] != ' ' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '|' && cmd[i] != '&' && cmd[i] != ';')
+					i++;
+				cmd_len = i - cmd_len;
+				tokens[count] = malloc(cmd_len + 1);
+				ft_strlcpy(tokens[count], cmd + i - cmd_len, cmd_len + 1);
+				count++;
+			}
+		}
+		if (cmd[i] == ' ')
+			i++;
+	}
+	tokens[count] = NULL;
+	return (tokens);
+}
+
+char **tokenize(char *cmd)
+{
+	int	token_number;
+	char	**tokens;
+
+	token_number = count_tokens(cmd);
+	tokens = malloc((token_number + 1) * sizeof(char *));
+	tokens = fill_tokens(tokens, cmd);
+
+}
+
+#include <stdio.h>
 
 int main()
 {
-    char *cmd;
+	int i = 0;
+	char **tokens = tokenize("(cmd1||cmd2) ; cmd3;");
 
-    cmd = ft_strdup("vv $USER  gg");
-    cmd = expand_env_variable(cmd);
-    printf("%s\n", cmd);
-    return (0);
+	while (tokens[i])
+	{
+		printf("%i --> %s\n", i, tokens[i]);
+		i++;
+	}
 }
