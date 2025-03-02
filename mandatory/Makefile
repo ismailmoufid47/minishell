@@ -1,4 +1,3 @@
-
 NAME = minishell
 
 CC = cc
@@ -13,17 +12,10 @@ LIBFT = ../libft/libft.a
 
 SRC = shell.c wrapers.c errors.c cmdline_utils.c expand.c tokenize.c 
 
- 
-
 all: $(NAME)
 
 $(NAME): shell.h $(LIBFT) $(SRC)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
-	
-
-
-
-
 
 $(LIBFT):
 	make -C ../libft
