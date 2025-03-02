@@ -1,6 +1,6 @@
 #include "../shell.h"
 
-void check_dash_n_option(char *str, int *option)
+void	check_dash_n_option(char *str, int *option)
 {
 	if (!ft_strcmp(str, "-n"))
 		*option = 1;
@@ -24,7 +24,7 @@ void	print_argument(char **argv, int argc, int option)
 		printf("\n");
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int	new_line;
 
