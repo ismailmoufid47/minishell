@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:07:34 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/01 19:01:53 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/03/02 14:54:30 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int main()
 		input = readline(get_prompt());
 		if (input == NULL)
 			exit(0);
-		print_tree(parse(input));
+		//print_tree(parse(input));
 	}
 	return (0);
 }

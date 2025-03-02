@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 17:26:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/01 18:53:47 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/03/02 15:16:29 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,9 @@
 
 
 typedef enum node_type{
-	SEQ,
-	AND,
-	OR,
 	PIP,
 	IN,
 	OUT,
-	SUB,
 	CMD
 }	t_node_type;
 
