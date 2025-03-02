@@ -1,6 +1,6 @@
 #include "shell.h"
 
-void	execute_command(const char *cmd, int fd[2])
+void	execute_hostname_command(const char *cmd, int fd[2])
 {
 	char	*args[2];
 
@@ -27,7 +27,7 @@ char	*get_host_name(void)
 	if (pid < 0)
 		error("fork");
 	else if (pid == 0)
-		execute_command("/bin/hostname", fd);
+		execute_hostname_command("/bin/hostname", fd);
 	else
 	{
 		close(fd[1]);
