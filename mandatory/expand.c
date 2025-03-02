@@ -2,11 +2,11 @@
 
 char	*search_and_replace(char *cmd, int start)
 {
-	int variable_len;
+	int		variable_len;
 	char	variable_name[1024];
 	char	*var;
 	char	*result;
-    int i;
+    int		i;
 
 	variable_len = 0;
     i = start;
@@ -30,12 +30,20 @@ char	*expand_env_variable(char *cmd_line)
 	i = 0;
 	while (cmd_line[i])
 	{
+		if (cmd_line[i] == '\'')
+		{
+			i++;
+			while (cmd_line[i] && cmd_line[i] != '\'')
+				i++;
+		}
 		if (cmd_line[i] == '$')
 		{
 			cmd_line = search_and_replace(cmd_line, i + 1);
 			i = 0;
 		}
-		i++;
+		if (cmd_line[i])
+			i++;
 	}
+	printf("%s", cmd_line);
     return (cmd_line);
 }

@@ -11,6 +11,12 @@ int count_tokens(char *cmd)
 	{
 		if (cmd[i] != ' ')
 		{
+			if (cmd[i] == '\'')
+			{
+				count++;
+				while (cmd[i] && cmd[i] != '\'')
+					i++;
+			}
 			if ((cmd[i] == '<' && cmd[i] == cmd[i + 1]) || (cmd[i] == '>' && cmd[i] == cmd[i + 1]))
 			{
 				count++;
@@ -46,6 +52,16 @@ char **fill_tokens(char **tokens, char *cmd)
 	{
 		if (cmd[i] != ' ')
 		{
+			if (cmd[i] == '\'')
+			{
+				cmd_len = i;
+				while (cmd[i] && cmd[i] != '\'')
+					i++;
+				cmd_len = i - cmd_len;
+				tokens[count] = malloc(cmd_len + 1);
+				ft_strlcpy(tokens[count], cmd + i - cmd_len, cmd_len + 1);
+				count++;
+			}
 			if ((cmd[i] == '<' && cmd[i] == cmd[i + 1]) || (cmd[i] == '>' && cmd[i] == cmd[i + 1]))
 			{
 				tokens[count] = malloc(3);
