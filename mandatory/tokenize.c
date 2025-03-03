@@ -72,7 +72,7 @@ char **fill_tokens(char **tokens, char *cmd)
 					i++;
 				cmd_len = i - cmd_len;
 				tokens[count] = malloc(cmd_len + 1);
-				ft_strlcpy(tokens[count], cmd + i - cmd_len + 1, cmd_len );
+				ft_strlcpy(tokens[count], cmd + i - cmd_len , cmd_len + 2);
 				count++;
 				if (cmd[i] == '\'')
 					i++;
@@ -85,7 +85,7 @@ char **fill_tokens(char **tokens, char *cmd)
 					i++;
 				cmd_len = i - cmd_len;
 				tokens[count] = malloc(cmd_len + 1);
-				ft_strlcpy(tokens[count], cmd + i - cmd_len + 1, cmd_len );
+				ft_strlcpy(tokens[count], cmd + i - cmd_len , cmd_len  + 2);
 				count++;
 				if (cmd[i] == '"')
 					i++;

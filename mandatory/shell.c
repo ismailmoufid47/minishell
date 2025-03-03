@@ -12,6 +12,34 @@ void	print_tokens(char **tokens)
 	}
 }
 
+t_ast	*create_redirection_node(char *file)
+{
+	t_ast *red;
+
+	red = malloc(sizeof(t_ast)); 
+	red->file = file;
+	red->type = IN;
+	return (red);
+}
+
+//t_ast *creat_ast(char **tokens)
+//{
+//	t_ast	*root;
+//	t_ast	*pipe;
+//	t_ast	*red;
+//
+//	int i = 0;
+//	while (tokens[i])
+//	{
+//		if (!ft_strcmp(tokens[i], "<"))
+//		{
+//			red = create_redirection_node(tokens[i + 1]);
+//			if (i == 0)
+//
+//		}
+//	}
+//}
+
 t_ast	*parse(char *cmd_line)
 {
 	char	**tokens;
@@ -21,6 +49,7 @@ t_ast	*parse(char *cmd_line)
 	cmd_line = expand_env_variable(cmd_line);
 	tokens = tokenize(cmd_line);
 	print_tokens(tokens);
+//	root = create_ast(tokens);
 	return (root);
 }
 
@@ -41,3 +70,6 @@ int	main(void)
 	}
 	return (0);
 }
+
+
+        
