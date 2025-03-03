@@ -14,7 +14,10 @@ int count_tokens(char *cmd)
 			if (cmd[i] == '\'')
 			{
 				count++;
+				i++;
 				while (cmd[i] && cmd[i] != '\'')
+					i++;
+				if (cmd[i] == '\'')
 					i++;
 			}
 			if ((cmd[i] == '<' && cmd[i] == cmd[i + 1]) || (cmd[i] == '>' && cmd[i] == cmd[i + 1]))
