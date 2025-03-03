@@ -45,23 +45,44 @@ char	*get_host_name(void)
 	return (ft_strdup(buffer));
 }
 
+char	*replace_home_with_tilde(char *pwd)
+{
+    char	*home;
+    size_t	home_len;
+    char	*new_pwd;
+
+    home = getenv("HOME");
+    if (!home)
+        return (ft_strdup(pwd));
+    home_len = ft_strlen(home);
+    if (ft_strncmp(pwd, home, home_len) == 0)
+    {
+        new_pwd = ft_strjoin("~", pwd + home_len);
+        return (new_pwd);
+    }
+    return (ft_strdup(pwd));
+}
+
 char	*get_prompt(void)
 {
-	char	*user;
-	char	*host;
-	char	*pwd;
-	char	*prompt;
+    char	*user;
+    char	*host;
+    char	*pwd;
+    char	*prompt;
+    char	*tilde_pwd;
 
-	user = getenv("USER");
-	host = get_host_name();
-	pwd = getenv("PWD");
-	prompt = ft_strjoin("\033[1;34m", user);
-	prompt = ft_strjoin(prompt, "\033[1;37m@");
-	prompt = ft_strjoin(prompt, "\033[1;34m");
-	prompt = ft_strjoin(prompt, host);
-	prompt = ft_strjoin(prompt, "\033[0m ");
-	prompt = ft_strjoin(prompt, "\033[1;32m");
-	prompt = ft_strjoin(prompt, pwd);
-	prompt = ft_strjoin(prompt, "\033[0m $ ");
-	return (prompt);
+    user = getenv("USER");
+    host = get_host_name();
+    pwd = getenv("PWD");
+    tilde_pwd = replace_home_with_tilde(pwd);
+    prompt = ft_strjoin("\033[1;34m", user);
+    prompt = ft_strjoin(prompt, "\033[1;37m@");
+    prompt = ft_strjoin(prompt, "\033[1;34m");
+    prompt = ft_strjoin(prompt, host);
+    prompt = ft_strjoin(prompt, "\033[0m ");
+    prompt = ft_strjoin(prompt, "\033[1;32m");
+    prompt = ft_strjoin(prompt, tilde_pwd);
+    prompt = ft_strjoin(prompt, "\033[0m $ ");
+    free(tilde_pwd);
+    return (prompt);
 }
