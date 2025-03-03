@@ -38,7 +38,7 @@ char	*get_host_name(void)
 		close(fd[0]);
 		wait(NULL);
 		if (strchr(buffer, '.'))
-		buffer[strchr(buffer, '.') - buffer] = '\0';
+			buffer[strchr(buffer, '.') - buffer] = '\0';
 	}
 	return (ft_strdup(buffer));
 }
