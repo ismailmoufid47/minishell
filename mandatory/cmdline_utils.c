@@ -18,9 +18,9 @@ char	*get_host_name(void)
 {
 	int		fd[2];
 	pid_t	pid;
-	char	buffer[256];
-	ssize_t	count;
+	char	*line;
 
+	line = NULL;
 	if (pipe(fd) == -1)
 		error("pipe");
 	pid = fork();
@@ -31,58 +31,50 @@ char	*get_host_name(void)
 	else
 	{
 		close(fd[1]);
-		count = read(fd[0], buffer, sizeof(buffer) - 1);
-		if (count < 0)
-			error("read");
-		buffer[count] = '\0';
-		close(fd[0]);
+		line = get_next_line(fd[0]);
 		wait(NULL);
-		if (ft_strchr(buffer, '.'))
-			buffer[ft_strchr(buffer, '.') - buffer] = '\0';
-		else
-			buffer[ft_strchr(buffer, '\n') - buffer] = '\0';
+		close(fd[0]);
+		if (!line)
+			error("read");
+		*ft_strchr(line, '\n') = '\0';
+		if (ft_strchr(line, '.'))
+			*ft_strchr(line, '.') = '\0';
 	}
-	return (ft_strdup(buffer));
+	return (line);
 }
 
 char	*replace_home_with_tilde(char *pwd)
 {
-    char	*home;
-    size_t	home_len;
-    char	*new_pwd;
+	char	*home;
+	size_t	home_len;
 
-    home = getenv("HOME");
-    if (!home)
-        return (ft_strdup(pwd));
-    home_len = ft_strlen(home);
-    if (ft_strncmp(pwd, home, home_len) == 0)
-    {
-        new_pwd = ft_strjoin("~", pwd + home_len);
-        return (new_pwd);
-    }
-    return (ft_strdup(pwd));
+	home = getenv("HOME");
+	if (!home)
+		return (ft_strdup(pwd));
+	home_len = ft_strlen(home);
+	if (ft_strncmp(pwd, home, home_len) == 0)
+		return (ft_strjoin("~", pwd + home_len));
+	return (ft_strdup(pwd));
 }
 
 char	*get_prompt(void)
 {
-    char	*user;
-    char	*host;
-    char	*pwd;
-    char	*prompt;
-    char	*tilde_pwd;
+	char	*host;
+	char	*pwd;
+	char	*prmpt;
+	char	*tmp;
 
-    user = getenv("USER");
-    host = get_host_name();
-    pwd = getenv("PWD");
-    tilde_pwd = replace_home_with_tilde(pwd);
-    prompt = ft_strjoin("\033[1;34m", user);
-    prompt = ft_strjoin(prompt, "\033[1;37m@");
-    prompt = ft_strjoin(prompt, "\033[1;34m");
-    prompt = ft_strjoin(prompt, host);
-    prompt = ft_strjoin(prompt, "\033[0m ");
-    prompt = ft_strjoin(prompt, "\033[1;32m");
-    prompt = ft_strjoin(prompt, tilde_pwd);
-    prompt = ft_strjoin(prompt, "\033[0m$ ");
-    free(tilde_pwd);
-    return (prompt);
+	host = get_host_name();
+	pwd = getenv("PWD");
+	if (!pwd)
+		pwd = ft_strdup("unknown");
+	else
+		pwd = replace_home_with_tilde(pwd);
+	tmp = ((prmpt = ft_strjoin("\033[1;34m", getenv("USER"))), prmpt);
+	tmp = ((prmpt = ft_strjoin(prmpt, "@")), free(tmp), prmpt);
+	tmp = ((prmpt = ft_strjoin(prmpt, host)), free(tmp), free(host), prmpt);
+	tmp = ((prmpt = ft_strjoin(prmpt, "\033[0m: \033[1;32m")), free(tmp), prmpt);
+	tmp = ((prmpt = ft_strjoin(prmpt, pwd)), free(tmp), free(pwd), prmpt);
+	prmpt = ((free(tmp)), ft_strjoin(prmpt, "\033[0m$ "));
+	return (prmpt);
 }
