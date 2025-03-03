@@ -1,137 +1,94 @@
 #include "shell.h"
 
-int count_tokens(char *cmd)
+int	get_token_count(char *input)
 {
-	int i;
-	int count;
+	int	pos;
+	int	token_count;
 
-	i = 0;
-	count = 0;
-	while (cmd[i])
+	pos = ((token_count = 0), 0);
+	while (input[pos])
 	{
-		if (cmd[i] != ' ')
+		while (input[pos] == ' ')
+			pos++;
+		if (!input[pos])
+			break ;
+		token_count++;
+		if (input[pos] == '"' || input[pos] == '\'')
+			skip_quoted_section(input, &pos, input[pos]);
+		else if (is_double_symbol(input, pos))
+			pos += 2;
+		else if (is_special_operator(input[pos]))
+			pos++;
+		else
 		{
-			if (cmd[i] == '\'')
-			{
-				count++;
-				i++;
-				while (cmd[i] && cmd[i] != '\'')
-					i++;
-				if (cmd[i] == '\'')
-					i++;
-			}
-			if (cmd[i] == '"')
-			{
-				count++;
-				i++;
-				while (cmd[i] && cmd[i] != '"')
-					i++;
-				if (cmd[i] == '"')
-					i++;
-			}
-			if ((cmd[i] == '<' && cmd[i] == cmd[i + 1]) || (cmd[i] == '>' && cmd[i] == cmd[i + 1]))
-			{
-				count++;
-				i += 2;
-			}
-			if (cmd[i] == '<' || cmd[i] == '>' || cmd[i] == '|')
-			{
-				count++;
-				i++;
-			}
-			if (cmd[i] && cmd[i] != ' ')
-			{
-				count++;
-				while (cmd[i] && cmd[i] != ' ' && cmd[i] != '>' && cmd[i] != '<' && cmd[i] != '|')
-					i++;
-			}
+			while (input[pos]
+				&& !is_special_operator(input[pos]) && input[pos] != ' ')
+				pos++;
 		}
-		if (cmd[i] == ' ')
-			i++;
 	}
-	return (count);
+	return (token_count);
 }
 
-char **fill_tokens(char **tokens, char *cmd)
+int	get_token_length(char *input, int *pos)
 {
-	int i;
-	int count;
-	int cmd_len;
+	int	start;
 
-	i = 0;
-	count = 0;
-	while (cmd[i])
+	start = *pos;
+	if (input[*pos] == '"' || input[*pos] == '\'')
+		skip_quoted_section(input, pos, input[*pos]);
+	else if (is_double_symbol(input, *pos))
+		*pos += 2;
+	else if (is_special_operator(input[*pos]))
+		(*pos)++;
+	else
 	{
-		if (cmd[i] != ' ')
-		{
-			if (cmd[i] == '\'')
-			{
-				cmd_len = i;
-				i++;
-				while (cmd[i] && cmd[i] != '\'')
-					i++;
-				cmd_len = i - cmd_len;
-				tokens[count] = malloc(cmd_len + 1);
-				ft_strlcpy(tokens[count], cmd + i - cmd_len , cmd_len + 2);
-				count++;
-				if (cmd[i] == '\'')
-					i++;
-			}
-			if (cmd[i] == '"')
-			{
-				cmd_len = i;
-				i++;
-				while (cmd[i] && cmd[i] != '"')
-					i++;
-				cmd_len = i - cmd_len;
-				tokens[count] = malloc(cmd_len + 1);
-				ft_strlcpy(tokens[count], cmd + i - cmd_len , cmd_len  + 2);
-				count++;
-				if (cmd[i] == '"')
-					i++;
-			}
-			if ((cmd[i] == '<' && cmd[i] == cmd[i + 1]) || (cmd[i] == '>' && cmd[i] == cmd[i + 1]))
-			{
-				tokens[count] = malloc(3);
-				ft_strlcpy(tokens[count], cmd + i, 3);
-				count++;
-				i += 2;
-			}
-			if (cmd[i] == '<' || cmd[i] == '>' || cmd[i] == '|')
-			{
-				tokens[count] = malloc(2);
-				ft_strlcpy(tokens[count], cmd + i, 2);
-				count++;
-				i++;
-			}
-			if (cmd[i] && cmd[i] != ' ')
-			{
-				cmd_len = i;
-				while (cmd[i] && cmd[i] != ' ' && cmd[i] != '>' && cmd[i] != '<' && cmd[i] != '|')
-					i++;
-				cmd_len = i - cmd_len;
-				tokens[count] = malloc(cmd_len + 1);
-				ft_strlcpy(tokens[count], cmd + i - cmd_len, cmd_len + 1);
-				count++;
-			}
-		}
-		if (cmd[i] == ' ')
-			i++;
+		while (input[*pos] && !is_special_operator(input[*pos]) && input[*pos] != ' ')
+			(*pos)++;
 	}
-	tokens[count] = NULL;
-	printf("count: %d\n", count);
+	return (*pos - start);
+}
+
+char	*allocate_token(char *input, int start, int length)
+{
+	char	*token;
+
+	token = malloc(sizeof(char) * (length + 1));
+	if (!token)
+		return (NULL);
+	ft_strlcpy(token, input + start, length + 1);
+	return (token);
+}
+
+char	**extract_tokens(char **tokens, char *input)
+{
+	int	pos;
+	int	token_index;
+	int	length;
+
+	pos = ((token_index = 0), 0);
+	while (input[pos])
+	{
+		skip_whitespace(input, &pos);
+		if (!input[pos])
+			break ;
+		length = get_token_length(input, &pos);
+		tokens[token_index] = allocate_token(input, pos - length, length);
+		if (!tokens[token_index])
+			return (NULL);
+		token_index++;
+	}
+	tokens[token_index] = NULL;
 	return (tokens);
 }
 
-char **tokenize(char *cmd)
+char	**tokenize(char *input)
 {
-	int	token_number;
+	int		token_count;
 	char	**tokens;
 
-	printf("cmd: %s\n", cmd);
-	token_number = count_tokens(cmd);
-	tokens = malloc((token_number + 1) * sizeof(char *));
-	printf("token_number: %d\n", token_number);
-	tokens = fill_tokens(tokens, cmd);
-    return (tokens);
+	token_count = get_token_count(input);
+	tokens = malloc(sizeof(char *) * (token_count + 1));
+	if (!tokens)
+		return (NULL);
+	return (extract_tokens(tokens, input));
 }

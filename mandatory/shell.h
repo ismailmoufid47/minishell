@@ -38,7 +38,7 @@ typedef struct ast
 }	t_ast;
 
 // Wrapers: 
-int	open_wraper(char *file, int open_mode, int create_permissions);
+int		open_wraper(char *file, int open_mode, int create_permissions);
 
 // Errors: 
 void	error(char *error_prefix);
@@ -50,6 +50,10 @@ char	*get_prompt(void);
 char	*expand_env_variable(char *cmd_line);
 
 //tokenize
-char **tokenize(char *cmd);
+int		is_special_operator(char c);
+int		is_double_symbol(char *input, int pos);
+void	skip_quoted_section(char *input, int *pos, char quote);
+void	skip_whitespace(char *input, int *pos);
+char	**tokenize(char *cmd);
 
 #endif
