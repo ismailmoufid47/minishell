@@ -82,7 +82,7 @@ char	*get_prompt(void)
     prompt = ft_strjoin(prompt, "\033[0m ");
     prompt = ft_strjoin(prompt, "\033[1;32m");
     prompt = ft_strjoin(prompt, tilde_pwd);
-    prompt = ft_strjoin(prompt, "\033[0m $ ");
+    prompt = ft_strjoin(prompt, "\033[0m$ ");
     free(tilde_pwd);
     return (prompt);
 }

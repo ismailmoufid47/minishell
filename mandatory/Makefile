@@ -15,7 +15,7 @@ SRC = shell.c wrappers.c errors.c cmdline_utils.c expand.c tokenize.c
 all: $(NAME)
 
 $(NAME): shell.h $(LIBFT) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(LFLAGS) $(SRC) -o $(NAME)
 
 $(LIBFT):
 	make -C ../libft
