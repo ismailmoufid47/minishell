@@ -75,6 +75,7 @@ char	*get_prompt(void)
 	tmp = ((prmpt = ft_strjoin(prmpt, host)), free(tmp), free(host), prmpt);
 	tmp = ((prmpt = ft_strjoin(prmpt, "\033[0m: \033[1;32m")), free(tmp), prmpt);
 	tmp = ((prmpt = ft_strjoin(prmpt, pwd)), free(tmp), free(pwd), prmpt);
-	prmpt = ((free(tmp)), ft_strjoin(prmpt, "\033[0m$ "));
+	prmpt = ft_strjoin(prmpt, "\033[0m$ ");
+	free(tmp);
 	return (prmpt);
 }
