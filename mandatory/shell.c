@@ -34,6 +34,8 @@ int	main(void)
 		input = readline(get_prompt());
 		if (input == NULL)
 			exit(0);
+		if (*input)
+			add_history(input);
 		parse(input);
 		//print_tree(parse(input));
 	}
