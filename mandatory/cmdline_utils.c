@@ -37,10 +37,10 @@ char	*get_host_name(void)
 		buffer[count] = '\0';
 		close(fd[0]);
 		wait(NULL);
-		if (strchr(buffer, '.'))
-			buffer[strchr(buffer, '.') - buffer] = '\0';
+		if (ft_strchr(buffer, '.'))
+			buffer[ft_strchr(buffer, '.') - buffer] = '\0';
 		else
-			buffer[strchr(buffer, '\n') - buffer] = '\0';
+			buffer[ft_strchr(buffer, '\n') - buffer] = '\0';
 	}
 	return (ft_strdup(buffer));
 }
