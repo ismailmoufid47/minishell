@@ -4,11 +4,11 @@
 // can only contain alphanumeric characters and underscores
 char	*search_and_replace(char *cmd, int start)
 {
-	int		variable_len;
 	char	variable_name[1024];
-	char	*var;
 	char	*result;
+	char	*var;
 	int		i;
+	int		variable_len;
 
 	variable_len = ft_isdigit(cmd[start]);
 	i = start;
@@ -20,7 +20,7 @@ char	*search_and_replace(char *cmd, int start)
 	}
 	ft_strlcpy(variable_name, cmd + start, variable_len + 1);
 	var = getenv(variable_name);
-	if (!var)
+	if (!var && ft_isdigit(cmd[start]))
 		var = "";
 	if (variable_len == 0)
 		var = "$";
