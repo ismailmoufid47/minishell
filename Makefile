@@ -2,7 +2,7 @@ NAME = minishell
 
 MANDATORY_FILES = mandatory/Makefile mandatory/shell.h mandatory/shell.c \
 				mandatory/expand.c mandatory/tokenize.c mandatory/errors.c \
-				mandatory/wrappers.c mandatory/cmdline_utils.c \
+				mandatory/wrappers.c mandatory/utils/cmdline_utils.c mandatory/utils/tokenize_utils.c \
 				mandatory/bin/Makefile mandatory/bin/echo.c mandatory/bin/pwd.c
 
 BONUS_FILES = 
