@@ -8,7 +8,7 @@ void	print_tokens(char **tokens)
 	printf("Tokens:\n");
 	while (tokens[i])
 	{
-		printf("	%d: %s\n", i, tokens[i]);
+		printf("	%d : %s\n", i, tokens[i]);
 		i++;
 	}
 	printf("\n");
@@ -25,6 +25,26 @@ t_list	*create_node(char *value, t_node_type type)
 	return (node);
 }
 
+void	print_list(t_list *list)
+{
+	printf("\t\tLIST\n");
+	while (list)
+	{
+		if (list->type == IN)
+			printf("IN: %s", list->value);
+		else if (list->type == OUT)
+			printf("OUT: %s", list->value);
+		else if (list->type == PIPE)
+			printf("PIPE: %s", list->value);
+		else if (list->type == FIL)
+			printf("FILE: %s", list->value);
+		else
+			printf("WORD: %s", list->value);
+		list = list->next;
+		if (list)
+			printf(" ---> ");
+	}
+}
 t_list	*create_list(char **tokens)
 {
 	t_list	*nav = NULL;
@@ -88,26 +108,6 @@ t_list	*create_list(char **tokens)
 	return (list);
 }
 
-void	print_list(t_list *list)
-{
-	printf("\t\tLIST\n");
-	while (list)
-	{
-		if (list->type == IN)
-			printf("IN: %s", list->value);
-		else if (list->type == OUT)
-			printf("OUT: %s", list->value);
-		else if (list->type == PIPE)
-			printf("PIPE: %s", list->value);
-		else if (list->type == FIL)
-			printf("FILE: %s", list->value);
-		else
-			printf("WORD: %s", list->value);
-		list = list->next;
-		if (list)
-			printf(" ---> ");
-	}
-}
 
 t_ast	*parse(char *cmd_line)
 {
@@ -125,23 +125,8 @@ t_ast	*parse(char *cmd_line)
 	return (root);
 }
 
-int	main(void)
+int main()
 {
-	char	*input;
-	// t_ast	*root;
-
-	while (1)
-	{
-		input = readline(get_prompt());
-		if (input == NULL)
-			exit(0);
-		if (*input)
-			add_history(input);
-		parse(input);
-		//print_tree(parse(input));
-	}
-	return (0);
+	parse("< file.txt cat | wc -l > file.out");
+	return 0;
 }
-
-
-        

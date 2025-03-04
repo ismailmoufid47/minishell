@@ -22,10 +22,12 @@
 # include <sys/wait.h>
 
 typedef enum node_type{
-	PIP,
+	PIPE,
 	IN,
 	OUT,
-	CMD
+	CMD,
+	FIL,
+	WRD
 }	t_node_type;
 
 typedef struct ast
@@ -36,6 +38,13 @@ typedef struct ast
 	char		*file;
 	char		*full_cmd;
 }	t_ast;
+
+typedef struct a_list
+{
+	t_node_type		type;
+	char			*value;
+	struct a_list	*next;
+}	t_list;
 
 // Wrapers: 
 int		open_wraper(char *file, int open_mode, int create_permissions);
