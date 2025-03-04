@@ -36,7 +36,8 @@ typedef struct ast
 	struct ast	*left;
 	struct ast	*right;
 	char		*file;
-	char		*full_cmd;
+	char		*cmd_left;
+	char		*cmd_right;
 }	t_ast;
 
 typedef struct a_list
