@@ -1,14 +1,7 @@
 #include "shell.h"
 
-// handle echo $$
-// handle echo $?
-// handle echo $$
-// handle echo $?
-// handle echo $$
-// handle echo $HOME
-
-
-
+// can't start with a digit expample: $12var expands to 2var
+// can only contain alphanumeric characters and underscores
 char	*search_and_replace(char *cmd, int start)
 {
 	int		variable_len;
@@ -17,9 +10,10 @@ char	*search_and_replace(char *cmd, int start)
 	char	*result;
 	int		i;
 
-	variable_len = 0;
+	variable_len = ft_isdigit(cmd[start]);
 	i = start;
-	while (cmd[i] && (ft_isalnum(cmd[i]) || cmd[i] == '_'))
+	while (cmd[i]
+		&& (ft_isalnum(cmd[i]) || cmd[i] == '_') && !ft_isdigit(cmd[start]))
 	{
 		variable_len++;
 		i++;
@@ -31,9 +25,9 @@ char	*search_and_replace(char *cmd, int start)
 	if (variable_len == 0)
 		var = "$";
 	cmd[start - 1] = '\0';
-	result = ft_strjoin(cmd, var);
-	result = ft_strjoin(result, cmd + start + variable_len);
-	return (result);
+	var = ft_strjoin(cmd, var);
+	result = ft_strjoin(var, cmd + start + variable_len);
+	return (free(var), result);
 }
 
 char	*expand_env_variable(char *cmd_line)
