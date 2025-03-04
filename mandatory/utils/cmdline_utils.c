@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "../shell.h"
 
 void	execute_hostname_command(const char *cmd, int fd[2])
 {
