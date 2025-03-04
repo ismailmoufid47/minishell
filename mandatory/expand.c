@@ -1,26 +1,39 @@
 #include "shell.h"
 
+// handle echo $$
+// handle echo $?
+// handle echo $$
+// handle echo $?
+// handle echo $$
+// handle echo $HOME
+
+
+
 char	*search_and_replace(char *cmd, int start)
 {
 	int		variable_len;
 	char	variable_name[1024];
 	char	*var;
 	char	*result;
-    int		i;
+	int		i;
 
 	variable_len = 0;
-    i = start;
-	while (cmd[i] && cmd[i] != ' ' && cmd[i] != '"')
+	i = start;
+	while (cmd[i] && (ft_isalnum(cmd[i]) || cmd[i] == '_'))
 	{
 		variable_len++;
 		i++;
 	}
 	ft_strlcpy(variable_name, cmd + start, variable_len + 1);
 	var = getenv(variable_name);
-    cmd[start - 1] = '\0';
+	if (!var)
+		var = "";
+	if (variable_len == 0)
+		var = "$";
+	cmd[start - 1] = '\0';
 	result = ft_strjoin(cmd, var);
 	result = ft_strjoin(result, cmd + start + variable_len);
-    return (result);
+	return (result);
 }
 
 char	*expand_env_variable(char *cmd_line)
@@ -44,6 +57,6 @@ char	*expand_env_variable(char *cmd_line)
 		if (cmd_line[i])
 			i++;
 	}
-	printf("after expansion: %s\n", cmd_line);
-    return (cmd_line);
+	printf("\nCmdline after expansion: %s\n\n", cmd_line);
+	return (cmd_line);
 }

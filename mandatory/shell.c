@@ -8,9 +8,10 @@ void	print_tokens(char **tokens)
 	printf("Tokens:\n");
 	while (tokens[i])
 	{
-		printf("Token %d: %s\n", i, tokens[i]);
+		printf("	%d: %s\n", i, tokens[i]);
 		i++;
 	}
+	printf("\n");
 }
 
 t_ast	*create_redirection_node(char *file)
