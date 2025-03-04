@@ -65,4 +65,8 @@ void	skip_quoted_section(char *input, int *pos, char quote);
 void	skip_whitespace(char *input, int *pos);
 char	**tokenize(char *cmd);
 
+//classed list
+t_list	*create_list(char **tokens);
+void	print_list(t_list *list);
+
 #endif
