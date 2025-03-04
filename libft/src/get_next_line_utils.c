@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 16:27:13 by isel-mou          #+#    #+#             */
-/*   Updated: 2025/01/12 21:20:44 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/03/04 01:41:25 by ismail           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	*ft_substr2(char *line, unsigned int start, size_t len)
 	if (!sub)
 		return (NULL);
 	i = 0;
-	while (i++ < final && line[start + i - 1]) 
+	while (i++ < final && line[start + i - 1])
 		sub[i - 1] = line[start + i - 1];
 	sub[i - 1] = '\0';
 	return (sub);

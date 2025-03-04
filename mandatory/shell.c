@@ -5,6 +5,7 @@ void	print_tokens(char **tokens)
 	int	i;
 
 	i = 0;
+	printf("Tokens:\n");
 	while (tokens[i])
 	{
 		printf("Token %d: %s\n", i, tokens[i]);

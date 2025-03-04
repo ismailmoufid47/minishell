@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 16:18:59 by isel-mou          #+#    #+#             */
-/*   Updated: 2025/01/13 12:53:19 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/03/04 01:40:23 by ismail           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*extract_line(char **line)
 			return (free(*line), *line = NULL, extracted);
 		return (extracted);
 	}
-	return (extracted = ft_strdup2(*line), 
+	return (extracted = ft_strdup2(*line),
 		free(*line), *line = NULL, extracted);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 23:07:48 by isel-mou          #+#    #+#             */
-/*   Updated: 2025/01/27 18:27:53 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/03/04 01:41:59 by ismail           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	count_substring(char *string, char delimiter)
 			in_word = 1;
 		}
 		else if (*string == delimiter)
-			in_word = 0; 
+			in_word = 0;
 		string++;
 	}
 	return (count);

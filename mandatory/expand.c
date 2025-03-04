@@ -44,6 +44,6 @@ char	*expand_env_variable(char *cmd_line)
 		if (cmd_line[i])
 			i++;
 	}
-	printf("%s", cmd_line);
+	printf("after expansion: %s\n", cmd_line);
     return (cmd_line);
 }
