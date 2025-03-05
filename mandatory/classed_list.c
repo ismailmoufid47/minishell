@@ -74,9 +74,8 @@ t_list	*join_words(t_list *head)
 		}
 		current = current->next;
 	}
-	// head = handle_cmd_red(head,IN);
-	head = handle_cmd_red(head,OUT);
-	//head = handle_cmd_aftr_out(head);
+	head = handle_cmd_red(head, IN);
+	head = handle_cmd_red(head, OUT);
 	return (head);
 }
 
