@@ -6,38 +6,48 @@ void	print_list(t_list *list)
 	while (list)
 	{
 		if (list->type == IN)
-			printf("IN: %s", list->value);
+			printf("	IN:   %s", list->value);
 		else if (list->type == OUT)
-			printf("OUT: %s", list->value);
+			printf("	 OUT: %s", list->value);
 		else if (list->type == PIPE)
-			printf("PIPE: %s", list->value);
+			printf("	PIPE: %s", list->value);
 		else if (list->type == FIL)
-			printf("FILE: %s", list->value);
+			printf("	FILE: %s", list->value);
 		else
-			printf("WORD: %s", list->value);
+			printf("	WORD: %s", list->value);
 		list = list->next;
 		if (list)
-			printf(" ---> ");
+			printf("\n	  ↓\n");
 	}
+	printf("\n");
 }
 
-t_list	*handle_cmd_bfr_in(t_list *head)
+t_list	*handle_cmd_red(t_list *head, t_node_type type)
 {
 	t_list	*current;
 	t_list	*tmp;
 	t_list	*prev;
+	t_list	*prev_prev;
 
 	current = head;
 	prev = NULL;
+	prev_prev = NULL;
 	while (current)
 	{
-		if (current->type == IN && prev && prev->type == WRD && current->next)
+		if (current->type == type && prev && prev->type == WRD && current->next && prev_prev)
 		{
 			tmp = prev;
-			head = current;
+			prev_prev->next = current;
 			tmp->next = current->next->next;
 			current->next->next = tmp;
 		}
+		else if (current->type == type && prev && prev->type == WRD && current->next && !prev_prev)
+		{
+			head = current;
+			prev->next = current->next->next;
+			current->next->next = prev;
+		}
+		prev_prev = prev;
 		prev = current;
 		current = current->next;
 	}
@@ -49,8 +59,6 @@ t_list	*join_words(t_list *head)
 	t_list	*current;
 	t_list	*tmp;
 
-	head = handle_cmd_bfr_in(head);
-	head = handle_cmd_aftr_out(head);
 	current = head;
 	while (current)
 	{
@@ -66,6 +74,9 @@ t_list	*join_words(t_list *head)
 		}
 		current = current->next;
 	}
+	// head = handle_cmd_red(head,IN);
+	head = handle_cmd_red(head,OUT);
+	//head = handle_cmd_aftr_out(head);
 	return (head);
 }
 
@@ -118,6 +129,8 @@ t_list	*create_list(char **tokens)
 		printf("token : %s node : %s\n", tokens[i], nav->value);
 		i++;
 	}
+	head = join_words(head);
+	printf("\naffa\n");
 	head = join_words(head);
 	return (head);
 }

@@ -46,7 +46,7 @@ t_ast	*create_ast(t_list *list)
 		{
 			node = create_ast_node(list);
 			node->file = list->next->value;
-			node->cmd_left = prev->value;
+			node->cmd_left = list->next->next->value;
 			root = add_node_front(root, node);
 		}
 		else if (list->type == PIPE)

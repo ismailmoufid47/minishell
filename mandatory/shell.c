@@ -25,8 +25,8 @@ t_ast	*parse(char *cmd_line)
 	cmd_line = expand_env_variable(cmd_line);
 	tokens = tokenize(cmd_line);
 	list = create_list(tokens);
-	root = create_ast(list);
 	print_list(list);
+	root = create_ast(list);
 	return (root);
 }
 
