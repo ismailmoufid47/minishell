@@ -21,6 +21,54 @@ void	print_list(t_list *list)
 	}
 }
 
+t_list	*handle_cmd_bfr_in(t_list *head)
+{
+	t_list	*current;
+	t_list	*tmp;
+	t_list	*prev;
+
+	current = head;
+	prev = NULL;
+	while (current)
+	{
+		if (current->type == IN && prev && prev->type == WRD && current->next)
+		{
+			tmp = prev;
+			head = current;
+			tmp->next = current->next->next;
+			current->next->next = tmp;
+		}
+		prev = current;
+		current = current->next;
+	}
+	return (head);
+}
+
+t_list	*join_words(t_list *head)
+{
+	t_list	*current;
+	t_list	*tmp;
+
+	head = handle_cmd_bfr_in(head);
+	head = handle_cmd_aftr_out(head);
+	current = head;
+	while (current)
+	{
+		if (current->type == WRD && current->next && current->next->type == WRD)
+		{
+			current->value = ft_strjoin(current->value, " ");
+			current->value = ft_strjoin(current->value, current->next->value);
+			tmp = current->next;
+			current->next = tmp->next;
+			free(tmp);
+			current = head;
+			continue ;
+		}
+		current = current->next;
+	}
+	return (head);
+}
+
 t_list	*create_node(char *value, t_node_type type)
 {
 	t_list	*node;
@@ -70,28 +118,7 @@ t_list	*create_list(char **tokens)
 		printf("token : %s node : %s\n", tokens[i], nav->value);
 		i++;
 	}
+	head = join_words(head);
 	return (head);
 }
 
-t_list	*join_words(t_list *head)
-{
-	t_list	*current;
-	t_list	*tmp;
-
-	current = head;
-	while (current)
-	{
-		if (current->type == WRD && current->next && current->next->type == WRD)
-		{
-			current->value = ft_strjoin(current->value, " ");
-			current->value = ft_strjoin(current->value, current->next->value);
-			tmp = current->next;
-			current->next = tmp->next;
-			free(tmp);
-			current = head;
-			continue ;
-		}
-		current = current->next;
-	}
-	return (head);
-}

@@ -71,4 +71,8 @@ t_list	*create_list(char **tokens);
 t_list	*join_words(t_list *head);
 void	print_list(t_list *list);
 
+//AST TREE
+t_ast	*create_ast(t_list *list);
+
+
 #endif
