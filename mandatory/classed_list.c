@@ -62,7 +62,8 @@ t_list	*create_list(char **tokens)
 			token_to_node(&head, &nav, tokens[i], OUT);
 		else if (!ft_strcmp(tokens[i], "|"))
 			token_to_node(&head, &nav, tokens[i], PIPE);
-		else if (i && (!ft_strcmp(tokens[i - 1], "<") || !ft_strcmp(tokens[i - 1], ">")))
+		else if (i && (!ft_strcmp(tokens[i - 1], "<")
+				|| !ft_strcmp(tokens[i - 1], ">")))
 			token_to_node(&head, &nav, tokens[i], FIL);
 		else
 			token_to_node(&head, &nav, tokens[i], WRD);
