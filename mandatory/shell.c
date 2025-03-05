@@ -53,21 +53,21 @@ t_ast	*create_ast(t_list *list)
 			node = create_ast_node(list);
 			node->file = list->next->value;
 			node->cmd_right = list->next->next->value;
-			add_node_front(root, node);
+			root = add_node_front(root, node);
 		}
 		else if (list->type == OUT)
 		{
 			node = create_ast_node(list);
 			node->file = list->next->value;
 			node->cmd_left = prev->value;
-			add_node_front(root, node);
+			root = add_node_front(root, node);
 		}
 		else if (list->type == PIPE)
 		{
 			node = create_ast_node(list);
 			node->cmd_left = prev->value;
 			node->cmd_right = list->next->value;
-			add_node_front(root, node);
+			root = add_node_front(root, node);
 		}
 		prev = list;
 		list = list->next;
