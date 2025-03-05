@@ -68,6 +68,7 @@ char	**tokenize(char *cmd);
 
 //classed list
 t_list	*create_list(char **tokens);
+t_list	*join_words(t_list *head);
 void	print_list(t_list *list);
 
 #endif

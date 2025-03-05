@@ -1,30 +1,5 @@
 #include "shell.h"
 
-void	print_tokens(char **tokens)
-{
-	int	i;
-
-	i = 0;
-	printf("Tokens:\n");
-	while (tokens[i])
-	{
-		printf("	%d : %s\n", i, tokens[i]);
-		i++;
-	}
-	printf("\n");
-}
-
-t_list	*create_node(char *value, t_node_type type)
-{
-	t_list	*node;
-
-	node = malloc(sizeof(t_list));
-	node->value = value;
-	node->type = type;
-	node->next = NULL;
-	return (node);
-}
-
 void	print_list(t_list *list)
 {
 	printf("\t\tLIST\n");
@@ -45,88 +20,71 @@ void	print_list(t_list *list)
 			printf(" ---> ");
 	}
 }
+
+t_list	*create_node(char *value, t_node_type type)
+{
+	t_list	*node;
+
+	node = malloc(sizeof(t_list));
+	node->value = value;
+	node->type = type;
+	node->next = NULL;
+	return (node);
+}
+
+void	token_to_node(t_list **head, t_list **nav, char *token, int type)
+{
+	if (!*head)
+	{
+		*head = create_node(token, type);
+		*nav = *head;
+	}
+	else
+	{
+		(*nav)->next = create_node(token, type);
+		*nav = (*nav)->next;
+	}
+}
+
 t_list	*create_list(char **tokens)
 {
-	t_list	*nav = NULL;
-	t_list	*list = NULL;
+	t_list	*nav;
+	t_list	*head;
+	t_list	*tmp;
 	int		i;
 
 	i = 0;
-	nav = list;
+	nav = ((head = NULL), NULL);
 	while (tokens[i])
 	{
 		if (!ft_strcmp(tokens[i], "<"))
-		{
-			if (nav == list)
-			{
-				list = create_node(tokens[i], IN);
-				nav = list;
-			}
-			nav->next = create_node(tokens[i], IN);
-		}
+			token_to_node(&head, &nav, tokens[i], IN);
 		else if (!ft_strcmp(tokens[i], ">"))
-		{
-			if (nav == list)
-			{
-				list = create_node(tokens[i], OUT);
-				nav = list;
-			}
-			nav->next = create_node(tokens[i], OUT);
-		}
+			token_to_node(&head, &nav, tokens[i], OUT);
 		else if (!ft_strcmp(tokens[i], "|"))
-		{
-			if (nav == list)
-			{
-				list = create_node(tokens[i], PIPE);
-				nav = list;
-			}
-			nav->next = create_node(tokens[i], PIPE);
-		}
-		else if (i != 0 && (!ft_strcmp(tokens[i - 1], "<") || !ft_strcmp(tokens[i - 1], ">")))
-		{
-			if (nav == list)
-			{
-				list = create_node(tokens[i], FIL);
-				nav = list;
-			}
-			nav->next = create_node(tokens[i], FIL);
-		}
+			token_to_node(&head, &nav, tokens[i], PIPE);
+		else if (i && (!ft_strcmp(tokens[i - 1], "<") || !ft_strcmp(tokens[i - 1], ">")))
+			token_to_node(&head, &nav, tokens[i], FIL);
 		else
-		{
-			if (nav == list)
-			{
-				list = create_node(tokens[i], WRD);
-				nav = list;
-			}
-			nav->next = create_node(tokens[i], WRD);
-		}
+			token_to_node(&head, &nav, tokens[i], WRD);
 		printf("token : %s node : %s\n", tokens[i], nav->value);
-		nav = nav->next;
+		//printf("%p %p\n", nav->next, head);
 		i++;
 	}
-	print_list(list);
-	return (list);
+	return (head);
 }
 
-
-t_ast	*parse(char *cmd_line)
+int main(void)
 {
-	char	**tokens;
-	t_ast	*root;
-	t_list	*list;
+	char *cmd_line;
+	t_ast *root;
+	char **tokens;
+	t_list *list;
 
-	root = NULL;
-	list = NULL;
+	cmd_line = "ls -l | wc -l";
 	cmd_line = expand_env_variable(cmd_line);
 	tokens = tokenize(cmd_line);
 	list = create_list(tokens);
-	print_tokens(tokens);
 	print_list(list);
-	return (root);
-}
-
-int main()
-{
-	parse("< file.txt cat | wc -l > file.out");
-	return 0;
+	return (0);
 }

@@ -41,7 +41,8 @@ int	get_token_length(char *input, int *pos)
 		(*pos)++;
 	else
 	{
-		while (input[*pos] && !is_special_operator(input[*pos]) && !ft_isspace(input[*pos]))
+		while (input[*pos]
+			&& !is_special_operator(input[*pos]) && !ft_isspace(input[*pos]))
 			(*pos)++;
 	}
 	return (*pos - start);
