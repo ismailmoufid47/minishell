@@ -36,15 +36,16 @@ typedef struct ast
 	struct ast	*left;
 	struct ast	*right;
 	char		*file;
-	char		*cmd_left;
-	char		*cmd_right;
+	char		*cmd;
 }	t_ast;
 
 typedef struct a_list
 {
-	t_node_type		type;
 	char			*value;
 	struct a_list	*next;
+	t_node_type		type;
+	int				is_red;
+	struct a_list	*redirected_to;
 }	t_list;
 
 // Wrapers: 

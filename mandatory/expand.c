@@ -51,6 +51,5 @@ char	*expand_env_variable(char *cmd_line)
 		if (cmd_line[i])
 			i++;
 	}
-	printf("\nCmdline after expansion: %s\n\n", cmd_line);
 	return (cmd_line);
 }

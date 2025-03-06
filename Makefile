@@ -1,9 +1,23 @@
 NAME = minishell
 
-MANDATORY_FILES = mandatory/Makefile mandatory/shell.h mandatory/shell.c \
-				mandatory/expand.c mandatory/tokenize.c mandatory/errors.c \
-				mandatory/wrappers.c mandatory/utils/cmdline_utils.c mandatory/utils/tokenize_utils.c \
-				mandatory/bin/Makefile mandatory/bin/echo.c mandatory/bin/pwd.c
+# use this command to copy all the files in mandatory:
+#find mandatory -type f | pbcopy
+
+MANDATORY_FILES = mandatory/bin/echo.c \
+				mandatory/bin/Makefile \
+				mandatory/bin/pwd.c \
+				mandatory/classed_list.c \
+				mandatory/create_ast.c \
+				mandatory/errors.c \
+				mandatory/expand.c \
+				mandatory/Makefile \
+				mandatory/shell.c \
+				mandatory/shell.h \
+				mandatory/tokenize.c \
+				mandatory/utils/cmdline_utils.c \
+				mandatory/utils/tokenize_utils.c \
+				mandatory/wrappers.c
+
 
 BONUS_FILES = 
 
