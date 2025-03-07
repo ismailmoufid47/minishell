@@ -99,88 +99,11 @@ t_list	*join_words(t_list *head)
 	}
 	head = handle_cmd_red(head, IN);
 	head = handle_cmd_red(head, OUT);
+	head = handle_cmd_red(head, HDOC);
+	head = handle_cmd_red(head, APP);
 	return (head);
 }
 
-t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type)
-{
-	t_list	*node;
-
-	node = malloc(sizeof(t_list));
-	node->value = token;
-	node->type = type;
-	node->next = NULL;
-	if (!*head)
-	{
-		*head = node;
-		*nav = *head;
-	}
-	else
-	{
-		(*nav)->next = node;
-		*nav = (*nav)->next;
-	}
-	return (node);
-}
-
-t_list	*closest_cmd(t_list *head)
-{
-	t_list	*current;
-	t_list	*node;
-
-	current = head;
-	while (current)
-	{
-		if (current->type == PIPE)
-		{
-			node = malloc(sizeof(t_list));
-			node->value = NULL;
-			node->type = WRD;
-			node->next = current;
-			return (node);
-		}
-		if (current->type == WRD)
-			return (current);
-		current = current->next;
-	}
-	node = malloc(sizeof(t_list));
-	node->value = NULL;
-	node->type = WRD;
-	node->next = NULL;
-	return (node);
-}
-
-t_list	*redirections(t_list *node, t_list *cmd)
-{
-	t_list	*head;
-
-	head = node;
-	while (node->next && node->next != cmd)
-		node = node->next;
-	node->next = NULL;
-	return (head);
-}
-
-t_list *keep_only_redirections(t_list *head)
-{
-	t_list	*current;
-	t_list	*prev;
-
-	current = head;
-	prev = NULL;
-	while (current)
-	{
-		if (current->type != FIL && current->type != IN && current->type != OUT 
-			&& current->type != APP && current->type != HDOC)
-		{
-			if (prev)
-				prev->next = NULL;
-		}
-		prev = current;
-		current = current->next;
-	}
-	return (head);
-}
 
 // the cmd is always after the redirections
 t_list *remove_red_and_add_it_to_cmd(t_list *head)
@@ -203,13 +126,12 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 				head = cmd;
 			cmd->is_redirected = 1;
 			cmd->redirections = redirections(current, cmd);
+			cmd->redirections = keep_only_redirections(cmd->redirections);
 			current = cmd;
 		}
 		prev = current;
 		current = current->next;
-		cmd->redirections = keep_only_redirections(cmd->redirections);
 	}
-
 	return (head);
 }
 

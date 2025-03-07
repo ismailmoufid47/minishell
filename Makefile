@@ -14,6 +14,7 @@ MANDATORY_FILES = mandatory/bin/echo.c \
 				mandatory/shell.c \
 				mandatory/shell.h \
 				mandatory/tokenize.c \
+				mandatory/utils/classed_list_utils.c\
 				mandatory/utils/cmdline_utils.c \
 				mandatory/utils/tokenize_utils.c \
 				mandatory/wrappers.c
