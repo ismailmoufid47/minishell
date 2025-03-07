@@ -1,0 +1,2 @@
+cmd1 < a | > b > c > d cmd2
+git add .

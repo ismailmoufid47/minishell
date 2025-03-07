@@ -27,7 +27,7 @@ t_ast	*parse(char *cmd_line)
 	tokens = tokenize(cmd_line);
 	print_tokens(tokens);
 	list = create_list(tokens);
-	print_list(list);
+	print_list(list, 1);
 	// root = create_ast(list);
 	return (root);
 }
@@ -56,20 +56,56 @@ t_ast	*parse(char *cmd_line)
 // 	}
 // }
 
+void	load_history(const char *filename)
+{
+	int		fd;
+	char	*line;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Failed to open history file");
+		return ;
+	}
+	line = get_next_line(fd);
+	while (line)
+	{
+		line[ft_strlen(line) - 1] = '\0';
+		add_history(line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+}
+
 int	main(void)
 {
 	char	*input;
 	t_ast	*root;
+	int		history_fd;
 
+	history_fd = open("command_history.txt",
+			O_WRONLY | O_CREAT | O_APPEND | O_CREAT, 0600);
+	load_history("command_history.txt");
+	if (history_fd == -1)
+		error("Failed to open history file");
 	while (1)
 	{
 		input = readline(get_prompt());
 		if (input == NULL)
 			exit(0);
 		if (*input)
+		{
 			add_history(input);
+			write(history_fd, input, strlen(input));
+			write(history_fd, "\n", 1);
+		}
 		root = parse(input);
+		(void)root;
 		// print_tree(root);
+		free(input);
 	}
+
+	close(history_fd);
 	return (0);
 }

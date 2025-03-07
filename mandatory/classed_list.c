@@ -1,23 +1,45 @@
 #include "shell.h"
 
-void	print_list(t_list *list)
+void	print_list(t_list *list, int tab_count)
 {
-	printf("\n		LIST\n\n");
+	int	i;
+
+	i = 0;
+	printf("\n");
+	while (i++ < tab_count)
+		printf("		");
+	printf("		LIST\n\n");
 	while (list)
 	{
+		i = 0;
+		while (i++ < tab_count)
+			printf("		");
 		if (list->type == IN)
-			printf("	 IN:  %s", list->value);
+			printf("	 IN");
 		else if (list->type == OUT)
-			printf("	 OUT: %s", list->value);
+			printf("	 OUT");
 		else if (list->type == PIPE)
-			printf("	PIPE: %s", list->value);
+			printf("	PIPE");
 		else if (list->type == FIL)
-			printf("	FILE: %s", list->value);
+			printf("      FILE: %s", list->value);
 		else
-			printf("	WORD: %s", list->value);
+		{
+			printf("       CMD:  %s", list->value);
+			if (list->is_redirected)
+			{
+				printf(",  REDIRECTIONS:\n");
+				print_list(list->redirections, tab_count + 1);
+			}
+		}
 		list = list->next;
 		if (list)
-			printf("\n	  ↓\n");
+		{
+			i = 0;
+			printf("\n");
+			while (i++ < tab_count)
+				printf("		");
+			printf("	  ↓\n");
+		}
 	}
 	printf("\n");
 }
@@ -97,18 +119,31 @@ t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type)
 	return (node);
 }
 
-t_list	*find_closest_cmd(t_list *head)
+t_list	*closest_cmd(t_list *head)
 {
 	t_list	*current;
 
 	current = head;
 	while (current)
 	{
-		if (current->type == CMD)
+		if (current->type == PIPE)
+			return (NULL);
+		if (current->type == WRD)
 			return (current);
 		current = current->next;
 	}
 	return (NULL);
+}
+
+t_list	*redirections(t_list *node, t_list *cmd)
+{
+	t_list	*head;
+
+	head = node;
+	while (node->next && node->next != cmd)
+		node = node->next;
+	node->next = NULL;
+	return (head);
 }
 
 // the cmd is always after the redirections
@@ -116,31 +151,30 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 {
 	t_list	*current;
 	t_list	*prev;
-	t_list	*prev_prev;
-	t_list	*tmp;
+	t_list	*cmd;
 
+	current = head;
+	prev = NULL;
 	while (current)
 	{
+		cmd = closest_cmd(current);
 		if (current->type == IN || current->type == OUT)
 		{
+			if (prev)
+				prev->next = cmd;
+			if (head == current)
+				head = cmd;
 			if (current->next && current->next->type == FIL)
 			{
-				if (prev_prev)
+				if (cmd)
 				{
-					prev_prev->next = current->next->next;
-					find_closest_cmd(current)->redirected_to = tmp;
-				}
-				else
-				{
-					head = current->next;
-					tmp = current->next;
-					current->next = tmp->next;
-					tmp->next = current;
+					cmd->is_redirected = 1;
+					cmd->redirections = redirections(current, cmd);
 				}
 			}
+			current = cmd;
 		}
 		prev = current;
-		prev_prev = prev;
 		current = current->next;
 	}
 	return (head);
@@ -150,6 +184,7 @@ t_list	*create_list(char **tokens)
 {
 	t_list	*nav;
 	t_list	*head;
+	t_list	*node;
 	int		i;
 
 	i = 0;
@@ -166,11 +201,16 @@ t_list	*create_list(char **tokens)
 				|| !ft_strcmp(tokens[i - 1], ">")))
 			token_to_node(&head, &nav, tokens[i], FIL);
 		else
-			token_to_node(&head, &nav, tokens[i], WRD);
+		{
+			node = token_to_node(&head, &nav, tokens[i], WRD);
+			node->is_redirected = 0;
+			node->redirections = NULL;
+		}
 		i++;
 	}
 	head = join_words(head);
 	head = join_words(head);
+	head = remove_red_and_add_it_to_cmd(head);
 	return (head);
 }
 

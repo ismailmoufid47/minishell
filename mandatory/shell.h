@@ -21,7 +21,8 @@
 # include <errno.h>          // perror
 # include <sys/wait.h>
 
-typedef enum node_type{
+typedef enum node_type
+{
 	PIPE,
 	IN,
 	OUT,
@@ -44,8 +45,8 @@ typedef struct a_list
 	char			*value;
 	struct a_list	*next;
 	t_node_type		type;
-	int				is_red;
-	struct a_list	*redirected_to;
+	int				is_redirected;
+	struct a_list	*redirections;
 }	t_list;
 
 // Wrapers: 
@@ -70,7 +71,7 @@ char	**tokenize(char *cmd);
 //classed list
 t_list	*create_list(char **tokens);
 t_list	*join_words(t_list *head);
-void	print_list(t_list *list);
+void	print_list(t_list *list, int tab_count);
 
 //AST TREE
 t_ast	*create_ast(t_list *list);
