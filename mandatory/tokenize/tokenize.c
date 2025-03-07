@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "../shell.h"
 
 int	get_token_count(char *input)
 {

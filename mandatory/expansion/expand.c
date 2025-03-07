@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "../shell.h"
 
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores

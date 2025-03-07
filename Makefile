@@ -3,21 +3,21 @@ NAME = minishell
 # use this command to copy all the files in mandatory:
 #find mandatory -type f | pbcopy
 
-MANDATORY_FILES = mandatory/bin/echo.c \
+MANDATORY_FILES = mandatory/abstract_syntax_tree/create_ast.c \
+				mandatory/bin/echo.c \
 				mandatory/bin/Makefile \
 				mandatory/bin/pwd.c \
-				mandatory/classed_list.c \
-				mandatory/create_ast.c \
-				mandatory/errors.c \
-				mandatory/expand.c \
+				mandatory/expansion/expand.c \
+				mandatory/linked_list/linked_list.c \
+				mandatory/linked_list/linked_list_utils.c \
 				mandatory/Makefile \
 				mandatory/shell.c \
 				mandatory/shell.h \
-				mandatory/tokenize.c \
-				mandatory/utils/classed_list_utils.c\
+				mandatory/tokenize/tokenize.c \
+				mandatory/tokenize/tokenize_utils.c \
 				mandatory/utils/cmdline_utils.c \
-				mandatory/utils/tokenize_utils.c \
-				mandatory/wrappers.c
+				mandatory/utils/errors.c \
+				mandatory/utils/wrappers.c
 
 
 BONUS_FILES = 

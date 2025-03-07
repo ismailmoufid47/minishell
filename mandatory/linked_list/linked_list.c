@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "../shell.h"
 
 void	print_list(t_list *list, int tab_count)
 {

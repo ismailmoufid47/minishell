@@ -10,8 +10,17 @@ LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 
 LIBFT = ../libft/libft.a 
 
-SRC = shell.c wrappers.c errors.c expand.c tokenize.c utils/cmdline_utils.c \
-utils/tokenize_utils.c utils/classed_list_utils.c classed_list.c create_ast.c
+SRC = abstract_syntax_tree/create_ast.c \
+	expansion/expand.c \
+	linked_list/linked_list.c \
+	linked_list/linked_list_utils.c \
+	tokenize/tokenize.c \
+	tokenize/tokenize_utils.c \
+	utils/cmdline_utils.c \
+	utils/errors.c \
+	utils/wrappers.c \
+	shell.c
+
 
 all: $(NAME)
 
