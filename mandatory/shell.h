@@ -26,6 +26,8 @@ typedef enum node_type
 	PIPE,
 	IN,
 	OUT,
+	HDOC,
+	APP,
 	CMD,
 	FIL,
 	WRD

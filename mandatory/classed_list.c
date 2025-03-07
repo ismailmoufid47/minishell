@@ -14,7 +14,11 @@ void	print_list(t_list *list, int tab_count)
 		i = 0;
 		while (i++ < tab_count)
 			printf("		");
-		if (list->type == IN)
+		if (list->type == HDOC)
+			printf("      HEREDOC");
+		else if (list->type == APP)
+			printf("       APPEND");
+		else if (list->type == IN)
 			printf("	 IN");
 		else if (list->type == OUT)
 			printf("	 OUT");
@@ -122,17 +126,28 @@ t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type)
 t_list	*closest_cmd(t_list *head)
 {
 	t_list	*current;
+	t_list	*node;
 
 	current = head;
 	while (current)
 	{
 		if (current->type == PIPE)
-			return (NULL);
+		{
+			node = malloc(sizeof(t_list));
+			node->value = NULL;
+			node->type = WRD;
+			node->next = current;
+			return (node);
+		}
 		if (current->type == WRD)
 			return (current);
 		current = current->next;
 	}
-	return (NULL);
+	node = malloc(sizeof(t_list));
+	node->value = NULL;
+	node->type = WRD;
+	node->next = NULL;
+	return (node);
 }
 
 t_list	*redirections(t_list *node, t_list *cmd)
@@ -143,6 +158,27 @@ t_list	*redirections(t_list *node, t_list *cmd)
 	while (node->next && node->next != cmd)
 		node = node->next;
 	node->next = NULL;
+	return (head);
+}
+
+t_list *keep_only_redirections(t_list *head)
+{
+	t_list	*current;
+	t_list	*prev;
+
+	current = head;
+	prev = NULL;
+	while (current)
+	{
+		if (current->type != FIL && current->type != IN && current->type != OUT 
+			&& current->type != APP && current->type != HDOC)
+		{
+			if (prev)
+				prev->next = NULL;
+		}
+		prev = current;
+		current = current->next;
+	}
 	return (head);
 }
 
@@ -158,25 +194,22 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 	while (current)
 	{
 		cmd = closest_cmd(current);
-		if (current->type == IN || current->type == OUT)
+		if (current->type == IN || current->type == OUT
+			|| current->type == APP || current->type == HDOC)
 		{
 			if (prev)
 				prev->next = cmd;
 			if (head == current)
 				head = cmd;
-			if (current->next && current->next->type == FIL)
-			{
-				if (cmd)
-				{
-					cmd->is_redirected = 1;
-					cmd->redirections = redirections(current, cmd);
-				}
-			}
+			cmd->is_redirected = 1;
+			cmd->redirections = redirections(current, cmd);
 			current = cmd;
 		}
 		prev = current;
 		current = current->next;
+		cmd->redirections = keep_only_redirections(cmd->redirections);
 	}
+
 	return (head);
 }
 
@@ -191,14 +224,20 @@ t_list	*create_list(char **tokens)
 	nav = ((head = NULL), NULL);
 	while (tokens[i])
 	{
-		if (!ft_strcmp(tokens[i], "<"))
+		if (!ft_strcmp(tokens[i], "<<"))
+			token_to_node(&head, &nav, tokens[i], HDOC);
+		else if (!ft_strcmp(tokens[i], ">>"))
+			token_to_node(&head, &nav, tokens[i], APP);
+		else if (!ft_strcmp(tokens[i], "<"))
 			token_to_node(&head, &nav, tokens[i], IN);
 		else if (!ft_strcmp(tokens[i], ">"))
 			token_to_node(&head, &nav, tokens[i], OUT);
 		else if (!ft_strcmp(tokens[i], "|"))
 			token_to_node(&head, &nav, tokens[i], PIPE);
 		else if (i && (!ft_strcmp(tokens[i - 1], "<")
-				|| !ft_strcmp(tokens[i - 1], ">")))
+				|| !ft_strcmp(tokens[i - 1], ">")
+				|| !ft_strcmp(tokens[i - 1], ">>")
+				|| !ft_strcmp(tokens[i - 1], "<<")))
 			token_to_node(&head, &nav, tokens[i], FIL);
 		else
 		{
@@ -213,4 +252,3 @@ t_list	*create_list(char **tokens)
 	head = remove_red_and_add_it_to_cmd(head);
 	return (head);
 }
-

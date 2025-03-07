@@ -28,33 +28,23 @@ t_ast	*parse(char *cmd_line)
 	print_tokens(tokens);
 	list = create_list(tokens);
 	print_list(list, 1);
-	// root = create_ast(list);
+	root = create_ast(list);
 	return (root);
 }
 
-// void	print_tree(t_ast *root)
-// {
-// 	printf("\n		TREE\n\n");
-// 	while (root)
-// 	{
-// 		if (root->type == OUT)
-// 		{
-// 			printf("	\033[1;31mcmd: %s\033[0m←\033[1;32mOUT\033[0m→\033[1;34mfile: %s\033[0m\n", root->left, root->file);
-// 			printf("		↓\n");
-// 		}
-// 		else if (root->type == IN)
-// 		{
-// 			printf("	\033[1;31mcmd: %s\033[0m←\033[1;32mIN\033[0m→\033[1;34mfile: %s\033[0m\n",root->cmd_right, root->file);
-// 			printf("		↓\n");
-// 		}
-// 		else if (root->type == PIPE)
-// 		{
-// 			printf("	\033[1;31mcmd: %s\033[0m←\033[1;32mPIPE\033[0m→\033[1;34mcmd: %s\033[0m\n", root->cmd_left, root->cmd_right);
-// 			printf("		↓\n");
-// 		}
-// 		root = root->left;
-// 	}
-// }
+void	print_tree(t_ast *root)
+{
+	printf("\n		TREE\n\n");
+	while (root)
+	{
+		if (root->type == PIPE)
+		{
+			printf("	\033[1;31mcmd: %s\033[0m←\033[1;32mPIPE\033[0m→\033[1;34mcmd: %s\033[0m\n", root->left->cmd, root->right->cmd);
+			printf("		↓\n");
+		}
+		root = root->left;
+	}
+}
 
 void	load_history(const char *filename)
 {
