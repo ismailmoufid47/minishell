@@ -1,4 +1,4 @@
-#include "../shell.h"
+#include "../include/shell.h"
 
 t_list	*create_list_node(char *token, int type)
 {

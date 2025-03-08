@@ -10,22 +10,22 @@ LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 
 LIBFT = ../libft/libft.a 
 
-SRC = abstract_syntax_tree/create_ast.c \
-	expansion/expand.c \
-	linked_list/linked_list.c \
-	linked_list/linked_list_utils.c \
-	tokenize/tokenize.c \
-	tokenize/tokenize_utils.c \
+SRC = 1_expansion/expand.c \
+	2_tokenization/tokenize.c \
+	2_tokenization/tokenize_utils.c \
+	3_listification/linked_list.c \
+	3_listification/linked_list_utils.c \
+	4_execution_tree_construction/create_ast.c \
 	utils/cmdline_utils.c \
-	utils/errors.c \
 	utils/wrappers.c \
+	utils/errors.c \
 	shell.c
-
 
 all: $(NAME)
 
-$(NAME): shell.h $(LIBFT) $(SRC)
+$(NAME): include/shell.h $(LIBFT) $(SRC)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
+	mv -f ../command_history .
 
 $(LIBFT):
 	make -C ../libft

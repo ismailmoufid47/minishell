@@ -1,4 +1,4 @@
-#include "../shell.h"
+#include "../include/shell.h"
 
 
 t_ast	*create_ast_node(t_list *list)

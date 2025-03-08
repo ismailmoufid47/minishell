@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "include/shell.h"
 
 void	print_tokens(char **tokens)
 {
@@ -46,39 +46,15 @@ void	print_tree(t_ast *root)
 	}
 }
 
-void	load_history(const char *filename)
-{
-	int		fd;
-	char	*line;
-
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Failed to open history file");
-		return ;
-	}
-	line = get_next_line(fd);
-	while (line)
-	{
-		line[ft_strlen(line) - 1] = '\0';
-		add_history(line);
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
-}
-
 int	main(void)
 {
 	char	*input;
 	t_ast	*root;
 	int		history_fd;
 
-	history_fd = open("command_history.txt",
-			O_WRONLY | O_CREAT | O_APPEND | O_CREAT, 0600);
+	history_fd = open_wraper("command_history",
+			O_RDWR | O_CREAT | O_APPEND, 0666);
 	load_history("command_history.txt");
-	if (history_fd == -1)
-		error("Failed to open history file");
 	while (1)
 	{
 		input = readline(get_prompt());

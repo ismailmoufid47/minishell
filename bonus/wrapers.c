@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wrapers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 18:08:33 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/01 18:27:22 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/03/08 02:30:16 by ismail           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
+#include "include/shell.h"
 
 int	open_wraper(char *file, int open_mode, int create_permissions)
 {

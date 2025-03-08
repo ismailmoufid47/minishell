@@ -1,14 +1,17 @@
-#include "../shell.h"
+#include "../include/shell.h"
 
 void	print_list(t_list *list, int tab_count)
 {
 	int	i;
 
 	i = 0;
-	printf("\n");
-	while (i++ < tab_count)
-		printf("		");
-	printf("		LIST\n\n");
+	if (tab_count == 0)
+	{
+		printf("\n");
+		while (i++ < tab_count)
+			printf("		");
+		printf("		LIST\n\n");
+	}
 	while (list)
 	{
 		i = 0;

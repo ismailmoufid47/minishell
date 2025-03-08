@@ -1,4 +1,4 @@
-#include "../shell.h"
+#include "../include/shell.h"
 
 void	execute_hostname_command(const char *cmd, int fd[2])
 {
@@ -78,4 +78,27 @@ char	*get_prompt(void)
 	prmpt = ft_strjoin(prmpt, "\033[0m$ ");
 	free(tmp);
 	return (prmpt);
+}
+
+
+void	load_history(const char *filename)
+{
+	int		fd;
+	char	*line;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Failed to open history file");
+		return ;
+	}
+	line = get_next_line(fd);
+	while (line)
+	{
+		line[ft_strlen(line) - 1] = '\0';
+		add_history(line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
 }
