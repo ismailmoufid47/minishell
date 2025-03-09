@@ -14,8 +14,8 @@ LIBFT = ../libft/libft.a
 SRC = 1_expansion/expand.c \
 	2_tokenization/tokenize.c \
 	2_tokenization/tokenize_utils.c \
-	3_listification/linked_list.c \
-	3_listification/linked_list_utils.c \
+	3_listification/classed_list.c \
+	3_listification/classed_list_utils.c \
 	4_execution_tree_construction/create_ast.c \
 	utils/cmdline_utils.c \
 	utils/wrappers.c \
