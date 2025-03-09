@@ -62,14 +62,14 @@ t_list	*handle_cmd_red(t_list *head, t_node_type type)
 	while (current)
 	{
 		if (current->type == type && prev
-			&& prev->type == WRD && current->next && prev_prev)
+			&& prev->type == CMD && current->next && prev_prev)
 		{
 			prev_prev->next = ((tmp = prev), current);
 			tmp->next = current->next->next;
 			current->next->next = tmp;
 		}
 		else if (current->type == type
-			&& prev && prev->type == WRD && current->next && !prev_prev)
+			&& prev && prev->type == CMD && current->next && !prev_prev)
 		{
 			head = current;
 			prev->next = current->next->next;
@@ -88,7 +88,7 @@ t_list	*join_words(t_list *head)
 	current = head;
 	while (current)
 	{
-		if (current->type == WRD && current->next && current->next->type == WRD)
+		if (current->type == CMD && current->next && current->next->type == CMD)
 		{
 			current->value = ft_strjoin(current->value, " ");
 			current->value = ft_strjoin(current->value, current->next->value);
@@ -138,17 +138,17 @@ t_list	*closest_cmd(t_list *head)
 		{
 			node = malloc(sizeof(t_list));
 			node->value = NULL;
-			node->type = WRD;
+			node->type = CMD;
 			node->next = current;
 			return (node);
 		}
-		if (current->type == WRD)
+		if (current->type == CMD)
 			return (current);
 		current = current->next;
 	}
 	node = malloc(sizeof(t_list));
 	node->value = NULL;
-	node->type = WRD;
+	node->type = CMD;
 	node->next = NULL;
 	return (node);
 }
@@ -161,27 +161,6 @@ t_list	*redirections(t_list *node, t_list *cmd)
 	while (node->next && node->next != cmd)
 		node = node->next;
 	node->next = NULL;
-	return (head);
-}
-
-t_list *keep_only_redirections(t_list *head)
-{
-	t_list	*current;
-	t_list	*prev;
-
-	current = head;
-	prev = NULL;
-	while (current)
-	{
-		if (current->type != FIL && current->type != IN && current->type != OUT 
-			&& current->type != APP && current->type != HDOC)
-		{
-			if (prev)
-				prev->next = NULL;
-		}
-		prev = current;
-		current = current->next;
-	}
 	return (head);
 }
 
@@ -244,7 +223,7 @@ t_list	*create_list(char **tokens)
 			token_to_node(&head, &nav, tokens[i], FIL);
 		else
 		{
-			node = token_to_node(&head, &nav, tokens[i], WRD);
+			node = token_to_node(&head, &nav, tokens[i], CMD);
 			node->is_redirected = 0;
 			node->redirections = NULL;
 		}

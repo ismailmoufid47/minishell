@@ -52,17 +52,17 @@ t_list	*closest_cmd(t_list *head)
 	current = head;
 	while (current)
 	{
-		if (current->type == WRD)
+		if (current->type == CMD)
 			return (current);
 		if (current->type == PIPE)
 		{
-			node = create_list_node(NULL, WRD);
+			node = create_list_node(NULL, CMD);
 			node->next = current;
 			return (node);
 		}
 		current = current->next;
 	}
-	node = create_list_node(NULL, WRD);
+	node = create_list_node(NULL, CMD);
 	return (node);
 }
 

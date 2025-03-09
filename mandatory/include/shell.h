@@ -28,9 +28,8 @@ typedef enum node_type
 	OUT,
 	HDOC,
 	APP,
-	CMD,
 	FIL,
-	WRD
+	CMD
 }	t_node_type;
 
 typedef struct ast
@@ -72,7 +71,11 @@ void	skip_whitespace(char *input, int *pos);
 char	**tokenize(char *cmd);
 
 //classed list
+
 t_list	*create_list(char **tokens);
+
+// classed list utils:
+t_list	*keep_only_redirections(t_list *head);
 t_list	*join_words(t_list *head);
 void	print_list(t_list *list, int tab_count);
 

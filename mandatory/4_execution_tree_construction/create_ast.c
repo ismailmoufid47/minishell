@@ -55,7 +55,7 @@ t_ast	*create_ast(t_list *list)
 			node = create_ast_node(list);
 			root = add_node_front(root, node);
 		}
-		else if (list->type == WRD)
+		else if (list->type == CMD)
 		{
 			node = create_ast_node(list);
 			node->type = CMD;
