@@ -11,7 +11,7 @@ LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 LIBFT = ../libft/libft.a 
 
 SRC = shell.c wrappers.c errors.c expand.c tokenize.c utils/cmdline_utils.c \
-utils/tokenize_utils.c utils/classed_list_utils.c classed_list.c create_ast.c
+utils/tokenize_utils.c classed_list.c create_ast.c
 
 all: $(NAME)
 

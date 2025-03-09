@@ -72,14 +72,8 @@ char	**tokenize(char *cmd);
 
 //classed list
 t_list	*create_list(char **tokens);
+t_list	*join_words(t_list *head);
 void	print_list(t_list *list, int tab_count);
-
-//classed list utils:
-t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
-t_list	*closest_cmd(t_list *head);
-t_list	*keep_only_redirections(t_list *head);
-t_list	*redirections(t_list *node, t_list *cmd);
-t_list	*create_list_node(char *token, int type);
 
 //AST TREE
 t_ast	*create_ast(t_list *list);
