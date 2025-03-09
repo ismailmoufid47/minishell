@@ -3,20 +3,22 @@ NAME = minishell
 # use this command to copy all the files in mandatory:
 #find mandatory -type f | pbcopy
 
-MANDATORY_FILES = mandatory/bin/echo.c \
-				mandatory/bin/Makefile \
-				mandatory/bin/pwd.c \
-				mandatory/classed_list.c \
-				mandatory/create_ast.c \
-				mandatory/errors.c \
-				mandatory/expand.c \
-				mandatory/Makefile \
-				mandatory/shell.c \
-				mandatory/shell.h \
-				mandatory/tokenize.c \
-				mandatory/utils/cmdline_utils.c \
-				mandatory/utils/tokenize_utils.c \
-				mandatory/wrappers.c
+
+MANDATORY_FILES = mandatory/1_expansion/expand.c \
+			mandatory/2_tokenization/tokenize.c \
+			mandatory/2_tokenization/tokenize_utils.c \
+			mandatory/3_listification/linked_list.c \
+			mandatory/3_listification/linked_list_utils.c \
+			mandatory/4_execution_tree_construction/create_ast.c \
+			mandatory/Makefile \
+			mandatory/bin/Makefile \
+			mandatory/bin/echo.c \
+			mandatory/bin/pwd.c \
+			mandatory/shell.c \
+			mandatory/include/shell.h \
+			mandatory/utils/cmdline_utils.c \
+			mandatory/utils/errors.c \
+			mandatory/utils/wrappers.c
 
 
 BONUS_FILES = 
@@ -26,6 +28,7 @@ all: $(NAME)
 $(NAME): $(MANDATORY_FILES)
 	make -C mandatory
 	cp mandatory/minishell $(NAME)
+	mv mandatory/command_history .
 
 bonus: $(BONUS_FILES)
 	make -C bonus

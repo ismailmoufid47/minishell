@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "include/shell.h"
 
 char	*search_and_replace(char *cmd, int start)
 {

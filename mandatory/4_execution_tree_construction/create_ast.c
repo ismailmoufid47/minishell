@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "../include/shell.h"
 
 
 t_ast	*create_ast_node(t_list *list)
@@ -30,9 +30,10 @@ t_ast	*create_ast(t_list *list)
 {
 	t_ast	*root;
 	t_ast	*node;
-	t_ast	*last_created_node = NULL;
+	t_ast	*last_created_node;
 
 	root = NULL;
+	last_created_node = NULL;
 	while (list)
 	{
 		if (list->type == IN)

@@ -1,5 +1,5 @@
 
-#include "shell.h"
+#include "../include/shell.h"
 
 void	error(char *error_prefix)
 {

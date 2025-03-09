@@ -9,14 +9,14 @@ SRC = ../errors.c
 
 NAME = bin
 
-all: ../shell.h $(LIBFT) pwd echo
+all: ../include/shell.h $(LIBFT) pwd echo
 
 $(NAME): all
 
-pwd: ../shell.h  $(LIBFT) $(SRC) pwd.c
+pwd: ../include/shell.h  $(LIBFT) $(SRC) pwd.c
 	@$(CC) $(CFLAGS) $(SRC) pwd.c $(LFLAGS) -o pwd
 
-echo: ../shell.h $(LIBFT) $(SRC) echo.c
+echo: ../include/shell.h $(LIBFT) $(SRC) echo.c
 	@$(CC) $(CFLAGS) $(SRC) echo.c $(LFLAGS) -o echo
 
 $(LIBFT):

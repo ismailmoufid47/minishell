@@ -1,4 +1,4 @@
-#include "../shell.h"
+#include "../include/shell.h"
 
 int	is_double_symbol(char *input, int pos)
 {

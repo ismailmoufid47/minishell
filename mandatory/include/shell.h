@@ -3,7 +3,7 @@
 # define SHELL_H
 
 
-# include "../libft/include/libft.h"
+# include "../../libft/include/libft.h"
 # include <stdlib.h>         // malloc, free, exit, getenv
 # include <unistd.h>         // write, access, open, read, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname
 # include <stdio.h>          // printf
@@ -59,6 +59,7 @@ void	error(char *error_prefix);
 
 // command line Utils:
 char	*get_prompt(void);
+void	load_history(const char *filename);
 
 //expander
 char	*expand_env_variable(char *cmd_line);

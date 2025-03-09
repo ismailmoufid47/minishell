@@ -1,5 +1,5 @@
 
-#include "shell.h"
+#include "../include/shell.h"
 
 int	open_wraper(char *file, int open_mode, int create_permissions)
 {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 18:17:45 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/01 18:35:04 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/03/08 02:30:16 by ismail           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
+#include "include/shell.h"
 
 void	error(char *error_prefix)
 {

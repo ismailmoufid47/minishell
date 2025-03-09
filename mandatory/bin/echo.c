@@ -1,4 +1,4 @@
-#include "../shell.h"
+#include "../include/shell.h"
 
 void	check_dash_n_option(char *str, int *option)
 {
