@@ -10,12 +10,12 @@ int	open_wraper(char *file, int open_mode, int create_permissions)
 	else
 		fd = open(file, open_mode, create_permissions);
 	if (fd == -1)
-		error("open");
+		error(ft_strdup("open"));
 	return (fd);
 }
 
 void	cd(char *path)
 {
 	if (chdir(path) == -1)
-		error("cd");
+		error(ft_strdup("cd"));
 }

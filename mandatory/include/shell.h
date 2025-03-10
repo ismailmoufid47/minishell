@@ -55,6 +55,7 @@ int		open_wraper(char *file, int open_mode, int create_permissions);
 
 // Errors: 
 void	error(char *error_prefix);
+int		syntax_error(char **tokens, char *error_prefix);
 
 // command line Utils:
 char	*get_prompt(void);
@@ -63,21 +64,26 @@ void	load_history(const char *filename);
 //expander
 char	*expand_env_variable(char *cmd_line);
 
-//tokenize
+// tokenize:
+char	**tokenize(char *cmd);
+
+//tokenize utils:
+int		is_special_token(char *token);
 int		is_special_operator(char c);
 int		is_double_symbol(char *input, int pos);
 void	skip_quoted_section(char *input, int *pos, char quote);
 void	skip_whitespace(char *input, int *pos);
-char	**tokenize(char *cmd);
 
 //classed list
-
 t_list	*create_list(char **tokens);
 
 // classed list utils:
 t_list	*keep_only_redirections(t_list *head);
 t_list	*join_words(t_list *head);
 void	print_list(t_list *list, int tab_count);
+t_list	*redirections(t_list *node, t_list *cmd);
+t_list	*closest_cmd(t_list *head);
+t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 //AST TREE
 t_ast	*create_ast(t_list *list);

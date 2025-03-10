@@ -1,5 +1,10 @@
 #include "../include/shell.h"
 
+int	is_special_token(char *token)
+{
+	return (is_double_symbol(token, 0) || is_special_operator(token[0]));
+}
+
 int	is_double_symbol(char *input, int pos)
 {
 	return ((input[pos] == '<' && input[pos + 1] == '<') || 

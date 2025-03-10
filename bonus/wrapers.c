@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrapers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 18:08:33 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/08 02:30:16 by ismail           ###   ########.fr       */
+/*   Updated: 2025/03/09 20:42:08 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ int	open_wraper(char *file, int open_mode, int create_permissions)
 	else
 		fd = open(file, open_mode, create_permissions);
 	if (fd == -1)
-		error("open");
+		error(ft_strdup("open"));
 	return (fd);
 }

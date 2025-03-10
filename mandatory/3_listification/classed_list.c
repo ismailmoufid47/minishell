@@ -105,64 +105,7 @@ t_list	*join_words(t_list *head)
 	return (head);
 }
 
-t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type)
-{
-	t_list	*node;
 
-	node = malloc(sizeof(t_list));
-	node->value = token;
-	node->type = type;
-	node->next = NULL;
-	if (!*head)
-	{
-		*head = node;
-		*nav = *head;
-	}
-	else
-	{
-		(*nav)->next = node;
-		*nav = (*nav)->next;
-	}
-	return (node);
-}
-
-t_list	*closest_cmd(t_list *head)
-{
-	t_list	*current;
-	t_list	*node;
-
-	current = head;
-	while (current)
-	{
-		if (current->type == PIPE)
-		{
-			node = malloc(sizeof(t_list));
-			node->value = NULL;
-			node->type = CMD;
-			node->next = current;
-			return (node);
-		}
-		if (current->type == CMD)
-			return (current);
-		current = current->next;
-	}
-	node = malloc(sizeof(t_list));
-	node->value = NULL;
-	node->type = CMD;
-	node->next = NULL;
-	return (node);
-}
-
-t_list	*redirections(t_list *node, t_list *cmd)
-{
-	t_list	*head;
-
-	head = node;
-	while (node->next && node->next != cmd)
-		node = node->next;
-	node->next = NULL;
-	return (head);
-}
 
 // the cmd is always after the redirections
 t_list *remove_red_and_add_it_to_cmd(t_list *head)

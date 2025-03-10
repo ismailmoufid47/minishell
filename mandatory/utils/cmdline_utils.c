@@ -6,12 +6,12 @@ void	execute_hostname_command(const char *cmd, int fd[2])
 
 	close(fd[0]);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
-		error("dup2");
+		error(ft_strdup("dup2"));
 	close(fd[1]);
 	args[0] = (char *)cmd;
 	args[1] = NULL;
 	if (execve(cmd, args, NULL) == -1)
-		error("execve");
+		error(ft_strdup("execve"));
 }
 
 char	*get_host_name(void)
@@ -22,10 +22,10 @@ char	*get_host_name(void)
 
 	line = NULL;
 	if (pipe(fd) == -1)
-		error("pipe");
+		error(ft_strdup("pipe"));
 	pid = fork();
 	if (pid < 0)
-		error("fork");
+		error(ft_strdup("fork"));
 	else if (pid == 0)
 		execute_hostname_command("/bin/hostname", fd);
 	else
@@ -35,7 +35,7 @@ char	*get_host_name(void)
 		wait(NULL);
 		close(fd[0]);
 		if (!line)
-			error("read");
+			error(ft_strdup("read"));
 		*ft_strchr(line, '\n') = '\0';
 		if (ft_strchr(line, '.'))
 			*ft_strchr(line, '.') = '\0';

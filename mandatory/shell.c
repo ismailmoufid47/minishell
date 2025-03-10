@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shell.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
+/*   Updated: 2025/03/09 21:53:17 by jbelkerf         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "include/shell.h"
 
 void	print_tokens(char **tokens)
@@ -14,6 +26,24 @@ void	print_tokens(char **tokens)
 	printf("\n");
 }
 
+int	validate_tokens(char **tokens)
+{
+	int		i;
+
+	i = 0;
+	if (!ft_strcmp(tokens[0], "|"))
+		return (syntax_error(tokens, "|"));
+	while (tokens[i])
+	{
+		if (is_special_token(tokens[i]) && !tokens[i + 1])
+			return (syntax_error(tokens, "newline"));
+		if (is_special_token(tokens[i]) && is_special_token(tokens[i + 1]))
+			return (syntax_error(tokens, tokens[i + 1]));
+		i++;
+	}
+	return (1);
+}
+
 t_ast	*parse(char *cmd_line)
 {
 	char	**tokens;
@@ -25,6 +55,8 @@ t_ast	*parse(char *cmd_line)
 	cmd_line = expand_env_variable(cmd_line);
 	printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
+	if (!validate_tokens(tokens))
+		return (NULL);
 	print_tokens(tokens);
 	list = create_list(tokens);
 	print_list(list, 1);
@@ -54,12 +86,14 @@ int	main(void)
 
 	history_fd = open_wraper("command_history",
 			O_RDWR | O_CREAT | O_APPEND, 0666);
-	load_history("command_history.txt");
+	load_history("command_history");
 	while (1)
 	{
 		input = readline(get_prompt());
 		if (input == NULL)
 			exit(0);
+		if (*input == 0)
+			continue ;
 		if (*input)
 		{
 			add_history(input);
@@ -68,10 +102,8 @@ int	main(void)
 		}
 		root = parse(input);
 		(void)root;
-		// print_tree(root);
 		free(input);
 	}
-
 	close(history_fd);
 	return (0);
 }
