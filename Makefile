@@ -40,7 +40,7 @@ clean:
 
 fclean:
 	make -C mandatory fclean
-	make -C bonus fclean
+# 	make -C bonus fclean
 	rm -f $(NAME)
 
 re: fclean all

@@ -5,11 +5,11 @@ LFLAGS = -L ../../libft -lft
 
 LIBFT = ../../libft/libft.a 
 
-SRC = ../errors.c
+SRC = ../utils/errors.c
 
 NAME = bin
 
-all: ../include/shell.h $(LIBFT) pwd echo
+all: ../include/shell.h $(LIBFT) pwd echo env
 
 $(NAME): all
 
@@ -18,6 +18,9 @@ pwd: ../include/shell.h  $(LIBFT) $(SRC) pwd.c
 
 echo: ../include/shell.h $(LIBFT) $(SRC) echo.c
 	@$(CC) $(CFLAGS) $(SRC) echo.c $(LFLAGS) -o echo
+
+env: ../include/shell.h $(LIBFT) $(SRC) env.c
+	@$(CC) $(CFLAGS) $(SRC) env.c $(LFLAGS) -o env
 
 $(LIBFT):
 	@make -C ../../libft
