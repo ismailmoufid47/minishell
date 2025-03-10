@@ -62,8 +62,8 @@ SRC = 1_expansion/expand.c \
 	2_tokenization/tokenize_utils.c \
 	3_listification/classed_list.c \
 	3_listification/classed_list_utils.c \
-	4_execution_tree_construction/create_ast.c \
 	utils/cmdline_utils.c \
+	utils/envp_handler.c \
 	utils/wrappers.c \
 	utils/errors.c \
 	shell.c

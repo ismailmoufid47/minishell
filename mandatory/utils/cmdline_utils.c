@@ -43,12 +43,12 @@ char	*get_host_name(void)
 	return (line);
 }
 
-char	*replace_home_with_tilde(char *pwd)
+char	*replace_home_with_tilde(t_envp *envp, char *pwd)
 {
 	char	*home;
 	size_t	home_len;
 
-	home = getenv("HOME");
+	home = ft_get_env_val(envp, "HOME");
 	if (!home)
 		return (ft_strdup(pwd));
 	home_len = ft_strlen(home);
@@ -57,7 +57,7 @@ char	*replace_home_with_tilde(char *pwd)
 	return (ft_strdup(pwd));
 }
 
-char	*get_prompt(void)
+char	*get_prompt(t_envp *envp)
 {
 	char	*host;
 	char	*pwd;
@@ -65,12 +65,13 @@ char	*get_prompt(void)
 	char	*tmp;
 
 	host = get_host_name();
-	pwd = getenv("PWD");
+	pwd = ft_get_env_val(envp, "PWD");
 	if (!pwd)
 		pwd = ft_strdup("unknown");
 	else
-		pwd = replace_home_with_tilde(pwd);
-	tmp = ((prmpt = ft_strjoin("\033[1;34m", getenv("USER"))), prmpt);
+		pwd = replace_home_with_tilde(envp, pwd);
+	prmpt = ft_strjoin("\033[1;34m", ft_get_env_val(envp, "USER"));
+	tmp = prmpt;
 	tmp = ((prmpt = ft_strjoin(prmpt, "@")), free(tmp), prmpt);
 	tmp = ((prmpt = ft_strjoin(prmpt, host)), free(tmp), free(host), prmpt);
 	tmp = ((prmpt = ft_strjoin(prmpt, "\033[0m: \033[1;32m")), free(tmp), prmpt);

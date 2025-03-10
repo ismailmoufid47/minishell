@@ -2,7 +2,7 @@
 
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
-char	*search_and_replace(char *cmd, int start)
+char	*search_and_replace(char *cmd, int start, t_envp *envp)
 {
 	char	variable_name[1024];
 	char	*result;
@@ -13,24 +13,25 @@ char	*search_and_replace(char *cmd, int start)
 	variable_len = ft_isdigit(cmd[start]);
 	i = start;
 	while (cmd[i]
-		&& (ft_isalnum(cmd[i]) || cmd[i] == '_') && !ft_isdigit(cmd[start]))
+		&& (ft_isalnum(cmd[i]) || cmd[i] == '_' || cmd[i] == '?')
+		&& !ft_isdigit(cmd[start]))
 	{
 		variable_len++;
 		i++;
 	}
 	ft_strlcpy(variable_name, cmd + start, variable_len + 1);
-	var = getenv(variable_name);
-	if (!var && ft_isdigit(cmd[start]))
-		var = "";
+	var = ft_get_env_val(envp, variable_name);
 	if (variable_len == 0)
 		var = "$";
+	if (!var || ft_isdigit(cmd[start]))
+		var = "";
 	cmd[start - 1] = '\0';
 	var = ft_strjoin(cmd, var);
 	result = ft_strjoin(var, cmd + start + variable_len);
 	return (free(var), result);
 }
 
-char	*expand_env_variable(char *cmd_line)
+char	*expand_env_variable(char *cmd_line, t_envp *envp)
 {
 	int	i;
 
@@ -45,8 +46,8 @@ char	*expand_env_variable(char *cmd_line)
 		}
 		if (cmd_line[i] == '$')
 		{
-			cmd_line = search_and_replace(cmd_line, i + 1);
-			i = 0;
+			if (cmd_line[i + 1])
+				cmd_line = search_and_replace(cmd_line, i + 1, envp);
 		}
 		if (cmd_line[i])
 			i++;

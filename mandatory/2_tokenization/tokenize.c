@@ -8,7 +8,8 @@ int	get_token_count(char *input)
 	pos = ((token_count = 0), 0);
 	while (input[pos])
 	{
-		skip_whitespace(input, &pos);
+		while (input[pos] == ' ')
+			pos++;
 		if (!input[pos])
 			break ;
 		token_count++;
@@ -68,7 +69,8 @@ char	**extract_tokens(char **tokens, char *input)
 	pos = ((token_index = 0), 0);
 	while (input[pos])
 	{
-		skip_whitespace(input, &pos);
+		while (input[pos] == ' ')
+			pos++;
 		if (!input[pos])
 			break ;
 		length = get_token_length(input, &pos);
