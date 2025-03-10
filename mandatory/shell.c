@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/09 21:53:17 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:40:03 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ int	validate_tokens(char **tokens)
 	{
 		if (is_special_token(tokens[i]) && !tokens[i + 1])
 			return (syntax_error(tokens, "newline"));
-		if (is_special_token(tokens[i]) && is_special_token(tokens[i + 1]))
+		if (ft_strcmp(tokens[i], "|") && is_special_token(tokens[i])
+			&& is_special_token(tokens[i + 1]))
 			return (syntax_error(tokens, tokens[i + 1]));
 		i++;
 	}
