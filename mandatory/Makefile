@@ -73,7 +73,6 @@ all: $(NAME)
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
-	cp ../command_history .
 
 $(LIBFT):
 	make -C ../libft

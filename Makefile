@@ -28,7 +28,6 @@ all: $(NAME)
 $(NAME): $(MANDATORY_FILES)
 	make -C mandatory
 	cp mandatory/minishell .
-	cp mandatory/command_history .
 
 bonus: $(BONUS_FILES)
 	make -C bonus

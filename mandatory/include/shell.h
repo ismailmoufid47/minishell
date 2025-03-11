@@ -62,10 +62,10 @@ int		syntax_error(char **tokens, char *error_prefix);
 
 // command line Utils:
 char	*get_prompt(t_envp *envp);
-void	load_history(const char *filename);
+void	load_history(int fd);
 
 //expander:
-char    *expand_env_variable(char *cmd_line, t_envp *envp);
+char	*expand_env_variable(char *cmd_line, t_envp *envp);
 
 // tokenize:
 char	**tokenize(char *cmd);

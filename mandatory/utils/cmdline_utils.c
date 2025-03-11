@@ -82,17 +82,10 @@ char	*get_prompt(t_envp *envp)
 }
 
 
-void	load_history(const char *filename)
+void	load_history(int fd)
 {
-	int		fd;
 	char	*line;
 
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Failed to open history file");
-		return ;
-	}
 	line = get_next_line(fd);
 	while (line)
 	{

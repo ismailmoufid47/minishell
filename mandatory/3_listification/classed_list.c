@@ -5,7 +5,7 @@ void	print_list(t_list *list, int tab_count)
 	int	i;
 
 	i = 0;
-	if (tab_count == 0)
+	if (tab_count == 1)
 	{
 		printf("\n");
 		while (i++ < tab_count)
@@ -132,7 +132,8 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 		}
 		prev = current;
 		current = current->next;
-		cmd->redirections = keep_only_redirections(cmd->redirections);
+		if (cmd)
+			cmd->redirections = keep_only_redirections(cmd->redirections);
 	}
 
 	return (head);
