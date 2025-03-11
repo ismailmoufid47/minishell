@@ -27,14 +27,3 @@ void	handle_here_doc(char *delimiter)
 	close(fd1);
 	ft_dup2(fd2, 0);
 }
-
-int	main(void)
-{
-	char	*line;
-
-	handle_here_doc("EOF");
-	line = get_next_line(0);
-	ft_putendl_fd(line, 1);
-	free(line);
-	return (0);
-}
