@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
+/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/11 03:12:55 by ismail           ###   ########.fr       */
+/*   Updated: 2025/03/11 17:18:41 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	main(void)
 
 	envp = set_envp();
 	input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
-	history_fd = open_wraper(input, O_RDWR | O_CREAT | O_APPEND, 0666);
+	history_fd = open_wrapper(input, O_RDWR | O_CREAT | O_APPEND, 0666);
 	load_history(history_fd);
 	free(input);
 	while (1)
@@ -69,9 +69,7 @@ int	main(void)
 			write(history_fd, "\n", 1);
 		}
 		list = parse(input, envp);
-		printf("\n		PARSED LIST\n\n");
-		print_list(list, 1);
-		// execute(list);
+		execute(list, envp);
 		free(input);
 	}
 	close(history_fd);

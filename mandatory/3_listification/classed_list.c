@@ -131,9 +131,9 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 			current = cmd;
 		}
 		prev = current;
-		current = current->next;
-		if (cmd)
+		if (current == cmd)
 			cmd->redirections = keep_only_redirections(cmd->redirections);
+		current = current->next;
 	}
 
 	return (head);

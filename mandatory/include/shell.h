@@ -49,26 +49,29 @@ typedef struct s_list
 	struct s_list	*redirections;
 }	t_list;
 
-// envp:
-t_envp	*set_envp(void);
-char	*ft_get_env_val(t_envp *envp, char *var_name);
-
-// Wrapers: 
-int		open_wraper(char *file, int open_mode, int create_permissions);
-
-// Errors: 
-void	error(char *error_prefix);
-int		syntax_error(char **tokens, char *error_prefix);
-
-// command line Utils:
-char	*get_prompt(t_envp *envp);
-void	load_history(int fd);
-
 //expander:
 char	*expand_env_variable(char *cmd_line, t_envp *envp);
 
 // tokenize:
 char	**tokenize(char *cmd);
+
+//classed list:
+t_list	*create_list(char **tokens);
+
+// Execute:
+void	execute(t_list *list, t_envp *envp);
+
+// envp:
+t_envp	*set_envp(void);
+char	*ft_get_env_val(t_envp *envp, char *var_name);
+
+// wrappers: 
+int		open_wrapper(char *file, int open_mode, int create_permissions);
+void	ft_dup2(int fd1, int fd2);
+
+// Errors: 
+void	error(char *error_prefix);
+int		syntax_error(char **tokens, char *error_prefix);
 
 //tokenize utils:
 int		is_special_token(char *token);
@@ -76,9 +79,6 @@ int		is_special_operator(char c);
 int		is_double_symbol(char *input, int pos);
 void	skip_quoted_section(char *input, int *pos, char quote);
 int		validate_tokens(char **tokens);
-
-//classed list:
-t_list	*create_list(char **tokens);
 
 // classed list utils:
 t_list	*keep_only_redirections(t_list *head);
@@ -88,6 +88,11 @@ t_list	*redirections(t_list *node, t_list *cmd);
 t_list	*closest_cmd(t_list *head);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
-// Execute:
+// execute utils:
+void	handle_here_doc(char *delimiter);
+
+// command line Utils:
+char	*get_prompt(t_envp *envp);
+void	load_history(int fd);
 
 #endif

@@ -1,6 +1,9 @@
 NAME = minishell
 
 CC = cc
+
+FSANITIZE = -fsanitize=address -g
+
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
          -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
@@ -62,6 +65,8 @@ SRC = 1_expansion/expand.c \
 	2_tokenization/tokenize_utils.c \
 	3_listification/classed_list.c \
 	3_listification/classed_list_utils.c \
+	4_execution/execute.c \
+	4_execution/execute_utils.c \
 	utils/cmdline_utils.c \
 	utils/envp_handler.c \
 	utils/wrappers.c \
@@ -72,7 +77,7 @@ SRC = 1_expansion/expand.c \
 all: $(NAME)
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) 
 
 $(LIBFT):
 	make -C ../libft
