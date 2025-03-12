@@ -46,6 +46,7 @@ char	**envp_to_char(t_envp *envp)
 		count++;
 		envp = envp->next;
 	}
+	result[count] = NULL;
 	return (result);
 }
 
@@ -132,21 +133,12 @@ void	execute(t_list *list, t_envp *envp)
 		if (current->type == PIPE)
 			prev_pipe = current;
 		current = current->next;
-		if (!current && prev_pipe)
-		{
-			close(prev_pipe->pipe_fds[0]);
-			close(prev_pipe->pipe_fds[1]);
-		}
+	}
+	if (prev_pipe)
+	{
+		close(prev_pipe->pipe_fds[0]);
+		close(prev_pipe->pipe_fds[1]);
 	}
 	while (wait(NULL) > 0)
 		;
-	while (list)
-	{
-		if (list->type == PIPE)
-		{
-			close(list->pipe_fds[0]);
-			close(list->pipe_fds[1]);
-		}
-		list = list->next;
-	}
 }

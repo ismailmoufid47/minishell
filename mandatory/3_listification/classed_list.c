@@ -27,8 +27,7 @@ void	print_list(t_list *list, int tab_count)
 			printf("	 OUT");
 		else if (list->type == PIPE)
 		{
-			printf("       PIPE:  %s", list->value);
-			printf(",  FDS:\n");
+			printf("       PIPE  FDS:\n");
 			printf("		IN:%d\n", list->pipe_fds[0]);
 			printf("		OUT:%d\n", list->pipe_fds[1]);
 		}
@@ -53,7 +52,7 @@ void	print_list(t_list *list, int tab_count)
 			printf("	  ↓\n");
 		}
 	}
-	printf("\n");
+	printf("\n\n");
 }
 
 t_list	*handle_cmd_red(t_list *head, t_node_type type)
