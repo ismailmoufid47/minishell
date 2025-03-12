@@ -43,10 +43,11 @@ typedef struct s_envp{
 typedef struct s_list
 {
 	char			*value;
-	struct s_list	*next;
-	t_node_type		type;
 	int				is_redirected;
 	struct s_list	*redirections;
+	int				pipe_fds[2];
+	struct s_list	*next;
+	t_node_type		type;
 }	t_list;
 
 //expander:
@@ -67,6 +68,7 @@ char	*ft_get_env_val(t_envp *envp, char *var_name);
 
 // wrappers: 
 int		open_wrapper(char *file, int open_mode, int create_permissions);
+void	pipe_wrapper(int *pipe_fd);
 void	ft_dup2(int fd1, int fd2);
 
 // Errors: 

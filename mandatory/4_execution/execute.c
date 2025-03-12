@@ -12,20 +12,15 @@ void	redirect(t_list *redirections)
 		if (current->type == IN)
 			ft_dup2(open_wrapper(file, O_RDONLY, 0), 0);
 		if (current->type == OUT)
-			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT, 0200), 0);
+			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT, 0666), 1);
 		if (current->type == APP)
-			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT | O_APPEND, 0200), 0);
+			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT | O_APPEND, 0666), 1);
 		if (current->type == HDOC)
 			handle_here_doc(file);
 		current = current->next->next;
 	}
 }
 
-void	pipe_wrapper(int *pipe_fd)
-{
-	if (pipe(pipe_fd) == -1)
-		error(ft_strdup("pipe"));
-}
 
 char	**envp_to_char(t_envp *envp)
 {
@@ -34,6 +29,7 @@ char	**envp_to_char(t_envp *envp)
 	char	**result;
 	char	*tmp;
 
+	count = 0;
 	current = envp;
 	while (current)
 	{
@@ -81,59 +77,76 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	return (free(cmd_path), (ft_free_split(path)), NULL);
 }
 
-void	execute_cmd(t_list *cmd, t_envp *envp)
+void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
 	char	*cmd_path;
 	char	**args;
 
+	if (prev)
+	{
+		ft_dup2(prev->pipe_fds[0], STDIN_FILENO);
+		close(prev->pipe_fds[1]);
+	}
+	if (cmd->next)
+	{
+		ft_dup2(cmd->next->pipe_fds[1], STDOUT_FILENO);
+		close(cmd->next->pipe_fds[0]);
+	}
 	if (cmd->is_redirected)
 		redirect(cmd->redirections);
 	envp_char = envp_to_char(envp);
 	args = ft_split(cmd->value, ' ');
-	cmd_path = get_cmd_path(cmd->value, envp_char);
+	cmd_path = get_cmd_path(args[0], envp_char);
 	execve(cmd_path, args, envp_char);
-	error(ft_strdup(args[0]));
+	error(ft_strdup("execve"));
 
 }
 
 void	execute(t_list *list, t_envp *envp)
 {
 	t_list	*current;
-	int		pipe_fd[2];
+	t_list	*prev;
+	t_list	*prev_pipe;
 	int		pid;
 
 	current = list;
+	prev = NULL;
+	prev_pipe = NULL;
 	while (current)
 	{
+		if (current->type == PIPE && prev_pipe)
+		{
+			close(prev_pipe->pipe_fds[0]);
+			close(prev_pipe->pipe_fds[1]);
+		}
 		if (current->type == CMD)
 		{
-			if (current->next && current->next->type == PIPE)
-			{
-				pipe_wrapper(pipe_fd);
-				ft_dup2(pipe_fd[1], STDOUT_FILENO);
-				pid = fork();
-				if (pid == 0)
-					execute_cmd(current, envp);
-				else if (pid > 0)
-					ft_dup2(pipe_fd[0], STDIN_FILENO);
-				else
-					error(ft_strdup("fork"));
-			}
-			else
-			{
-				pid = fork();
-				if (pid == 0)
-					execute_cmd(current, envp);
-				else if (pid == -1)
-					error(ft_strdup("fork"));
-			}
+			pid = fork();
+			if (pid == 0)
+				execute_cmd(current, envp, prev);
+			else if (pid == -1)
+				error(ft_strdup("fork"));
 		}
+		prev = current;
+		if (current->type == PIPE)
+			prev_pipe = current;
 		current = current->next;
+		if (!current && prev_pipe)
+		{
+			close(prev_pipe->pipe_fds[0]);
+			close(prev_pipe->pipe_fds[1]);
+		}
 	}
-	if (pid > 0)
+	while (wait(NULL) > 0)
+		;
+	while (list)
 	{
-		close(0);
-		close(1);
+		if (list->type == PIPE)
+		{
+			close(list->pipe_fds[0]);
+			close(list->pipe_fds[1]);
+		}
+		list = list->next;
 	}
 }

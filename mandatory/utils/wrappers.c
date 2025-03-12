@@ -1,6 +1,12 @@
 
 #include "../include/shell.h"
 
+void	pipe_wrapper(int *pipe_fd)
+{
+	if (pipe(pipe_fd) == -1)
+		error(ft_strdup("pipe"));
+}
+
 int	open_wrapper(char *file, int open_mode, int create_permissions)
 {
 	int	fd;
