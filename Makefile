@@ -9,6 +9,8 @@ MANDATORY_FILES = mandatory/1_expansion/expand.c \
 			mandatory/2_tokenization/tokenize_utils.c \
 			mandatory/3_listification/classed_list.c \
 			mandatory/3_listification/classed_list_utils.c \
+			mandatory/4_execution/execute.c \
+			mandatory/4_execution/execute_utils.c \
 			mandatory/Makefile \
 			mandatory/bin/Makefile \
 			mandatory/bin/echo.c \
