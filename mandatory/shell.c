@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/12 21:51:29 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/03/13 19:44:08 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	tokens = tokenize(cmd_line);
 	if (!validate_tokens(tokens))
 		return (NULL);
-	print_tokens(tokens);
+	// print_tokens(tokens);
 	list = create_list(tokens);
-	print_list(list, 0);
+	// print_list(list, 0);
 	return (list);
 }
 

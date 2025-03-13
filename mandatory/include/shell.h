@@ -42,12 +42,12 @@ typedef struct s_envp{
 
 typedef struct s_list
 {
+	t_node_type		type;
 	char			*value;
 	int				is_redirected;
 	struct s_list	*redirections;
 	int				pipe_fds[2];
 	struct s_list	*next;
-	t_node_type		type;
 }	t_list;
 
 //to be deleted
@@ -69,6 +69,13 @@ void	execute(t_list *list, t_envp *envp);
 // envp:
 t_envp	*set_envp(void);
 char	*ft_get_env_val(t_envp *envp, char *var_name);
+
+// Built-ins:
+void	pwd(t_envp *envp);
+void	cd(char *full_cmd, t_envp	*envp);
+
+// Built-ins utils:
+char	*get_cwd(t_envp *envp);
 
 // wrappers: 
 int		open_wrapper(char *file, int open_mode, int create_permissions);
@@ -96,9 +103,11 @@ t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
 void	handle_here_doc(char *delimiter);
+char	**split_zayda_naghza(char *full_cmd);
 
 // command line Utils:
 char	*get_prompt(t_envp *envp);
 void	load_history(int fd);
+
 
 #endif

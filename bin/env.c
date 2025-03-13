@@ -4,7 +4,6 @@ void	print_envp(char **envp)
 {
 	if (*envp)
 	{
-		printf
 		print_envp(&(*++envp));
 		// if (envp[0][0] != '?')
 			printf("%s\n", *envp);

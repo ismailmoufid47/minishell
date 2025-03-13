@@ -78,7 +78,7 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	return (free(cmd_path), (ft_free_split(path)), NULL);
 }
 
-char **split_zayda_naghza(char *full_cmd)
+char	**split_zayda_naghza(char *full_cmd)
 {
 	int		i;
 	char	**tokens;
@@ -96,6 +96,12 @@ char **split_zayda_naghza(char *full_cmd)
 		i++;
 	}
 	return (tokens);
+}
+
+int	is_built_in(char *cmd)
+{
+	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "env")
+		|| !ft_strcmp(cmd, "pwd"));
 }
 
 void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
@@ -117,15 +123,15 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	if (cmd->is_redirected)
 		redirect(cmd->redirections);
 	envp_char = envp_to_char(envp);
-	//args = ft_split(cmd->value, ' ');
 	args = split_zayda_naghza(cmd->value);
-	printf("args\n");
-	print_tokens(args);
-	cmd_path = get_cmd_path(args[0], envp_char);
+	if (is_built_in(args[0]))
+		cmd_path = ft_strjoin("./bin/", args[0]);
+	else
+		cmd_path = get_cmd_path(args[0], envp_char);
+	printf("path: %s\n", cmd_path);
 	if (cmd_path)
 		execve(cmd_path, args, envp_char);
 	error(args[0]);
-
 }
 
 void	execute(t_list *list, t_envp *envp)
@@ -133,7 +139,8 @@ void	execute(t_list *list, t_envp *envp)
 	t_list	*current;
 	t_list	*prev;
 	t_list	*prev_pipe;
-	int		pid;
+	pid_t	pid;
+	int		status;
 
 	current = list;
 	prev = NULL;
@@ -141,8 +148,11 @@ void	execute(t_list *list, t_envp *envp)
 	while (current)
 	{
 		if (current->type == PIPE && prev_pipe)
-			close_2(prev_pipe->pipe_fds[1], prev_pipe->pipe_fds[1]);
-		if (current->type == CMD)
+			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
+		if (!ft_strncmp(current->value, "cd ", 3)
+			|| !ft_strcmp(current->value, "cd"))
+			cd(current->value, envp);
+		else if (current->type == CMD)
 		{
 			pid = fork();
 			if (pid == 0)
@@ -157,6 +167,18 @@ void	execute(t_list *list, t_envp *envp)
 	}
 	if (prev_pipe)
 		close_2(prev_pipe->pipe_fds[1], prev_pipe->pipe_fds[1]);
+	while (list)
+	{
+		if (list->type == PIPE)
+			close_2(list->pipe_fds[0], list->pipe_fds[1]);
+		list = list->next;
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+	{
+		free(envp->value);
+		envp->value = ft_itoa(WEXITSTATUS(status));
+	}
 	while (wait(NULL) > 0)
 		;
 }
