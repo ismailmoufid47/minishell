@@ -78,6 +78,26 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	return (free(cmd_path), (ft_free_split(path)), NULL);
 }
 
+char **split_zayda_naghza(char *full_cmd)
+{
+	int		i;
+	char	**tokens;
+
+	i = 0;
+	tokens = tokenize(full_cmd);
+	while (tokens[i])
+	{
+		if (tokens[i][0] == '\'' || tokens[i][0] == '"')
+		{
+			if (tokens[i][0] == tokens[i][ft_strlen(tokens[i]) - 1])
+				tokens[i][ft_strlen(tokens[i]) - 1] = 0;
+			tokens[i] = &tokens[i][1];
+		}
+		i++;
+	}
+	return (tokens);
+}
+
 void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
@@ -97,10 +117,14 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	if (cmd->is_redirected)
 		redirect(cmd->redirections);
 	envp_char = envp_to_char(envp);
-	args = ft_split(cmd->value, ' ');
+	//args = ft_split(cmd->value, ' ');
+	args = split_zayda_naghza(cmd->value);
+	printf("args\n");
+	print_tokens(args);
 	cmd_path = get_cmd_path(args[0], envp_char);
-	execve(cmd_path, args, envp_char);
-	error(ft_strdup("execve"));
+	if (cmd_path)
+		execve(cmd_path, args, envp_char);
+	error(args[0]);
 
 }
 
@@ -117,10 +141,7 @@ void	execute(t_list *list, t_envp *envp)
 	while (current)
 	{
 		if (current->type == PIPE && prev_pipe)
-		{
-			close(prev_pipe->pipe_fds[0]);
-			close(prev_pipe->pipe_fds[1]);
-		}
+			close_2(prev_pipe->pipe_fds[1], prev_pipe->pipe_fds[1]);
 		if (current->type == CMD)
 		{
 			pid = fork();
@@ -135,10 +156,7 @@ void	execute(t_list *list, t_envp *envp)
 		current = current->next;
 	}
 	if (prev_pipe)
-	{
-		close(prev_pipe->pipe_fds[0]);
-		close(prev_pipe->pipe_fds[1]);
-	}
+		close_2(prev_pipe->pipe_fds[1], prev_pipe->pipe_fds[1]);
 	while (wait(NULL) > 0)
 		;
 }

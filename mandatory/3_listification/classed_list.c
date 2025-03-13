@@ -106,6 +106,8 @@ t_list	*join_words(t_list *head)
 	}
 	head = handle_cmd_red(head, IN);
 	head = handle_cmd_red(head, OUT);
+	head = handle_cmd_red(head, HDOC);
+	head = handle_cmd_red(head, APP);
 	return (head);
 }
 

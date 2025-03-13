@@ -94,5 +94,4 @@ void	load_history(int fd)
 		free(line);
 		line = get_next_line(fd);
 	}
-	close(fd);
 }

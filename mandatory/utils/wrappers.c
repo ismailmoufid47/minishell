@@ -32,3 +32,9 @@ void	cd(char *path)
 	if (chdir(path) == -1)
 		error(ft_strdup("cd"));
 }
+
+void	close_2(int fd1, int fd2)
+{
+	close(fd1);
+	close(fd2);
+}

@@ -18,8 +18,7 @@ void	handle_here_doc(char *delimiter)
 	}
 	if (!input)
 	{
-		close(fd1);
-		close(fd2);
+		close_2(fd1, fd2);
 		ft_putendl_fd("Minishell: here_doc:  EOF - CTL + D", 2);
 		exit(1);
 	}

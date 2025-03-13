@@ -50,6 +50,10 @@ typedef struct s_list
 	t_node_type		type;
 }	t_list;
 
+//to be deleted
+void	print_tokens(char **tokens);
+void	print_list(t_list *list, int tab_count);
+
 //expander:
 char	*expand_env_variable(char *cmd_line, t_envp *envp);
 
@@ -70,6 +74,7 @@ char	*ft_get_env_val(t_envp *envp, char *var_name);
 int		open_wrapper(char *file, int open_mode, int create_permissions);
 void	pipe_wrapper(int *pipe_fd);
 void	ft_dup2(int fd1, int fd2);
+void	close_2(int fd1, int fd2);
 
 // Errors: 
 void	error(char *error_prefix);
@@ -85,7 +90,6 @@ int		validate_tokens(char **tokens);
 // classed list utils:
 t_list	*keep_only_redirections(t_list *head);
 t_list	*join_words(t_list *head);
-void	print_list(t_list *list, int tab_count);
 t_list	*redirections(t_list *node, t_list *cmd);
 t_list	*closest_cmd(t_list *head);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);

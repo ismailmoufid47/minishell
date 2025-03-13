@@ -33,7 +33,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 
 	list = NULL;
 	cmd_line = expand_env_variable(cmd_line, envp);
-	printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
+	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
 	if (!validate_tokens(tokens))
 		return (NULL);
@@ -49,6 +49,7 @@ int	main(void)
 	t_list	*list;
 	int		history_fd;
 	t_envp	*envp;
+	char	*prompt;
 
 	envp = set_envp();
 	input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
@@ -57,7 +58,9 @@ int	main(void)
 	free(input);
 	while (1)
 	{
-		input = readline(get_prompt(envp));
+		prompt = get_prompt(envp);
+		input = readline(prompt);
+		free(prompt);
 		if (input == NULL)
 			exit(0);
 		if (*input == 0)
