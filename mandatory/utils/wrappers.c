@@ -72,6 +72,29 @@ char	*get_cwd(t_envp *envp)
 	return (NULL);
 }
 
+void	export(char *full_cmd, t_envp *envp)
+{
+	char	**args;
+	int		i;
+
+	args = split_zayda_naghza(full_cmd);
+	i = 1;
+	while (args[i])
+	{
+		if (ft_strchr(args[i], '='))
+		{
+			if (ft_strchr(args[i], '=') == args[i])
+			{
+				ft_putstr_fd("Minishell: export: `", 2);
+				ft_putstr_fd(args[i], 2);
+				perror("'");
+			}
+			
+		}
+		i++;
+	}
+}
+
 void	close_2(int fd1, int fd2)
 {
 	close(fd1);

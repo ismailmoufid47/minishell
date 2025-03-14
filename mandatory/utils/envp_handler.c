@@ -11,6 +11,17 @@ char	*ft_get_env_val(t_envp *envp, char *var_name)
 	return (NULL);
 }
 
+t_envp	*get_env_node(t_envp *envp, char *var_name)
+{
+	while (envp)
+	{
+		if (!ft_strcmp(var_name, envp->name))
+			return (envp);
+		envp = envp->next;
+	}
+	return (NULL);
+}
+
 t_envp	*create_envp_node(char *var)
 {
 	t_envp	*node;

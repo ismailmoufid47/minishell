@@ -57,7 +57,7 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	int		i;
 
 	i = 0;
-	if (cmd && !access(cmd, X_OK) && strchr(cmd, '/'))
+	if (cmd && !access(cmd, X_OK) && ft_strchr(cmd, '/'))
 		return (cmd);
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
@@ -128,7 +128,6 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		cmd_path = ft_strjoin("./bin/", args[0]);
 	else
 		cmd_path = get_cmd_path(args[0], envp_char);
-	printf("path: %s\n", cmd_path);
 	if (cmd_path)
 		execve(cmd_path, args, envp_char);
 	error(args[0]);
@@ -152,6 +151,9 @@ void	execute(t_list *list, t_envp *envp)
 		if (!ft_strncmp(current->value, "cd ", 3)
 			|| !ft_strcmp(current->value, "cd"))
 			cd(current->value, envp);
+		if (!ft_strncmp(current->value, "export ", 7)
+			|| !ft_strcmp(current->value, "export"))
+			export(current->value, envp);
 		else if (current->type == CMD)
 		{
 			pid = fork();

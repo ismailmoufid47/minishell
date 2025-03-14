@@ -89,8 +89,11 @@ void	load_history(int fd)
 	line = get_next_line(fd);
 	while (line)
 	{
-		line[ft_strlen(line) - 1] = '\0';
-		add_history(line);
+		if (ft_strlen(line) > 0)
+		{
+			line[ft_strlen(line) - 1] = '\0';
+			add_history(line);
+		}
 		free(line);
 		line = get_next_line(fd);
 	}

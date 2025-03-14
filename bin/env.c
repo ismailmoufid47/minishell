@@ -2,12 +2,13 @@
 
 void	print_envp(char **envp)
 {
-	if (*envp)
-	{
-		print_envp(&(*++envp));
-		// if (envp[0][0] != '?')
-			printf("%s\n", *envp);
-	}
+	int	i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	while (--i > 0)
+		printf("%s\n", envp[i]);
 }
 
 int	main(int argc, char	**argv, char **envp)

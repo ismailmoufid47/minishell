@@ -73,6 +73,7 @@ char	*ft_get_env_val(t_envp *envp, char *var_name);
 // Built-ins:
 void	pwd(t_envp *envp);
 void	cd(char *full_cmd, t_envp	*envp);
+void	export(char *full_cmd, t_envp *envp);
 
 // Built-ins utils:
 char	*get_cwd(t_envp *envp);
