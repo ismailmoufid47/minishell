@@ -186,5 +186,6 @@ t_list	*create_list(char **tokens)
 	head = join_words(head);
 	head = join_words(head);
 	head = remove_red_and_add_it_to_cmd(head);
+	
 	return (head);
 }

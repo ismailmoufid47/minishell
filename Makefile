@@ -58,6 +58,8 @@ MANDATORY_FILES = mandatory/1_expansion/expand.c \
 			mandatory/3_listification/classed_list_utils.c \
 			mandatory/4_execution/execute.c \
 			mandatory/4_execution/execute_utils.c \
+			mandatory/builtins/builtins.c \
+			mandatory/builtins/builtins_utils.c \
 			mandatory/Makefile \
 			mandatory/bin/Makefile \
 			mandatory/bin/echo.c \

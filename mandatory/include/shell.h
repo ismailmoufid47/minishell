@@ -69,6 +69,9 @@ void	execute(t_list *list, t_envp *envp);
 // envp:
 t_envp	*set_envp(void);
 char	*ft_get_env_val(t_envp *envp, char *var_name);
+t_envp	*create_envp_node(char *var);
+char	**envp_to_char(t_envp *envp);
+t_envp	*remove_envp_var(t_envp *envp, char *name);
 
 // Built-ins:
 void	pwd(t_envp *envp);
@@ -77,6 +80,8 @@ void	export(char *full_cmd, t_envp *envp);
 
 // Built-ins utils:
 char	*get_cwd(t_envp *envp);
+int		is_bin(char *cmd);
+int		is_valid_export_argument(char *arg);
 
 // wrappers: 
 int		open_wrapper(char *file, int open_mode, int create_permissions);
@@ -86,6 +91,7 @@ void	close_2(int fd1, int fd2);
 
 // Errors: 
 void	error(char *error_prefix);
+void	export_error(char *identifier);
 int		syntax_error(char **tokens, char *error_prefix);
 
 //tokenize utils:

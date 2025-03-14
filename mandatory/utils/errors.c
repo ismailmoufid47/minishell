@@ -16,3 +16,10 @@ int	syntax_error(char **tokens, char *error_prefix)
 	ft_free_split(tokens);
 	return (0);
 }
+
+void	export_error(char *identifier)
+{
+	ft_putstr_fd("Minishell: export: `", 2);
+	ft_putstr_fd(identifier, 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
+}

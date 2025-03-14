@@ -21,35 +21,6 @@ void	redirect(t_list *redirections)
 	}
 }
 
-
-char	**envp_to_char(t_envp *envp)
-{
-	int		count;
-	t_envp	*current;
-	char	**result;
-	char	*tmp;
-
-	count = 0;
-	current = envp;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	result = malloc((count + 1) * sizeof(char *));
-	count = 0;
-	while (envp)
-	{
-		tmp = ft_strjoin(envp->name, "=");
-		result[count] = ft_strjoin(tmp, envp->value);
-		free(tmp);
-		count++;
-		envp = envp->next;
-	}
-	result[count] = NULL;
-	return (result);
-}
-
 char	*get_cmd_path(char *cmd, char *envp[])
 {
 	char	*cmd_path;
@@ -78,32 +49,6 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	return (free(cmd_path), (ft_free_split(path)), NULL);
 }
 
-char	**split_zayda_naghza(char *full_cmd)
-{
-	int		i;
-	char	**tokens;
-
-	i = 0;
-	tokens = tokenize(full_cmd);
-	while (tokens[i])
-	{
-		if (tokens[i][0] == '\'' || tokens[i][0] == '"')
-		{
-			if (tokens[i][0] == tokens[i][ft_strlen(tokens[i]) - 1])
-				tokens[i][ft_strlen(tokens[i]) - 1] = 0;
-			tokens[i] = &tokens[i][1];
-		}
-		i++;
-	}
-	return (tokens);
-}
-
-int	is_built_in(char *cmd)
-{
-	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "pwd"));
-}
-
 void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
@@ -124,7 +69,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		redirect(cmd->redirections);
 	envp_char = envp_to_char(envp);
 	args = split_zayda_naghza(cmd->value);
-	if (is_built_in(args[0]))
+	if (is_bin(args[0]))
 		cmd_path = ft_strjoin("./bin/", args[0]);
 	else
 		cmd_path = get_cmd_path(args[0], envp_char);
@@ -151,7 +96,7 @@ void	execute(t_list *list, t_envp *envp)
 		if (!ft_strncmp(current->value, "cd ", 3)
 			|| !ft_strcmp(current->value, "cd"))
 			cd(current->value, envp);
-		if (!ft_strncmp(current->value, "export ", 7)
+		else if (!ft_strncmp(current->value, "export ", 7)
 			|| !ft_strcmp(current->value, "export"))
 			export(current->value, envp);
 		else if (current->type == CMD)
