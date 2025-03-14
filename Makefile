@@ -87,7 +87,7 @@ bonus: $(BONUS_FILES)
 
 clean:
 	make -C mandatory clean
-	make -C bonus clean
+# 	make -C bonus clean
 
 fclean:
 	make -C mandatory fclean
