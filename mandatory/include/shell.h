@@ -46,6 +46,7 @@ typedef struct s_list
 	char			*value;
 	int				is_redirected;
 	struct s_list	*redirections;
+	char 			**args;
 	int				pipe_fds[2];
 	struct s_list	*next;
 }	t_list;
@@ -75,8 +76,8 @@ t_envp	*remove_envp_var(t_envp *envp, char *name);
 
 // Built-ins:
 void	pwd(t_envp *envp);
-void	cd(char *full_cmd, t_envp	*envp);
-void	export(char *full_cmd, t_envp *envp);
+void	cd(char **args, t_envp	*envp);
+void	export(char **args, t_envp *envp);
 
 // Built-ins utils:
 char	*get_cwd(t_envp *envp);
@@ -103,14 +104,12 @@ int		validate_tokens(char **tokens);
 
 // classed list utils:
 t_list	*keep_only_redirections(t_list *head);
-t_list	*join_words(t_list *head);
 t_list	*redirections(t_list *node, t_list *cmd);
 t_list	*closest_cmd(t_list *head);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
 void	handle_here_doc(char *delimiter);
-char	**split_zayda_naghza(char *full_cmd);
 
 // command line Utils:
 char	*get_prompt(t_envp *envp);

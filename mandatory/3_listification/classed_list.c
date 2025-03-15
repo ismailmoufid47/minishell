@@ -41,6 +41,8 @@ void	print_list(t_list *list, int tab_count)
 				printf(",  REDIRECTIONS:\n");
 				print_list(list->redirections, tab_count + 1);
 			}
+			printf("args: \n");
+			print_tokens(list->args);
 		}
 		list = list->next;
 		if (list)
@@ -55,10 +57,9 @@ void	print_list(t_list *list, int tab_count)
 	printf("\n\n");
 }
 
-t_list	*handle_cmd_red(t_list *head, t_node_type type)
+t_list	*handle_cmd_red(t_list *head, t_node_type type , int *changed)
 {
 	t_list	*current;
-	t_list	*tmp;
 	t_list	*prev;
 	t_list	*prev_prev;
 
@@ -68,9 +69,10 @@ t_list	*handle_cmd_red(t_list *head, t_node_type type)
 		if (current->type == type && prev
 			&& prev->type == CMD && current->next && prev_prev)
 		{
-			prev_prev->next = ((tmp = prev), current);
-			tmp->next = current->next->next;
-			current->next->next = tmp;
+			prev_prev->next = current;
+			prev->next = current->next->next;
+			current->next->next = prev;
+			*changed = 1;
 		}
 		else if (current->type == type
 			&& prev && prev->type == CMD && current->next && !prev_prev)
@@ -78,40 +80,12 @@ t_list	*handle_cmd_red(t_list *head, t_node_type type)
 			head = current;
 			prev->next = current->next->next;
 			current->next->next = prev;
+			*changed = 1;
 		}
 		current = ((prev_prev = prev), (prev = current), current->next);
 	}
 	return (head);
 }
-
-t_list	*join_words(t_list *head)
-{
-	t_list	*current;
-	t_list	*tmp;
-
-	current = head;
-	while (current)
-	{
-		if (current->type == CMD && current->next && current->next->type == CMD)
-		{
-			current->value = ft_strjoin(current->value, " ");
-			current->value = ft_strjoin(current->value, current->next->value);
-			tmp = current->next;
-			current->next = tmp->next;
-			free(tmp);
-			current = head;
-			continue ;
-		}
-		current = current->next;
-	}
-	head = handle_cmd_red(head, IN);
-	head = handle_cmd_red(head, OUT);
-	head = handle_cmd_red(head, HDOC);
-	head = handle_cmd_red(head, APP);
-	return (head);
-}
-
-
 
 // the cmd is always after the redirections
 t_list *remove_red_and_add_it_to_cmd(t_list *head)
@@ -142,6 +116,53 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 		current = current->next;
 	}
 
+	return (head);
+}
+
+int	count_args(t_list *cmd)
+{
+	int	count;
+
+	count = 0;
+	while (cmd && cmd->type == CMD)
+	{
+		count++;
+		cmd = cmd->next;
+	}
+	return (count);
+}
+
+t_list	*extract_args_and_remove_them(t_list *head)
+{
+	t_list	*current;
+	t_list	*cmd;
+	int		i;
+
+	current = head;
+	while (current)
+	{
+		if (current->type == CMD)
+		{
+			i = 0;
+			current->args = malloc(sizeof(char *) * (count_args(current) + 1));
+			cmd = current;
+			while (current && current->type == CMD)
+			{
+				cmd->args[i] = current->value;
+				if (current != cmd)
+				{
+					cmd->next = current->next;
+					free(current);
+					current = cmd;
+				}
+				i++;
+				current = current->next;
+			}
+			cmd->args[i] = NULL;
+		}
+		if (current)
+			current = current->next;
+	}
 	return (head);
 }
 
@@ -183,9 +204,17 @@ t_list	*create_list(char **tokens)
 		}
 		i++;
 	}
-	head = join_words(head);
-	head = join_words(head);
+	while (1)
+	{
+		i = 0;
+		head = handle_cmd_red(head, IN, &i);
+		head = handle_cmd_red(head, OUT, &i);
+		head = handle_cmd_red(head, HDOC, &i);
+		head = handle_cmd_red(head, APP, &i);
+		if (!i)
+			break ;
+	}
 	head = remove_red_and_add_it_to_cmd(head);
-	
+	head = extract_args_and_remove_them(head);
 	return (head);
 }

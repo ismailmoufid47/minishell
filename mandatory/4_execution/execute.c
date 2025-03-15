@@ -53,7 +53,6 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
 	char	*cmd_path;
-	char	**args;
 
 	if (prev)
 	{
@@ -68,14 +67,13 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	if (cmd->is_redirected)
 		redirect(cmd->redirections);
 	envp_char = envp_to_char(envp);
-	args = split_zayda_naghza(cmd->value);
-	if (is_bin(args[0]))
-		cmd_path = ft_strjoin("./bin/", args[0]);
+	if (is_bin(cmd->args[0]))
+		cmd_path = ft_strjoin("./bin/", cmd->args[0]);
 	else
-		cmd_path = get_cmd_path(args[0], envp_char);
+		cmd_path = get_cmd_path(cmd->args[0], envp_char);
 	if (cmd_path)
-		execve(cmd_path, args, envp_char);
-	error(args[0]);
+		execve(cmd_path, cmd->args, envp_char);
+	error(cmd->args[0]);
 }
 
 void	execute(t_list *list, t_envp *envp)
@@ -95,10 +93,10 @@ void	execute(t_list *list, t_envp *envp)
 			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
 		if (!ft_strncmp(current->value, "cd ", 3)
 			|| !ft_strcmp(current->value, "cd"))
-			cd(current->value, envp);
+			cd(current->args, envp);
 		else if (!ft_strncmp(current->value, "export ", 7)
 			|| !ft_strcmp(current->value, "export"))
-			export(current->value, envp);
+			export(current->args, envp);
 		else if (current->type == CMD)
 		{
 			pid = fork();

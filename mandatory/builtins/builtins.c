@@ -1,12 +1,10 @@
 #include "../include/shell.h"
 
-void	export(char *full_cmd, t_envp *envp)
+void	export(char **args, t_envp *envp)
 {
-	char	**args;
 	int		i;
 	t_envp	*node;
 
-	args = split_zayda_naghza(full_cmd);
 	i = 1;
 	while (args[i])
 	{
@@ -24,13 +22,11 @@ void	export(char *full_cmd, t_envp *envp)
 	}
 }
 
-void	cd(char *full_cmd, t_envp	*envp)
+void	cd(char **args, t_envp	*envp)
 {
-	char	**args;
 	char	*path;
 	char	*old_pwd;
 
-	args = split_zayda_naghza(full_cmd);
 	path = args[1];
 	if (!path)
 		path = "/";
