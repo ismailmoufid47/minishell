@@ -6,7 +6,7 @@
 /*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/15 21:56:33 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/03/16 17:52:56 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 
 	list = NULL;
 	cmd_line = expand_env_variable(cmd_line, envp);
-	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
+	printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
 	if (!validate_tokens(tokens))
 		return (NULL);
-	// print_tokens(tokens);
+	print_tokens(tokens);
 	list = create_list(tokens);
-	// print_list(list, 0);
+	print_list(list, 0);
 	return (list);
 }
 

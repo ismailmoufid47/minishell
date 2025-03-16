@@ -67,13 +67,6 @@ t_list	*create_list(char **tokens);
 // Execute:
 void	execute(t_list *list, t_envp *envp);
 
-// envp:
-t_envp	*set_envp(void);
-char	*ft_get_env_val(t_envp *envp, char *var_name);
-t_envp	*create_envp_node(char *var);
-char	**envp_to_char(t_envp *envp);
-t_envp	*remove_envp_var(t_envp *envp, char *name);
-
 // Built-ins:
 void	pwd(t_envp *envp);
 void	cd(char **args, t_envp	*envp);
@@ -81,10 +74,12 @@ void	export(char **args, t_envp *envp);
 void	unset(char **args, t_envp *envp);
 void	exit_cmd(char **args, t_envp *envp, t_list *list);
 
-// Built-ins utils:
-char	*get_cwd(t_envp *envp);
-int		is_bin(char *cmd);
-int		is_valid_export_argument(char *arg);
+// envp:
+t_envp	*set_envp(void);
+char	*ft_get_env_val(t_envp *envp, char *var_name);
+t_envp	*create_envp_node(char *var);
+char	**envp_to_char(t_envp *envp);
+t_envp	*remove_envp_var(t_envp *envp, char *name);
 
 // wrappers: 
 int		open_wrapper(char *file, int open_mode, int create_permissions);
@@ -113,9 +108,14 @@ t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 // execute utils:
 void	handle_here_doc(char *delimiter, t_envp *envp);
 
+// Built-ins utils:
+char	*get_cwd(t_envp *envp);
+int		is_bin(char *cmd);
+int		is_valid_export_argument(char *arg);
+int		is_numeric(char *arg);
+
 // command line Utils:
 char	*get_prompt(t_envp *envp);
 void	load_history(int fd);
-
 
 #endif

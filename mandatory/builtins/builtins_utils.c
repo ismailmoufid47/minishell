@@ -33,3 +33,19 @@ int	is_valid_export_argument(char *arg)
 	}
 	return (1);
 }
+
+int	is_numeric(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (arg[i] == '+' || arg[i] == '-')
+		i++;
+	while (arg[i])
+	{
+		if (!ft_isdigit(arg[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}

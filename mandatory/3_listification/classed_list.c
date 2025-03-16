@@ -41,7 +41,7 @@ void	print_list(t_list *list, int tab_count)
 				printf(",  REDIRECTIONS:\n");
 				print_list(list->redirections, tab_count + 1);
 			}
-			printf("args: \n");
+			printf(" args: \n");
 			print_tokens(list->args);
 		}
 		list = list->next;
