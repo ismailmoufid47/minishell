@@ -75,7 +75,7 @@ void	exit_cmd(char **args, t_envp *envp, t_list *list)
 	if (!args[2])
 	{
 		if (is_numeric(args[1]))
-			exit(ft_atoi(args[1]) % 255);
+			exit(ft_atoi(args[1]) % 256);
 		else
 		{
 			ft_putstr_fd("Minishell: exit: ", 2);
