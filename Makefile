@@ -67,6 +67,7 @@ MANDATORY_FILES = mandatory/1_expansion/expand.c \
 			mandatory/shell.c \
 			mandatory/include/shell.h \
 			mandatory/utils/cmdline_utils.c \
+			mandatory/utils/signal_handlers.c \
 			mandatory/utils/errors.c \
 			mandatory/utils/wrappers.c \
 			mandatory/utils/envp_handler.c

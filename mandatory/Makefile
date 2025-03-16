@@ -71,6 +71,7 @@ SRC = 1_expansion/expand.c \
 	builtins/builtins_utils.c \
 	utils/cmdline_utils.c \
 	utils/envp_handler.c \
+	utils/signal_handlers.c \
 	utils/wrappers.c \
 	utils/errors.c \
 	shell.c

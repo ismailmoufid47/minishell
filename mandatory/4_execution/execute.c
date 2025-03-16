@@ -54,6 +54,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	char	**envp_char;
 	char	*cmd_path;
 
+	signal(SIGINT, sig_int);
 	if (prev)
 	{
 		ft_dup2(prev->pipe_fds[0], STDIN_FILENO);
@@ -81,7 +82,6 @@ void	execute(t_list *list, t_envp *envp)
 	t_list	*current;
 	t_list	*prev;
 	t_list	*prev_pipe;
-	pid_t	pid;
 	int		status;
 
 	current = list;
@@ -105,10 +105,10 @@ void	execute(t_list *list, t_envp *envp)
 			exit_cmd(current->args, envp, list);
 		else if (current->type == CMD)
 		{
-			pid = fork();
-			if (pid == 0)
+			current->pid = fork();
+			if (current->pid == 0)
 				execute_cmd(current, envp, prev);
-			else if (pid == -1)
+			else if (current->pid == -1)
 				error(ft_strdup("fork"));
 		}
 		prev = current;
@@ -124,7 +124,7 @@ void	execute(t_list *list, t_envp *envp)
 			close_2(list->pipe_fds[0], list->pipe_fds[1]);
 		list = list->next;
 	}
-	waitpid(pid, &status, 0);
+	waitpid(prev->pid, &status, 0);
 	if (WIFEXITED(status))
 	{
 		free(envp->value);

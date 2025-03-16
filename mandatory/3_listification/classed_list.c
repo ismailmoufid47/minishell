@@ -201,6 +201,7 @@ t_list	*create_list(char **tokens)
 			node = token_to_node(&head, &nav, tokens[i], CMD);
 			node->is_redirected = 0;
 			node->redirections = NULL;
+			node->pid = 0;
 		}
 		i++;
 	}

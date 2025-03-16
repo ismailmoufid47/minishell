@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/03/16 17:52:56 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/03/16 22:04:39 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 
 	list = NULL;
 	cmd_line = expand_env_variable(cmd_line, envp);
-	printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
+	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
 	if (!validate_tokens(tokens))
 		return (NULL);
-	print_tokens(tokens);
+	//print_tokens(tokens);
 	list = create_list(tokens);
-	print_list(list, 0);
+	//print_list(list, 0);
 	return (list);
 }
 
@@ -51,6 +51,8 @@ int	main(void)
 	t_envp	*envp;
 	char	*prompt;
 
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, print_prompt);
 	envp = set_envp();
 	input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
 	history_fd = open_wrapper(input, O_RDWR | O_CREAT | O_APPEND, 0666);
@@ -62,7 +64,7 @@ int	main(void)
 		input = readline(prompt);
 		free(prompt);
 		if (input == NULL)
-			exit(0);
+			return (printf("exit\n"), 0);
 		if (*input == 0)
 			continue ;
 		if (*input)

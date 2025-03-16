@@ -22,6 +22,7 @@
 # include <sys/wait.h>
 
 extern char	**environ;
+int			g_signal;
 
 typedef enum e_node_type
 {
@@ -46,7 +47,8 @@ typedef struct s_list
 	char			*value;
 	int				is_redirected;
 	struct s_list	*redirections;
-	char 			**args;
+	char			**args;
+	int				pid;
 	int				pipe_fds[2];
 	struct s_list	*next;
 }	t_list;
@@ -80,6 +82,10 @@ char	*ft_get_env_val(t_envp *envp, char *var_name);
 t_envp	*create_envp_node(char *var);
 char	**envp_to_char(t_envp *envp);
 t_envp	*remove_envp_var(t_envp *envp, char *name);
+
+// Signal handelers:
+void	sig_int(int signum);
+void	print_prompt(int sig);
 
 // wrappers: 
 int		open_wrapper(char *file, int open_mode, int create_permissions);
