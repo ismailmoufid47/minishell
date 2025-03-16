@@ -1,6 +1,6 @@
 #include "../include/shell.h"
 
-void	redirect(t_list *redirections)
+void	redirect(t_list *redirections, t_envp *envp)
 {
 	t_list	*current;
 	char	*file;
@@ -16,7 +16,7 @@ void	redirect(t_list *redirections)
 		if (current->type == APP)
 			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT | O_APPEND, 0666), 1);
 		if (current->type == HDOC)
-			handle_here_doc(file);
+			handle_here_doc(file, envp);
 		current = current->next->next;
 	}
 }
@@ -65,7 +65,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		close(cmd->next->pipe_fds[0]);
 	}
 	if (cmd->is_redirected)
-		redirect(cmd->redirections);
+		redirect(cmd->redirections, envp);
 	envp_char = envp_to_char(envp);
 	if (is_bin(cmd->args[0]))
 		cmd_path = ft_strjoin("./bin/", cmd->args[0]);
@@ -97,6 +97,12 @@ void	execute(t_list *list, t_envp *envp)
 		else if (!ft_strncmp(current->value, "export ", 7)
 			|| !ft_strcmp(current->value, "export"))
 			export(current->args, envp);
+		else if (!ft_strncmp(current->value, "unset ", 6)
+			|| !ft_strcmp(current->value, "unset"))
+			unset(current->args, envp);
+		else if (!ft_strncmp(current->value, "exit ", 5)
+			|| !ft_strcmp(current->value, "exit"))
+			exit_cmd(current->args, envp, list);
 		else if (current->type == CMD)
 		{
 			pid = fork();

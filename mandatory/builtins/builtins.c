@@ -54,3 +54,58 @@ void	cd(char **args, t_envp	*envp)
 	}
 }
 
+void	unset(char **args, t_envp *envp)
+{
+	int		i;
+
+	i = 1;
+	while (args[i])
+	{
+		remove_envp_var(envp, args[i]);
+		i++;
+	}
+}
+
+int	is_numeric(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (arg[i] == '+' || arg[i] == '-')
+		i++;
+	while (arg[i])
+	{
+		if (!ft_isdigit(arg[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	exit_cmd(char **args, t_envp *envp, t_list *list)
+{
+	(void)envp;
+	(void)list;
+	ft_putendl_fd("exit", 2);
+	if (!args[1])
+		exit(0);
+	if (!args[2])
+	{
+		if (is_numeric(args[1]))
+			exit(ft_atoi(args[1]) % 255);
+		else
+		{
+			ft_putstr_fd("Minishell: exit: ", 2);
+			ft_putstr_fd(args[1], 2);
+			ft_putendl_fd(": numeric argument required", 2);
+		}
+	}
+	else if (is_numeric(args[1]))
+		ft_putendl_fd("Minishell: exit: too many arguments", 2);
+	else
+	{
+		ft_putstr_fd("Minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putendl_fd(": numeric argument required", 2);
+	}
+}

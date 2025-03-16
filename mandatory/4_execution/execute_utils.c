@@ -1,20 +1,23 @@
 #include "../include/shell.h"
 
-void	handle_here_doc(char *delimiter)
+void	handle_here_doc(char *delimiter, t_envp *envp)
 {
 	int		fd1;
 	int		fd2;
 	char	*input;
+	char	*tmp;
 
 	fd1 = open_wrapper("read_line", O_WRONLY | O_TRUNC | O_CREAT, 0600);
 	fd2 = open_wrapper("read_line", O_RDONLY, 0);
 	unlink("read_line");
-	input = readline("> ");
-	while (input && ft_strcmp(input, delimiter))
+	tmp = readline("> ");
+	while (tmp && ft_strcmp(tmp, delimiter))
 	{
+		input = expand_env_variable(tmp, envp);
 		ft_putendl_fd(input, fd1);
+		free(tmp);
 		free(input);
-		input = readline("> ");
+		tmp = readline("> ");
 	}
 	if (!input)
 	{
@@ -22,7 +25,7 @@ void	handle_here_doc(char *delimiter)
 		ft_putendl_fd("Minishell: here_doc:  EOF - CTL + D", 2);
 		exit(1);
 	}
-	free(input);
+	free(tmp);
 	close(fd1);
 	ft_dup2(fd2, 0);
 }

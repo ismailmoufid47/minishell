@@ -34,8 +34,10 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 char	*expand_env_variable(char *cmd_line, t_envp *envp)
 {
 	int	i;
+	int	expanded;
 
 	i = 0;
+	expanded = 0;
 	while (cmd_line[i])
 	{
 		if (cmd_line[i] == '\'')
@@ -46,11 +48,14 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp)
 		}
 		if (cmd_line[i] == '$')
 		{
+			expanded = 1;
 			if (cmd_line[i + 1])
 				cmd_line = search_and_replace(cmd_line, i + 1, envp);
 		}
 		if (cmd_line[i])
 			i++;
 	}
+	if (!expanded)
+		cmd_line = ft_strdup(cmd_line);
 	return (cmd_line);
 }

@@ -78,6 +78,8 @@ t_envp	*remove_envp_var(t_envp *envp, char *name);
 void	pwd(t_envp *envp);
 void	cd(char **args, t_envp	*envp);
 void	export(char **args, t_envp *envp);
+void	unset(char **args, t_envp *envp);
+void	exit_cmd(char **args, t_envp *envp, t_list *list);
 
 // Built-ins utils:
 char	*get_cwd(t_envp *envp);
@@ -109,7 +111,7 @@ t_list	*closest_cmd(t_list *head);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
-void	handle_here_doc(char *delimiter);
+void	handle_here_doc(char *delimiter, t_envp *envp);
 
 // command line Utils:
 char	*get_prompt(t_envp *envp);
