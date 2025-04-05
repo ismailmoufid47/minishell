@@ -102,6 +102,7 @@ void	close_2(int fd1, int fd2);
 
 // Errors: 
 void	error(char *error_prefix);
+void	command_not_found(char *cmd);
 void	export_error(char *identifier);
 int		syntax_error(char **tokens, char *error_prefix);
 

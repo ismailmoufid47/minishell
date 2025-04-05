@@ -70,14 +70,13 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	if (cmd->value == NULL)
 		exit (0);
 	envp_char = envp_to_char(envp);
-	printf("args %p \n", cmd->args);
 	if (is_bin(cmd->args[0]))
 		cmd_path = ft_strjoin("./bin/", cmd->args[0]);
 	else
 		cmd_path = get_cmd_path(cmd->args[0], envp_char);
 	if (cmd_path)
 		execve(cmd_path, cmd->args, envp_char);
-	error(cmd->args[0]);
+	command_not_found(cmd->args[0]);
 }
 
 void	execute(t_list *list, t_envp *envp)

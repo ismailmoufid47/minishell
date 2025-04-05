@@ -208,16 +208,12 @@ t_list	*create_list(char **tokens)
 		{
 			tmp = node->value;
 			node->value = ft_strdup(++node->value);
-			printf("to be double quoted: %s\n", tokens[i]);
-			printf("node value after: %s\n", node->value);
 			node->quote_type = SIQUOTED;
 		}
 		else if (tokens[i][0] == '"')
 		{
 			tmp = node->value;
 			node->value = ft_strdup(++node->value);
-			printf("to be sigle quoted: %s\n", tokens[i]);
-			printf("node value after: %s\n", node->value);
 			node->quote_type = DOQUOTED;
 		}
 		i++;

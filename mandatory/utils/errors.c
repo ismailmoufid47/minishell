@@ -23,3 +23,12 @@ void	export_error(char *identifier)
 	ft_putstr_fd(identifier, 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
 }
+
+void	command_not_found(char *cmd)
+{
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": command not found\n", 2);
+	free(cmd);
+	exit (127);
+}
