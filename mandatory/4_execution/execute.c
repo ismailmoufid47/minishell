@@ -67,7 +67,10 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	}
 	if (cmd->is_redirected)
 		redirect(cmd->redirections, envp);
+	if (cmd->value == NULL)
+		exit (0);
 	envp_char = envp_to_char(envp);
+	printf("args %p \n", cmd->args);
 	if (is_bin(cmd->args[0]))
 		cmd_path = ft_strjoin("./bin/", cmd->args[0]);
 	else
@@ -91,17 +94,13 @@ void	execute(t_list *list, t_envp *envp)
 	{
 		if (current->type == PIPE && prev_pipe)
 			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
-		if (!ft_strncmp(current->value, "cd ", 3)
-			|| !ft_strcmp(current->value, "cd"))
+		if (!ft_strcmp(current->value, "cd"))
 			cd(current->args, envp);
-		else if (!ft_strncmp(current->value, "export ", 7)
-			|| !ft_strcmp(current->value, "export"))
+		else if (!ft_strcmp(current->value, "export"))
 			export(current->args, envp);
-		else if (!ft_strncmp(current->value, "unset ", 6)
-			|| !ft_strcmp(current->value, "unset"))
+		else if (!ft_strcmp(current->value, "unset"))
 			unset(current->args, envp);
-		else if (!ft_strncmp(current->value, "exit ", 5)
-			|| !ft_strcmp(current->value, "exit"))
+		else if (!ft_strcmp(current->value, "exit"))
 			exit_cmd(current->args, envp, list);
 		else if (current->type == CMD)
 		{

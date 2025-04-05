@@ -32,10 +32,10 @@ void	print_list(t_list *list, int tab_count)
 			printf("		OUT:%d\n", list->pipe_fds[1]);
 		}
 		else if (list->type == FIL)
-			printf("      FILE: %s", list->value);
+			printf("      FILE: %s, quote: %d", list->value, list->quote_type);
 		else
 		{
-			printf("       CMD:  %s", list->value);
+			printf("       CMD:  %s, quote: %d", list->value, list->quote_type);
 			if (list->is_redirected)
 			{
 				printf(",  REDIRECTIONS:\n");
@@ -168,6 +168,7 @@ t_list	*extract_args_and_remove_them(t_list *head)
 
 t_list	*create_list(char **tokens)
 {
+	char	*tmp;
 	t_list	*nav;
 	t_list	*head;
 	t_list	*node;
@@ -195,13 +196,29 @@ t_list	*create_list(char **tokens)
 				|| !ft_strcmp(tokens[i - 1], ">")
 				|| !ft_strcmp(tokens[i - 1], ">>")
 				|| !ft_strcmp(tokens[i - 1], "<<")))
-			token_to_node(&head, &nav, tokens[i], FIL);
+			node = token_to_node(&head, &nav, tokens[i], FIL);
 		else
 		{
 			node = token_to_node(&head, &nav, tokens[i], CMD);
 			node->is_redirected = 0;
 			node->redirections = NULL;
 			node->pid = 0;
+		}
+		if (tokens[i][0] == '\'')
+		{
+			tmp = node->value;
+			node->value = ft_strdup(++node->value);
+			printf("to be double quoted: %s\n", tokens[i]);
+			printf("node value after: %s\n", node->value);
+			node->quote_type = SIQUOTED;
+		}
+		else if (tokens[i][0] == '"')
+		{
+			tmp = node->value;
+			node->value = ft_strdup(++node->value);
+			printf("to be sigle quoted: %s\n", tokens[i]);
+			printf("node value after: %s\n", node->value);
+			node->quote_type = DOQUOTED;
 		}
 		i++;
 	}

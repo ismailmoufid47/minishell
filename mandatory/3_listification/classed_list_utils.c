@@ -7,6 +7,7 @@ t_list	*create_list_node(char *token, int type)
 	node = malloc(sizeof(t_list));
 	node->value = token;
 	node->type = type;
+	node->quote_type = UNQUOTED;
 	node->next = NULL;
 	return (node);
 }

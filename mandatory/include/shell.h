@@ -22,7 +22,6 @@
 # include <sys/wait.h>
 
 extern char	**environ;
-int			g_signal;
 
 typedef enum e_node_type
 {
@@ -35,6 +34,13 @@ typedef enum e_node_type
 	CMD
 }	t_node_type;
 
+typedef enum e_quotation
+{
+	UNQUOTED,
+	DOQUOTED,
+	SIQUOTED
+}	t_quotation;
+
 typedef struct s_envp{
 	char			*name;
 	char			*value;
@@ -45,6 +51,7 @@ typedef struct s_list
 {
 	t_node_type		type;
 	char			*value;
+	t_quotation		quote_type;
 	int				is_redirected;
 	struct s_list	*redirections;
 	char			**args;

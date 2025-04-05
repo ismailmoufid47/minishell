@@ -37,9 +37,9 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	tokens = tokenize(cmd_line);
 	if (!validate_tokens(tokens))
 		return (NULL);
-	//print_tokens(tokens);
+	print_tokens(tokens);
 	list = create_list(tokens);
-	//print_list(list, 0);
+	print_list(list, 0);
 	return (list);
 }
 
@@ -53,6 +53,7 @@ int	main(void)
 
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, print_prompt);
+	rl_catch_signals = 0;
 	envp = set_envp();
 	input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
 	history_fd = open_wrapper(input, O_RDWR | O_CREAT | O_APPEND, 0666);
@@ -74,7 +75,8 @@ int	main(void)
 			write(history_fd, "\n", 1);
 		}
 		list = parse(input, envp);
-		execute(list, envp);
+		if (list)
+			execute(list, envp);
 		free(input);
 	}
 	close(history_fd);

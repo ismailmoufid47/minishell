@@ -64,12 +64,23 @@ char	*allocate_token(char *input, int start, int length)
 	sq_flag = ((dq_flag = 0), 0);
 	if (!token)
 		return (NULL);
+	if (input[start] == '"' || input[start] == '\'')
+	{
+		token[j] = input[start];
+		if (input[start] == '\'')
+			sq_flag = 1;
+		else
+			dq_flag = 1;
+		i++;
+		j++;
+	}
 	while (i < start + length)
 	{
 		if (input[i] == '\'' && !dq_flag)
 			sq_flag = !sq_flag;
 		else if (input[i] == '"' && !sq_flag)
 			dq_flag = !dq_flag;
+		token[j] = 0;
 		if (input[i] == '\'' && dq_flag)
 			token[j++] = input[i];
 		if (input[i] == '"' && sq_flag)
@@ -99,6 +110,7 @@ char	**extract_tokens(char **tokens, char *input)
 			break ;
 		start = i;
 		length = get_token_length(input, &i);
+		// printf("%d\n", length);
 		tokens[j++] = allocate_token(input, start, length);
 	}
 	tokens[j] = NULL;
