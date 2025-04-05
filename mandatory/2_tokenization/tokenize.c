@@ -23,6 +23,13 @@ int	get_token_count(char *input)
 				sq_flag = !sq_flag;
 			else if (input[i] == '"' && !sq_flag)
 				dq_flag = !dq_flag;
+			if (is_special_token(input + i) && !sq_flag && !dq_flag)
+			{
+				i++;
+				if (input[i] == input[i - 1])
+					i++;
+				break ;
+			}
 			i++;
 		}
 	}
@@ -37,6 +44,16 @@ int	get_token_length(char *input, int *i)
 
 	start = *i;
 	sq_flag = ((dq_flag = 0), 0);
+	if (is_special_token(input + *i))
+	{
+		(*i)++;
+		if (input[*i] == input[*i -1])
+		{
+			(*i)++;
+			return (2);
+		}
+		return (1);
+	}
 	while (input[*i])
 	{
 		if (input[*i] == '\'' && !dq_flag)
@@ -44,6 +61,8 @@ int	get_token_length(char *input, int *i)
 		else if (input[*i] == '"' && !sq_flag)
 			dq_flag = !dq_flag;
 		else if (!sq_flag && !dq_flag && input[*i] == ' ')
+			break ;
+		if (!sq_flag && !dq_flag && is_special_token(input + *i))
 			break ;
 		(*i)++;
 	}
@@ -110,7 +129,7 @@ char	**extract_tokens(char **tokens, char *input)
 			break ;
 		start = i;
 		length = get_token_length(input, &i);
-		// printf("%d\n", length);
+		printf("lenght: %d, token: %s\n", length, input + i);
 		tokens[j++] = allocate_token(input, start, length);
 	}
 	tokens[j] = NULL;
@@ -123,6 +142,7 @@ char	**tokenize(char *input)
 	char	**tokens;
 
 	token_count = get_token_count(input);
+	printf("%d\n", token_count);
 	tokens = malloc(sizeof(char *) * (token_count + 1));
 	if (!tokens)
 		return (NULL);

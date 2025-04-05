@@ -37,7 +37,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	tokens = tokenize(cmd_line);
 	if (!validate_tokens(tokens))
 		return (NULL);
-	// print_tokens(tokens);
+	print_tokens(tokens);
 	list = create_list(tokens);
 	// print_list(list, 0);
 	return (list);

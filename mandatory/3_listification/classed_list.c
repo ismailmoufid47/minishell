@@ -208,12 +208,14 @@ t_list	*create_list(char **tokens)
 		{
 			tmp = node->value;
 			node->value = ft_strdup(++node->value);
+			free(tmp);
 			node->quote_type = SIQUOTED;
 		}
 		else if (tokens[i][0] == '"')
 		{
 			tmp = node->value;
 			node->value = ft_strdup(++node->value);
+			free(tmp);
 			node->quote_type = DOQUOTED;
 		}
 		i++;
