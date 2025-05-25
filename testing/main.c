@@ -6,7 +6,7 @@
 /*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:50:37 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/05/25 20:47:17 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/05/25 21:24:37 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,54 +78,6 @@ int find_the_star(char *pattern)
 	}
 	return -1;
 }
-
-// char **match_wild_card(char **files, char *pattern)
-// {
-// 	int len = strlen(pattern);
-// 	int star = find_the_star(pattern);
-// 	char *front = NULL;
-// 	char *end = NULL;
-// 	pattern[star]  = '\0';
-// 	if (star == 0)
-// 		end = pattern + 1;
-// 	else if (star == len)
-// 		front = pattern;
-// 	else
-// 	{
-// 		front = pattern;
-// 		end = &(pattern[star]) + 1;
-// 	}
-// 	int i = 0;
-// 	while (files[i])
-// 	{
-// 		if (!(match_front(files[i], front) && match_end(files[i], end)))
-// 			files[i][0] = 0;
-// 		i++;
-// 	}
-// 	return files;
-// }
-// int	match_lit(char *file, char **lits)
-// {
-// 	if (!*list)
-// 		return (1);
-// 	if (strstr()) //ft_
-// }
-
-
-// char **match_wild_card(char **files, char *pattern)
-// {
-// 	char	**lits;
-// 	int		i;
-
-// 	lits = ft_split(pattern, '*');
-// 	i = 0;
-// 	while (files[i])
-// 	{
-// 		if (!match_lit(files[i], lits))
-// 			files[i][0] = '\0';
-// 		i++;
-// 	}
-// }
 
 // int	main(int argc, char **argv)
 // {
@@ -203,8 +155,8 @@ char **match_wild_card(char **files, const char *pattern)
 
 int main(void)
 {
-    char *files[] = {"abkbc", "foo.txt", "foobar.c", "testfoo", "foo123bar", "barfoo", NULL};
-    const char *patterns[] = {"a*bb*c", "foo*", "*bar", "fo*", "*o?3*", "*ba*", NULL};
+    char *files[] = {"abkbc","Makefile",".abebeb", NULL};
+    const char *patterns[] = {".*", NULL};
 
     for (int p = 0; patterns[p]; p++) {
         int count = 0;
