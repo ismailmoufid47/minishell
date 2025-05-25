@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:50:37 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/05/25 13:42:43 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/05/25 15:45:10 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,25 @@
 #include "../mandatory/include/shell.h"
 #include <dirent.h>
 
+typedef enum e_patt_type
+{
+	FIRST,
+	MIDDLE,
+	END
+}	t_patt_type;
+typedef struct s_pattern
+{
+	t_patt_type type;
+	char *value;
+	struct s_pattern *next;
+}	t_pattern;
+
+
 int	match_front(char *file, char *front)
 {
 	int i = 0;
+	if (front == NULL)
+		return 1;
 	while (file[i] && front[i])
 	{
 		if (file[i] != front[i])
@@ -49,6 +65,8 @@ char *rev_str(char *str)
 
 int match_end(char *file , char *end)
 {
+	if (end == NULL)
+		return 1;
 	file = rev_str(file);
 	end = rev_str(end);
 	return (match_front(file, end));
@@ -61,12 +79,51 @@ void	print_files(char **files)
 		printf("--> %s\n", files[i++]);
 }
 
-int	main()
+int find_the_star(char *pattern)
+{
+	int i = 0;
+	while (pattern[i])
+	{
+		if (pattern[i] == '*')
+			return i;
+		i++;
+	}
+	return -1;
+}
+
+char **match_wild_card(char **files, char *pattern)
+{
+	int len = strlen(pattern);
+	int star = find_the_star(pattern);
+	char *front = NULL;
+	char *end = NULL;
+	pattern[star]  = '\0';
+	if (star == 0)
+		end = pattern + 1;
+	else if (star == len)
+		front = pattern;
+	else
+	{
+		front = pattern;
+		end = &(pattern[star]) + 1;
+	}
+	int i = 0;
+	while (files[i])
+	{
+		if (!(match_front(files[i], front) && match_end(files[i], end)))
+			files[i][0] = 0;
+		i++;
+	}
+	return files;
+}
+
+int	main(int argc, char **argv)
 {
 	char			*path = ".";
 	DIR				*dir = opendir(path);
 	struct dirent *entry = 1;
-	char			*files[100];
+	char			**files = malloc(100 * sizeof(char *));
+	char			*pattern = argv[1];
 	int i = 0;
 
 	printf("dir fd --> %d\n", dir);
@@ -77,5 +134,10 @@ int	main()
 			files[i++] = entry->d_name;
 	}
 	files[i] = NULL;
+	printf("all files :\n");
 	print_files(files);
+	files = match_wild_card(files, pattern);
+	printf("after choose\n");
+	print_files(files);
+	
 }
