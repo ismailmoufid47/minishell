@@ -20,6 +20,7 @@
 # include <term.h>           			// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (alternative to <curses.h>)
 # include <errno.h>          			// perror
 # include <sys/wait.h>
+#include <termios.h>
 
 extern char	**environ;
 

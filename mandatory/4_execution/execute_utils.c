@@ -7,7 +7,8 @@ void	handle_here_doc(char *delimiter, t_envp *envp)
 	char	*input;
 	char	*tmp;
 
-	fd1 = open_wrapper("read_line", O_WRONLY | O_TRUNC | O_CREAT, 0600);
+	input = "NULL";
+	fd1 = open_wrapper("read_line", O_WRONLY | O_CREAT | O_TRUNC , 0600);
 	fd2 = open_wrapper("read_line", O_RDONLY, 0);
 	unlink("read_line");
 	tmp = readline("> ");

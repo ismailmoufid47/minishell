@@ -5,8 +5,6 @@
 
 - sort the * output
 
-- multiple heredox
-
 - heredoc signals
 
 - heredoc with no command segfaults

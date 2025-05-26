@@ -3,9 +3,11 @@
 void	redirect(t_list *redirections, t_envp *envp)
 {
 	t_list	*current;
+	int		in;
 	char	*file;
 
 	current = redirections;
+	in = dup(0);
 	while (current)
 	{
 		file = current->next->value;
@@ -16,9 +18,13 @@ void	redirect(t_list *redirections, t_envp *envp)
 		if (current->type == APP)
 			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT | O_APPEND, 0666), 1);
 		if (current->type == HDOC)
+		{
+			dup2(in, 0);
 			handle_here_doc(file, envp);
+		}
 		current = current->next->next;
 	}
+	close(in);
 }
 
 char	*get_cmd_path(char *cmd, char *envp[])
@@ -85,10 +91,12 @@ void	execute(t_list *list, t_envp *envp)
 	t_list	*prev;
 	t_list	*prev_pipe;
 	int		status;
+	struct termios old;
 
 	current = list;
 	prev = NULL;
 	prev_pipe = NULL;
+	tcgetattr(STDIN_FILENO, &old);
 	while (current)
 	{
 		if (current->type == PIPE && prev_pipe)
@@ -130,4 +138,5 @@ void	execute(t_list *list, t_envp *envp)
 	}
 	while (wait(NULL) > 0)
 		;
+	tcsetattr(STDIN_FILENO, TCSANOW, &old);
 }
