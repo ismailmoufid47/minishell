@@ -2,7 +2,7 @@ NAME = minishell
 
 CC = cc
 
-FSANITIZE = -fsanitize=address -g
+FSANITIZE =# -fsanitize=address -g
 
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
          -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include

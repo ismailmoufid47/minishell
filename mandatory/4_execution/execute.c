@@ -60,7 +60,8 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	char	**envp_char;
 	char	*cmd_path;
 
-	signal(SIGINT, sig_int);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (prev)
 	{
 		ft_dup2(prev->pipe_fds[0], STDIN_FILENO);
@@ -115,7 +116,7 @@ void	execute(t_list *list, t_envp *envp)
 			if (current->pid == 0)
 				execute_cmd(current, envp, prev);
 			else if (current->pid == -1)
-				error(ft_strdup("fork"));
+				error_fork(ft_strdup("fork"));
 		}
 		prev = current;
 		if (current->type == PIPE)
@@ -136,6 +137,8 @@ void	execute(t_list *list, t_envp *envp)
 		free(envp->value);
 		envp->value = ft_itoa(WEXITSTATUS(status));
 	}
+	else
+		envp->value = ft_itoa(WTERMSIG(status) + 128) ;
 	while (wait(NULL) > 0)
 		;
 	tcsetattr(STDIN_FILENO, TCSANOW, &old);
