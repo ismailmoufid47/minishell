@@ -92,7 +92,6 @@ char	**envp_to_char(t_envp *envp);
 t_envp	*remove_envp_var(t_envp *envp, char *name);
 
 // Signal handelers:
-void	sig_int(int signum);
 void	print_prompt(int sig);
 
 // wrappers: 
@@ -106,6 +105,7 @@ void	error(char *error_prefix);
 void	command_not_found(char *cmd);
 void	export_error(char *identifier);
 int		syntax_error(char **tokens, char *error_prefix);
+void	error_fork(char *error_prefix);
 
 //tokenize utils:
 int		is_special_token(char *token);

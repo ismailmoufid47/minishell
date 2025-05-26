@@ -1,11 +1,5 @@
 #include "../include/shell.h"
 
-void	sig_int(int signum)
-{
-	(void)signum;
-	exit(130);
-}
-
 void	print_prompt(int sig)
 {
 	(void)sig;

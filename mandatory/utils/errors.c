@@ -13,7 +13,6 @@ void	error_fork(char *error_prefix)
 	ft_putstr_fd("Minishell: ", 2);
 	perror(error_prefix);
 	free(error_prefix);
-	exit(EXIT_FAILURE);
 }
 
 int	syntax_error(char **tokens, char *error_prefix)

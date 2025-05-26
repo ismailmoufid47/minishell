@@ -116,7 +116,10 @@ void	execute(t_list *list, t_envp *envp)
 			if (current->pid == 0)
 				execute_cmd(current, envp, prev);
 			else if (current->pid == -1)
+			{
 				error_fork(ft_strdup("fork"));
+				break ;
+			}
 		}
 		prev = current;
 		if (current->type == PIPE)
