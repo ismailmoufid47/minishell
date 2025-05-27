@@ -8,11 +8,32 @@ void	error(char *error_prefix)
 	exit(EXIT_FAILURE);
 }
 
-void	error_fork(char *error_prefix)
+void	print_envpt(char **envp)
 {
+	int	i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	while (--i >= 0)
+		printf("%s\n", envp[i]);
+}
+
+void	error_fork(t_envp **envp, char *error_prefix)
+{
+	t_envp *node;
+
+	// (void )(envp);
+
 	ft_putstr_fd("Minishell: ", 2);
 	perror(error_prefix);
 	free(error_prefix);
+	*envp = remove_envp_var(*envp, "?");
+	node = create_envp_node("?\0001");
+	node->next = *envp;
+	*envp = node;
+	print_envpt(envp_to_char(*envp));
+	printf("? = %s\n", ft_get_env_val(*envp, "?"));
 }
 
 int	syntax_error(char **tokens, char *error_prefix)

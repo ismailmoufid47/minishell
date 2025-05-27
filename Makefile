@@ -89,7 +89,10 @@ bonus: $(BONUS_FILES)
 clean:
 	make -C mandatory clean
 # 	make -C bonus clean
-
+m:
+	make m -C mandatory
+	cp mandatory/minishell .
+	cp -r mandatory/bin .
 fclean:
 	make -C mandatory fclean
 # 	make -C bonus fclean

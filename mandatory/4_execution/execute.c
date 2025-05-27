@@ -24,6 +24,7 @@ void	redirect(t_list *redirections, t_envp *envp)
 		}
 		current = current->next->next;
 	}
+	signal(SIGQUIT, SIG_DFL);
 	close(in);
 }
 
@@ -61,7 +62,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	char	*cmd_path;
 
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
 	if (prev)
 	{
 		ft_dup2(prev->pipe_fds[0], STDIN_FILENO);
@@ -86,7 +87,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	command_not_found(cmd->args[0]);
 }
 
-void	execute(t_list *list, t_envp *envp)
+void	execute(t_list *list, t_envp **envp)
 {
 	t_list	*current;
 	t_list	*prev;
@@ -103,21 +104,21 @@ void	execute(t_list *list, t_envp *envp)
 		if (current->type == PIPE && prev_pipe)
 			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
 		if (!ft_strcmp(current->value, "cd"))
-			cd(current->args, envp);
+			cd(current->args, (*envp));
 		else if (!ft_strcmp(current->value, "export"))
-			export(current->args, envp);
+			export(current->args, (*envp));
 		else if (!ft_strcmp(current->value, "unset"))
-			unset(current->args, envp);
+			unset(current->args, (*envp));
 		else if (!ft_strcmp(current->value, "exit"))
-			exit_cmd(current->args, envp, list);
+			exit_cmd(current->args, (*envp), list);
 		else if (current->type == CMD)
 		{
 			current->pid = fork();
 			if (current->pid == 0)
-				execute_cmd(current, envp, prev);
+				execute_cmd(current, (*envp), prev);
 			else if (current->pid == -1)
 			{
-				error_fork(ft_strdup("fork"));
+				error_fork(&(*envp), ft_strdup("fork"));
 				break ;
 			}
 		}
@@ -137,11 +138,11 @@ void	execute(t_list *list, t_envp *envp)
 	waitpid(prev->pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		free(envp->value);
-		envp->value = ft_itoa(WEXITSTATUS(status));
+		free((*envp)->value);
+		(*envp)->value = ft_itoa(WEXITSTATUS(status));
 	}
 	else
-		envp->value = ft_itoa(WTERMSIG(status) + 128) ;
+		(*envp)->value = ft_itoa(WTERMSIG(status) + 128) ;
 	while (wait(NULL) > 0)
 		;
 	tcsetattr(STDIN_FILENO, TCSANOW, &old);

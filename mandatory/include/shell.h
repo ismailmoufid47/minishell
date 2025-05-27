@@ -75,7 +75,7 @@ char	**tokenize(char *cmd);
 t_list	*create_list(char **tokens);
 
 // Execute:
-void	execute(t_list *list, t_envp *envp);
+void	execute(t_list *list, t_envp **envp);
 
 // Built-ins:
 void	pwd(t_envp *envp);
@@ -105,7 +105,7 @@ void	error(char *error_prefix);
 void	command_not_found(char *cmd);
 void	export_error(char *identifier);
 int		syntax_error(char **tokens, char *error_prefix);
-void	error_fork(char *error_prefix);
+void	error_fork(t_envp **envp, char *error_prefix);
 
 //tokenize utils:
 int		is_special_token(char *token);

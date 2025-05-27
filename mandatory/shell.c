@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/05/26 18:16:54 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/05/27 21:47:40 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ int	main(void)
 	t_envp	*envp;
 	char	*prompt;
 
-	signal(SIGQUIT, SIG_IGN);	signal(SIGINT, print_prompt);
+	signal(SIGQUIT, SIG_IGN);	
+	signal(SIGINT, print_prompt);
 	rl_catch_signals = 0;
 	envp = set_envp();
 	input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
@@ -61,7 +62,12 @@ int	main(void)
 	while (1)
 	{
 		prompt = get_prompt(envp);
-		input = readline(prompt);
+
+		printf("hhghfghfghere\n");
+		if (!ft_strcmp(ft_get_env_val(envp, "?"), "130"))
+			input = readline("");
+		else
+			input = readline(prompt);
 		free(prompt);
 		if (input == NULL)
 			return (printf("exit\n"), 0);
@@ -75,7 +81,7 @@ int	main(void)
 		}
 		list = parse(input, envp);
 		if (list)
-			execute(list, envp);
+			execute(list, &envp);
 		free(input);
 	}
 	close(history_fd);

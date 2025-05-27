@@ -80,7 +80,7 @@ SRC = 1_expansion/expand.c \
 all: $(NAME)
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) $(FSANITIZE)
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) 
 
 $(LIBFT):
 	make -C ../libft
@@ -93,5 +93,7 @@ fclean: clean
 	make -C ../libft fclean
 
 re: fclean all
+m :fclean include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC) 
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) $(FSANITIZE)
 
 .PHONY: all clean fclean re bonus

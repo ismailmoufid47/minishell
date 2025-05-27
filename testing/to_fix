@@ -5,10 +5,10 @@
 
 - sort the * output
 
-- heredoc signals
-
 - heredoc with no command segfaults
 
 - change last status code when command not found or other system calls failure
 
-- don't expand when the delimiter has quotes 
+- don't expand when the heredoc delimiter has quotes 
+
+-  unset ?
