@@ -122,6 +122,7 @@ t_list	*closest_cmd(t_list *head);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
+void	redirect(t_list *redirections, t_envp *envp, int stdin_fd);
 void	handle_here_doc(char *delimiter, t_envp *envp);
 
 // Built-ins utils:

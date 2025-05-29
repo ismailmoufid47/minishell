@@ -31,6 +31,7 @@ void	redirect(t_list *redirections, t_envp *envp, int stdin_fd)
 char	*get_cmd_path(char *cmd, char *envp[])
 {
 	char	*cmd_path;
+	char	*tmp;
 	char	**path;
 	int		i;
 
@@ -40,7 +41,16 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
 	if (!envp[i])
-		return (NULL);
+	{
+		tmp = ft_strjoin(getcwd(NULL, 0), "/");
+		cmd_path = ft_strjoin(tmp, cmd);
+		free(tmp);
+		if (!access(cmd_path, X_OK))
+		{
+			return (cmd_path);
+		}
+		return (free(cmd_path), NULL);
+	}
 	i = ((path = ft_split(envp[i] + 5, ':')), 0);
 	while (path[i++])
 	{
@@ -53,7 +63,8 @@ char	*get_cmd_path(char *cmd, char *envp[])
 		cmd_path = ((free(cmd_path)), ft_strjoin(path[i++], cmd));
 	if (cmd_path && !access(cmd_path, X_OK))
 		return (cmd_path);
-	return (free(cmd_path), (ft_free_split(path)), NULL);
+	ft_free_split(path);
+	return (free(cmd_path), NULL);
 }
 
 void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
@@ -141,6 +152,7 @@ void	execute(t_list *list, t_envp **envp)
 			close_2(list->pipe_fds[0], list->pipe_fds[1]);
 		list = list->next;
 	}
+	signal(SIGINT, SIG_IGN);
 	waitpid(prev->pid, &status, 0);
 	g_signal = 0;
 	if (is_built_in)
@@ -158,4 +170,5 @@ void	execute(t_list *list, t_envp **envp)
 	while (wait(NULL) > 0)
 		;
 	tcsetattr(STDIN_FILENO, TCSANOW, &old);
+	signal(SIGINT, print_prompt);
 }

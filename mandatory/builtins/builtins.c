@@ -1,11 +1,25 @@
 #include "../include/shell.h"
 
+void  redirect_builtins(t_list *current, t_envp *envp)
+{
+	int	stdout_fd;
+	int	stdin_fd;
+
+	if (!current->is_redirected)
+		return ;
+	stdin_fd = dup(STDIN_FILENO);
+	stdout_fd = dup(STDOUT_FILENO);
+	redirect(current->redirections, envp, STDIN_FILENO);
+	ft_dup2(stdout_fd, STDOUT_FILENO);
+	ft_dup2(stdin_fd, STDIN_FILENO);
+}
+
 void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int		i;
 	t_envp	*node;
 
-	
+	redirect_builtins(current, envp);
 	i = 1;
 	while (args[i])
 	{
@@ -34,6 +48,8 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 	char	*path;
 	char	*old_pwd;
 
+
+	redirect_builtins(current, envp);
 	path = args[1];
 	if (!path)
 		path = "/";
@@ -50,6 +66,7 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 		ft_free_split(args);
 		return ;
 	}
+	chdir(path);
 	free(envp->value);
 	envp->value = ft_strdup("0");
 	if ((prev &&  prev->type == PIPE)
@@ -74,6 +91,8 @@ void	unset(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int		i;
 
+
+	redirect_builtins(current, envp);
 	i = 1;
 	if (args[i] && !is_valid_unset_argument(args[i]))
 			return (identifier_error("unset", args[i], envp));
@@ -98,6 +117,8 @@ void	exit_cmd(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int subshell;
 
+
+	redirect_builtins(current, envp);
 	subshell = (prev &&  prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE);
 	ft_putendl_fd("exit", 2);

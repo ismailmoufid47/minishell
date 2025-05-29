@@ -53,6 +53,7 @@ t_envp	*create_envp_node(char *var)
 t_envp	*set_envp(void)
 {
 	int		i;
+	char	*str;
 	t_envp	*head;
 	t_envp	*node;
 
@@ -60,8 +61,10 @@ t_envp	*set_envp(void)
 	head = NULL;
 	while (environ[i])
 	{
-		*(ft_strchr(environ[i], '=')) = 0;
-		node = create_envp_node(environ[i]);
+		str = ft_strdup(environ[i]);
+		*(ft_strchr(str, '=')) = 0;
+		node = create_envp_node(str);
+		free(str);
 		node->next = head;
 		head = node;
 		i++;

@@ -6,7 +6,7 @@
 /*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/05/29 13:17:02 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:57:30 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,11 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 
 	list = NULL;
 	cmd_line = expand_env_variable(cmd_line, envp);
+	if (!cmd_line || !*cmd_line)
+	{
+		return (NULL);
+	}
+	
 	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
 	if (!validate_tokens(tokens, envp))
@@ -67,17 +72,13 @@ int	main(void)
 	while (1)
 	{
 		prompt = get_prompt(envp);
-		if (!ft_strcmp(ft_get_env_val(envp, "?"), "130"))
-			input = readline("");
-		else
+		
+		input = readline(prompt);
+		if (g_signal == SIGINT)
 		{
-			input = readline(prompt);
-			if (g_signal == SIGINT)
-			{
-				g_signal = 0;
-				free(envp->value);
-				envp->value = ft_strdup("1");
-			}
+			g_signal = 0;
+			free(envp->value);
+			envp->value = ft_strdup("1");
 		}
 		free(prompt);
 		if (input == NULL)
