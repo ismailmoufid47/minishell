@@ -1,0 +1,23 @@
+total 136
+drwxr-xr-x  22 isel-mou  candidates    748 May 29 13:56 .
+drwxr-xr-x  54 isel-mou  candidates   1904 May 29 13:52 ..
+drwxr-xr-x  15 isel-mou  candidates    510 May 29 13:47 .git
+-rw-r--r--   1 isel-mou  candidates    103 May 25 17:09 .gitignore
+drwxr-xr-x   5 isel-mou  candidates    170 May 25 17:45 .vscode
+-rw-r--r--   1 isel-mou  candidates   2515 May 28 12:55 Makefile
+-rw-r--r--   1 isel-mou  candidates      0 May 29 12:59 a
+-rw-r--r--   1 isel-mou  candidates     23 May 29 12:50 a.sh
+drwxr-xr-x   9 isel-mou  candidates    306 May 28 15:34 bin
+-rw-r--r--   1 isel-mou  candidates     18 May 29 13:52 grep
+drwxr-xr-x   7 isel-mou  candidates    238 May 29 13:45 libft
+-rw-r--r--   1 isel-mou  candidates      0 May 29 13:00 lol
+drwxr-xr-x  14 isel-mou  candidates    476 May 29 13:51 mandatory
+-rwxr-xr-x   1 isel-mou  candidates  43544 May 29 13:51 minishell
+-rw-r--r--   1 isel-mou  candidates      0 May 29 13:56 out
+-rw-r--r--   1 isel-mou  candidates    187 Mar 11 14:50 pull_at_startup.sh
+-rw-r--r--   1 isel-mou  candidates      0 May 29 12:59 q
+-rw-r--r--   1 isel-mou  candidates      0 May 29 12:59 r
+-rw-r--r--   1 isel-mou  candidates      0 May 29 12:55 ss
+-r-xr-xr-x   1 isel-mou  candidates   1191 Mar 11 14:50 sync_repo.sh
+drwxr-xr-x  14 isel-mou  candidates    476 May 28 12:55 testing
+-rw-r--r--   1 isel-mou  candidates      0 May 29 12:59 w

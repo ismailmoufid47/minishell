@@ -31,9 +31,11 @@ int	syntax_error(char **tokens, char *error_prefix, t_envp *envp)
 	return (0);
 }
 
-void	export_error(char *identifier, t_envp *envp)
+void	identifier_error(char *cmd, char *identifier, t_envp *envp)
 {
-	ft_putstr_fd("Minishell: export: `", 2);
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": `", 2);
 	ft_putstr_fd(identifier, 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
 	free(envp->value);

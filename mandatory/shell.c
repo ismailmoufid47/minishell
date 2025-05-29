@@ -6,7 +6,7 @@
 /*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/05/29 10:00:14 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/05/29 13:17:02 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	main(void)
 		}
 		free(prompt);
 		if (input == NULL)
-			return (printf("exit\n"), 0);
+			return (printf("exit\n"), ft_atoi(ft_get_env_val(envp, "?")));
 		if (*input == 0)
 			continue ;
 		if (*input)

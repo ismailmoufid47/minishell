@@ -10,7 +10,7 @@ int	get_token_count(char *input)
 
 	i = 0;
 	token_count = 0;
-	broke_for_special = 0;
+	broke_for_special = 1;
 	sq_flag = ((dq_flag = 0), 0);
 	while (input[i])
 	{

@@ -78,11 +78,11 @@ t_list	*create_list(char **tokens);
 void	execute(t_list *list, t_envp **envp);
 
 // Built-ins:
-void	pwd(t_envp *envp);
-void	cd(char **args, t_envp	*envp);
-void	export(char **args, t_envp *envp);
-void	unset(char **args, t_envp *envp);
-void	exit_cmd(char **args, t_envp *envp, t_list *list);
+void	pwd(t_envp *envp, t_list *current, t_list *prev);
+void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev);
+void	export(char **args, t_envp *envp, t_list *current, t_list *prev);
+void	unset(char **args, t_envp *envp, t_list *current, t_list *prev);
+void	exit_cmd(char **args, t_envp *envp, t_list *current, t_list *prev);
 
 // envp:
 t_envp	*set_envp(void);
@@ -104,7 +104,7 @@ void	close_2(int fd1, int fd2);
 // Errors: 
 void	error(char *error_prefix);
 void	exec_error(char *cmd);
-void	export_error(char *identifier, t_envp *envp);
+void	identifier_error(char *cmd, char *identifier, t_envp *envp);
 int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
 void	error_fork(t_envp **envp, char *error_prefix);
 
@@ -128,6 +128,7 @@ void	handle_here_doc(char *delimiter, t_envp *envp);
 char	*get_cwd(t_envp *envp);
 int		is_bin(char *cmd);
 int		is_valid_export_argument(char *arg);
+int		is_valid_unset_argument(char *arg);
 int		is_numeric(char *arg);
 
 // command line Utils:

@@ -2,14 +2,12 @@
 
 extern int	g_signal;
 
-void	redirect(t_list *redirections, t_envp *envp)
+void	redirect(t_list *redirections, t_envp *envp, int stdin_fd)
 {
 	t_list	*current;
-	int		in;
 	char	*file;
 
 	current = redirections;
-	in = dup(0);
 	while (current)
 	{
 		file = current->next->value;
@@ -21,13 +19,13 @@ void	redirect(t_list *redirections, t_envp *envp)
 			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT | O_APPEND, 0666), 1);
 		if (current->type == HDOC)
 		{
-			dup2(in, 0);
+			dup2(stdin_fd, 0);
 			handle_here_doc(file, envp);
 		}
 		current = current->next->next;
 	}
 	signal(SIGQUIT, SIG_DFL);
-	close(in);
+	close(stdin_fd);
 }
 
 char	*get_cmd_path(char *cmd, char *envp[])
@@ -58,7 +56,7 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	return (free(cmd_path), (ft_free_split(path)), NULL);
 }
 
-void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
+void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
 {
 	char	**envp_char;
 	char	*cmd_path;
@@ -76,7 +74,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		close(cmd->next->pipe_fds[0]);
 	}
 	if (cmd->is_redirected)
-		redirect(cmd->redirections, envp);
+		redirect(cmd->redirections, envp, stdin_fd);
 	if (cmd->value == NULL)
 		exit (0);
 	envp_char = envp_to_char(envp);
@@ -96,11 +94,13 @@ void	execute(t_list *list, t_envp **envp)
 	t_list	*prev_pipe;
 	int		status;
 	int		is_built_in;
+	int 	stdin_fd;
 	struct termios old;
 
 	current = list;
 	prev = NULL;
 	prev_pipe = NULL;
+	stdin_fd = dup(STDIN_FILENO);
 	tcgetattr(STDIN_FILENO, &old);
 	while (current)
 	{
@@ -108,19 +108,19 @@ void	execute(t_list *list, t_envp **envp)
 		if (current->type == PIPE && prev_pipe)
 			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
 		if (!ft_strcmp(current->value, "cd"))
-			cd(current->args, (*envp));
+			cd(current->args, *envp, current, prev);
 		else if (!ft_strcmp(current->value, "export"))
-			export(current->args, (*envp));
+			export(current->args, *envp, current, prev);
 		else if (!ft_strcmp(current->value, "unset"))
-			unset(current->args, (*envp));
+			unset(current->args, *envp, current, prev);
 		else if (!ft_strcmp(current->value, "exit"))
-			exit_cmd(current->args, (*envp), list);
+			exit_cmd(current->args, *envp, current, prev);
 		else if (current->type == CMD)
 		{
 			is_built_in = 0;
 			current->pid = fork();
 			if (current->pid == 0)
-				execute_cmd(current, (*envp), prev);
+				execute_cmd(current, (*envp), prev, stdin_fd);
 			else if (current->pid == -1)
 			{
 				error_fork(&(*envp), ft_strdup("fork"));
@@ -132,6 +132,7 @@ void	execute(t_list *list, t_envp **envp)
 			prev_pipe = current;
 		current = current->next;
 	}
+	close(stdin_fd);
 	if (prev_pipe)
 		close_2(prev_pipe->pipe_fds[1], prev_pipe->pipe_fds[1]);
 	while (list)
@@ -151,7 +152,6 @@ void	execute(t_list *list, t_envp **envp)
 	}
 	else if (WIFSIGNALED(status))
 	{
-		printf("hhhh\n");
 		(*envp)->value = ft_itoa(WTERMSIG(status) + 128) ;
 		g_signal = -1;
 	}

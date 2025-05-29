@@ -16,7 +16,7 @@ int	open_wrapper(char *file, int open_mode, int create_permissions)
 	else
 		fd = open(file, open_mode, create_permissions);
 	if (fd == -1)
-		error(ft_strdup("open"));
+		error(file);
 	return (fd);
 }
 

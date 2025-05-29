@@ -34,6 +34,22 @@ int	is_valid_export_argument(char *arg)
 	return (1);
 }
 
+int	is_valid_unset_argument(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_isalpha(arg[i]) && arg[i] != '_')
+		return (0);
+	while (arg[i])
+	{
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 
 int	is_numeric(char *arg)
 {
@@ -48,6 +64,8 @@ int	is_numeric(char *arg)
 		if (arg[i] == '-')
 			sign = -1;
 		i++;
+		if (!ft_isdigit(arg[i]))
+			return (0);
 	}
 	res = 0;
 	while (arg[i])
@@ -61,5 +79,5 @@ int	is_numeric(char *arg)
 		res = res * 10 + (arg[i] - '0');
 		i++;
 	}
-	return (1);
+	return (i);
 }
