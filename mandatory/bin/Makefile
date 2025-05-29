@@ -1,26 +1,27 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I ../../libft/include
+CFLAGS = -Wall -Wextra -Werror -I ../../libft/include\
+         -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
 LFLAGS = -L ../../libft -lft
 
 LIBFT = ../../libft/libft.a 
 
-SRC = ../utils/errors.c
+SRC = ../utils/errors.c ../utils/envp_handler.c
 
 NAME = bin
 
-all: ../include/shell.h $(LIBFT) echo env
+all: ../include/shell.h $(LIBFT) echo env pwd
 
 $(NAME): all
-
-# pwd: ../include/shell.h  $(LIBFT) $(SRC) pwd.c
-# 	@$(CC) $(CFLAGS) $(SRC) pwd.c $(LFLAGS) -o pwd
 
 echo: ../include/shell.h $(LIBFT) $(SRC) echo.c
 	@$(CC) $(CFLAGS) $(SRC) echo.c $(LFLAGS) -o echo
 
 env: ../include/shell.h $(LIBFT) $(SRC) env.c
 	@$(CC) $(CFLAGS) $(SRC) env.c $(LFLAGS) -o env
+
+pwd: ../include/shell.h $(LIBFT) $(SRC) pwd.c
+	@$(CC) $(CFLAGS) $(SRC) pwd.c $(LFLAGS) -o pwd
 
 $(LIBFT):
 	@make -C ../../libft
@@ -35,4 +36,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bin
+.PHONY: all clean fclean re bin pwd

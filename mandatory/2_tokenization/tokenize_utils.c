@@ -1,19 +1,19 @@
 #include "../include/shell.h"
 
-int	validate_tokens(char **tokens)
+int	validate_tokens(char **tokens, t_envp *envp)
 {
 	int		i;
 
 	i = 0;
 	if (tokens[0] && !ft_strcmp(tokens[0], "|"))
-		return (syntax_error(tokens, "|"));
+		return (syntax_error(tokens, "|", envp));
 	while (tokens[i])
 	{
 		if (is_special_token(tokens[i]) && !tokens[i + 1])
-			return (syntax_error(tokens, "newline"));
+			return (syntax_error(tokens, "newline", envp));
 		if (ft_strcmp(tokens[i], "|") && is_special_token(tokens[i])
 			&& is_special_token(tokens[i + 1]))
-			return (syntax_error(tokens, tokens[i + 1]));
+			return (syntax_error(tokens, tokens[i + 1], envp));
 		i++;
 	}
 	return (1);

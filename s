@@ -1,0 +1,14 @@
+s
+kefile
+a
+a.sh
+bin
+grep
+libft
+lol
+mandatory
+minishell
+pull_at_startup.sh
+s
+sync_repo.sh
+testing

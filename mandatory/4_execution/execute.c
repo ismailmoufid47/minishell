@@ -1,5 +1,7 @@
 #include "../include/shell.h"
 
+extern int	g_signal;
+
 void	redirect(t_list *redirections, t_envp *envp)
 {
 	t_list	*current;
@@ -84,7 +86,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		cmd_path = get_cmd_path(cmd->args[0], envp_char);
 	if (cmd_path)
 		execve(cmd_path, cmd->args, envp_char);
-	command_not_found(cmd->args[0]);
+	exec_error(cmd->args[0]);
 }
 
 void	execute(t_list *list, t_envp **envp)
@@ -93,6 +95,7 @@ void	execute(t_list *list, t_envp **envp)
 	t_list	*prev;
 	t_list	*prev_pipe;
 	int		status;
+	int		is_built_in;
 	struct termios old;
 
 	current = list;
@@ -101,6 +104,7 @@ void	execute(t_list *list, t_envp **envp)
 	tcgetattr(STDIN_FILENO, &old);
 	while (current)
 	{
+		is_built_in = 1;
 		if (current->type == PIPE && prev_pipe)
 			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
 		if (!ft_strcmp(current->value, "cd"))
@@ -113,6 +117,7 @@ void	execute(t_list *list, t_envp **envp)
 			exit_cmd(current->args, (*envp), list);
 		else if (current->type == CMD)
 		{
+			is_built_in = 0;
 			current->pid = fork();
 			if (current->pid == 0)
 				execute_cmd(current, (*envp), prev);
@@ -136,13 +141,20 @@ void	execute(t_list *list, t_envp **envp)
 		list = list->next;
 	}
 	waitpid(prev->pid, &status, 0);
-	if (WIFEXITED(status))
+	g_signal = 0;
+	if (is_built_in)
+		;
+	else if (WIFEXITED(status))
 	{
 		free((*envp)->value);
 		(*envp)->value = ft_itoa(WEXITSTATUS(status));
 	}
-	else
+	else if (WIFSIGNALED(status))
+	{
+		printf("hhhh\n");
 		(*envp)->value = ft_itoa(WTERMSIG(status) + 128) ;
+		g_signal = -1;
+	}
 	while (wait(NULL) > 0)
 		;
 	tcsetattr(STDIN_FILENO, TCSANOW, &old);

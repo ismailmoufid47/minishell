@@ -66,6 +66,7 @@ t_envp	*set_envp(void)
 		head = node;
 		i++;
 	}
+	head = replace_missing_envp(head);
 	node = create_envp_node("?\0000");
 	node->next = head;
 	head = node;

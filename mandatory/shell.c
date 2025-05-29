@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/05/27 21:47:40 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/05/29 10:00:14 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/shell.h"
+
+int	g_signal = 0;
 
 void	print_tokens(char **tokens)
 {
@@ -35,11 +37,11 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	cmd_line = expand_env_variable(cmd_line, envp);
 	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
-	if (!validate_tokens(tokens))
+	if (!validate_tokens(tokens, envp))
 		return (NULL);
-	print_tokens(tokens);
+	// print_tokens(tokens);
 	list = create_list(tokens);
-	print_list(list, 0);
+	// print_list(list, 0);
 	return (list);
 }
 
@@ -55,19 +57,28 @@ int	main(void)
 	signal(SIGINT, print_prompt);
 	rl_catch_signals = 0;
 	envp = set_envp();
-	input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
+	if (ft_get_env_val(envp, "HOME"))
+		input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
+	else
+		input = ft_strdup("/tmp/.bash_history");
 	history_fd = open_wrapper(input, O_RDWR | O_CREAT | O_APPEND, 0666);
 	load_history(history_fd);
 	free(input);
 	while (1)
 	{
 		prompt = get_prompt(envp);
-
-		printf("hhghfghfghere\n");
 		if (!ft_strcmp(ft_get_env_val(envp, "?"), "130"))
 			input = readline("");
 		else
+		{
 			input = readline(prompt);
+			if (g_signal == SIGINT)
+			{
+				g_signal = 0;
+				free(envp->value);
+				envp->value = ft_strdup("1");
+			}
+		}
 		free(prompt);
 		if (input == NULL)
 			return (printf("exit\n"), 0);

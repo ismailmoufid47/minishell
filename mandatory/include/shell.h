@@ -1,4 +1,3 @@
-
 #ifndef SHELL_H
 # define SHELL_H
 
@@ -7,7 +6,7 @@
 # include <stdio.h>    		    		// printf
 # include "readline/readline.h" 		// readline, rl_on_new_line, rl_replace_line, rl_redisplay
 # include "readline/history.h"  		// rl_clear_history, add_history
-# include "ncurses/ncurses.h"
+# include "ncurses/ncurses.h"			// ncurses, tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 # include <stdlib.h>        			// malloc, free, exit, getenv
 # include <unistd.h>         			// write, access, open, read, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname
 # include <string.h>         			// strerror
@@ -19,7 +18,8 @@
 # include <termios.h>        			// tcsetattr, tcgetattr
 # include <term.h>           			// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (alternative to <curses.h>)
 # include <errno.h>          			// perror
-# include <sys/wait.h>
+# include <sys/wait.h>					// wait, waitpid, WIFEXITED, WEXITSTATUS, WTERMSIG
+# include <sys/stat.h>       			// stat, lstat, fstat
 #include <termios.h>
 
 extern char	**environ;
@@ -90,6 +90,7 @@ char	*ft_get_env_val(t_envp *envp, char *var_name);
 t_envp	*create_envp_node(char *var);
 char	**envp_to_char(t_envp *envp);
 t_envp	*remove_envp_var(t_envp *envp, char *name);
+t_envp	*replace_missing_envp(t_envp *envp);
 
 // Signal handelers:
 void	print_prompt(int sig);
@@ -102,9 +103,9 @@ void	close_2(int fd1, int fd2);
 
 // Errors: 
 void	error(char *error_prefix);
-void	command_not_found(char *cmd);
-void	export_error(char *identifier);
-int		syntax_error(char **tokens, char *error_prefix);
+void	exec_error(char *cmd);
+void	export_error(char *identifier, t_envp *envp);
+int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
 void	error_fork(t_envp **envp, char *error_prefix);
 
 //tokenize utils:
@@ -112,7 +113,7 @@ int		is_special_token(char *token);
 int		is_special_operator(char c);
 int		is_double_symbol(char *input, int pos);
 void	skip_quoted_section(char *input, int *pos, char quote);
-int		validate_tokens(char **tokens);
+int		validate_tokens(char **tokens, t_envp *envp);
 
 // classed list utils:
 t_list	*keep_only_redirections(t_list *head);

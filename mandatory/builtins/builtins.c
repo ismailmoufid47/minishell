@@ -9,7 +9,7 @@ void	export(char **args, t_envp *envp)
 	while (args[i])
 	{
 		if (!is_valid_export_argument(args[i]))
-			export_error(args[i]);
+			return (export_error(args[i], envp));
 		else if (ft_strchr(args[i], '='))
 		{
 			*(ft_strchr(args[i], '=')) = '\0';
@@ -20,6 +20,8 @@ void	export(char **args, t_envp *envp)
 		}
 		i++;
 	}
+	free(envp->value);
+	envp->value = ft_strdup("0");
 }
 
 void	cd(char **args, t_envp	*envp)
@@ -61,6 +63,11 @@ void	unset(char **args, t_envp *envp)
 	i = 1;
 	while (args[i])
 	{
+		if (!ft_strcmp(args[i], "?"))
+		{
+			i++;
+			continue ;
+		}
 		remove_envp_var(envp, args[i]);
 		i++;
 	}

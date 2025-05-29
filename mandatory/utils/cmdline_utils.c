@@ -70,7 +70,10 @@ char	*get_prompt(t_envp *envp)
 		pwd = ft_strdup("unknown");
 	else
 		pwd = replace_home_with_tilde(envp, pwd);
-	prmpt = ft_strjoin("\033[1;34m", ft_get_env_val(envp, "USER"));
+	if (ft_get_env_val(envp, "USER"))
+		prmpt = ft_strjoin("\033[1;34m", ft_get_env_val(envp, "USER"));
+	else
+		prmpt = ft_strdup("\033[1;34muser");
 	tmp = prmpt;
 	tmp = ((prmpt = ft_strjoin(prmpt, "@")), free(tmp), prmpt);
 	tmp = ((prmpt = ft_strjoin(prmpt, host)), free(tmp), free(host), prmpt);

@@ -1,14 +1,8 @@
 
 - don't include hidden files in * by itself, eg.: ls *
 
-- exit should throw error when the first arg is bigger than long
-
 - sort the * output
 
-- heredoc with no command segfaults
+- change last status code when pipe fails
 
-- change last status code when command not found or other system calls failure
-
-- don't expand when the heredoc delimiter has quotes 
-
--  unset ?
+- don't expand when the heredoc delimiter, eg: << *, <<  
