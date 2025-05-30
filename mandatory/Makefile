@@ -5,22 +5,12 @@ CC = cc
 FSANITIZE = -fsanitize=address -g
 
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-         -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+         -I /home/linuxbrew/.linuxbrew/opt/readline/include -I /home/linuxbrew/.linuxbrew/opt/ncurses/include
 
-LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-         -l ft -l readline -l ncurses
+LFLAGS = -l ft -l readline -l ncurses -L ../libft
+        # -
 
-
-LIBFT = ../libft/libft.a
-
-BIN = bin/env \
-		bin/echo \
-		bin/pwd
-
-BIN_SRC = utils/errors.c \
-		utils/envp_handler.c \
-		utils/envp_handler_utils.c \
-		utils/free_resources.c 
+LIBFT = ../libft/libft.a 
 
 LIBFT_SRC =  ../libft/include/libft.h \
 		../libft/Makefile \
@@ -80,28 +70,20 @@ SRC = 1_expansion/expand.c \
 	builtins/builtins_utils.c \
 	utils/cmdline_utils.c \
 	utils/envp_handler.c \
+	utils/free_resources.c \
 	utils/envp_handler_utils.c \
 	utils/signal_handlers.c \
-	utils/free_resources.c \
 	utils/wrappers.c \
 	utils/errors.c \
 	shell.c
 
 
+
+
 all: $(NAME)
 
-bin/env: builtins/env.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/env.c $(LFLAGS) -o bin/env
-
-bin/echo: builtins/echo.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/echo.c $(LFLAGS) -o bin/echo
-
-bin/pwd: builtins/pwd.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/pwd.c $(LFLAGS) -o bin/pwd
-
-
-$(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC) $(BIN)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) 
+$(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
+	$(CC) $(CFLAGS) $(MANDATORY_FILES) $(LFLAGS)  -o $(NAME) 
 
 $(LIBFT):
 	make -C ../libft
@@ -111,7 +93,6 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
-	rm -f $(BIN)
 	make -C ../libft fclean
 
 re: fclean all
@@ -119,3 +100,4 @@ m :fclean include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) $(FSANITIZE)
 
 .PHONY: all clean fclean re bonus
+
