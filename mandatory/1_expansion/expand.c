@@ -2,6 +2,31 @@
 
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
+char **ft_spit_and_add_quotes(char *var)
+{
+	char	**result;
+	char	*tmp;
+	int		i;
+
+	result = tokenize(var);
+	i = 0;
+	while (result[i])
+	{
+		tmp = result[i];
+		if (i > 0)
+			result[i] = ft_strjoin(" \"", result[i]);
+		else
+			result[i] = ft_strjoin("\"", result[i]);
+		free(tmp);
+		tmp = result[i];
+		result[i] = ft_strjoin(result[i], "\"");
+		free(tmp);
+		i++;
+	}
+	return (result);
+
+}
+
 char	*search_and_replace(char *cmd, int start, t_envp *envp)
 {
 	char	variable_name[1024];
@@ -10,6 +35,7 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 	int		i;
 	int		variable_len;
 	char	*tmp;
+	char	**split_result;
 
 	variable_len = ft_isdigit(cmd[start]);
 	i = start - 1;
@@ -18,20 +44,43 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 		&& !ft_isdigit(cmd[start]))
 		variable_len++;
 	ft_strlcpy(variable_name, cmd + start, variable_len + 1);
-	var = ft_strjoin(ft_get_env_val(envp, variable_name), "\"");
+	var = ft_get_env_val(envp, variable_name);
 	if (variable_len == 0)
-	// {
-	// 	free(var);
-		var = strdup("$");
-	// }
-	tmp = cmd;
+		return (ft_strdup(cmd));
 	cmd[start - 1] = '\0';
 	if (!var || ft_isdigit(cmd[start]) || cmd[start] == '\"' || cmd[start] == '\'')
+	{
 		var = strdup("");
-	else
-		cmd = ft_strjoin(cmd, "\"");
-	var = ft_strjoin(cmd, var);
-	result = ft_strjoin(var, tmp + start + variable_len);
+		result = ft_strjoin(cmd, var);
+		free(var);
+		var = result;
+		result = ft_strjoin(result, cmd + start + variable_len);
+		free(var);
+		return (result);
+	}
+	split_result = ft_spit_and_add_quotes(var);
+	i = 0;
+	while (split_result && split_result[i])
+	{
+		tmp = split_result[i];
+		if (i == 0)
+			result = ft_strjoin(cmd, tmp);
+		else
+		{
+			var = result;
+			result = ft_strjoin(result, tmp);
+			free(var);
+		}
+		free(tmp);
+		i++;
+	}
+	if (i)
+	{
+		var = result;
+		result = ft_strjoin(result, cmd + start + variable_len);
+		free(var);
+	}
+	free(split_result);
 	return (result);
 }
 
@@ -48,7 +97,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp)
 	dq_flag = 0;
 	sq_flag = 0;
 	here_doc_is_prev = 0;
-	while (cmd_line[i])
+	while (cmd_line && cmd_line[i])
 	{
 		if (here_doc_is_prev)
 		{
@@ -74,9 +123,11 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp)
 		{
 			expanded = 1;
 			if (cmd_line[i + 1] && (strchr("_?", cmd_line[i + 1]) || ft_isalpha(cmd_line[i + 1])))
+			{
 				cmd_line = search_and_replace(cmd_line, i + 1, envp);
+			}
 		}
-		if (cmd_line[i])
+		if (cmd_line && cmd_line[i])
 			i++;
 	}
 	if (!expanded)

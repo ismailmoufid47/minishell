@@ -80,7 +80,7 @@ all: $(NAME)
 $(NAME): $(MANDATORY_FILES) $(LIBFT_SRC)
 	make -C mandatory
 	cp mandatory/minishell .
-	cp -r mandatory/bin .
+	cp -r mandatory/bin /tmp/bin/
 
 bonus: $(BONUS_FILES)
 	make -C bonus

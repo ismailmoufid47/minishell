@@ -36,8 +36,12 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	int		i;
 
 	i = 0;
-	if (cmd && !access(cmd, X_OK) && ft_strchr(cmd, '/'))
-		return (cmd);
+	if (ft_strchr(cmd, '/'))
+	{
+		if (cmd && !access(cmd, X_OK))
+			return (cmd);
+		return (NULL);
+	}
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
 	if (!envp[i])
@@ -90,7 +94,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
 		exit (0);
 	envp_char = envp_to_char(envp);
 	if (is_bin(cmd->args[0]))
-		cmd_path = ft_strjoin("./bin/", cmd->args[0]);
+		cmd_path = ft_strjoin("/tmp/bin/", cmd->args[0]);
 	else
 		cmd_path = get_cmd_path(cmd->args[0], envp_char);
 	if (cmd_path)

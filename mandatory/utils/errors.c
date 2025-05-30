@@ -46,7 +46,7 @@ void	exec_error(char *cmd)
 {
 	struct stat	buf;
 	stat(cmd, &buf);
-	if (S_ISDIR(buf.st_mode))
+	if (ft_strcmp(cmd, "." ) && ft_strcmp(cmd, "..") && S_ISDIR(buf.st_mode))
 	{
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd(cmd, 2);
