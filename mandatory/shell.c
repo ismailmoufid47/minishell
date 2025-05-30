@@ -46,10 +46,16 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	free(cmd_line);
 	if (!validate_tokens(tokens, envp))
 		return (NULL);
-	// print_tokens(tokens);
+	print_tokens(tokens);
 	list = create_list(tokens);
+	int i = 1;
+	while (tokens[i])
+	{
+		free(tokens[i]);
+		i++;
+	}
 	free(tokens);
-	// print_list(list, 0);
+	print_list(list, 0);
 	return (list);
 }
 

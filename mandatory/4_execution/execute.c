@@ -65,9 +65,9 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	cmd_path = ft_strjoin(path[i], cmd);
 	while (path[i] && cmd_path && access(cmd_path, X_OK))
 		cmd_path = ((free(cmd_path)), ft_strjoin(path[i++], cmd));
+	ft_free_split(path);
 	if (cmd_path && !access(cmd_path, X_OK))
 		return (cmd_path);
-	ft_free_split(path);
 	return (free(cmd_path), NULL);
 }
 
@@ -99,7 +99,11 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
 		cmd_path = get_cmd_path(cmd->args[0], envp_char);
 	if (cmd_path)
 		execve(cmd_path, cmd->args, envp_char);
-	exec_error(cmd);
+	if (cmd_path)
+		free(cmd_path);
+    if (envp_char)
+		ft_free_split(envp_char);
+	exec_error(&cmd);
 }
 
 void	execute(t_list *list, t_envp **envp)
@@ -135,10 +139,10 @@ void	execute(t_list *list, t_envp **envp)
 			is_built_in = 0;
 			current->pid = fork();
 			if (current->pid == 0)
-				execute_cmd(current, (*envp), prev, stdin_fd);
+				execute_cmd(current, *envp, prev, stdin_fd);
 			else if (current->pid == -1)
 			{
-				error_fork(&(*envp), ft_strdup("fork"));
+				error_fork(envp, ft_strdup("fork"));
 				break ;
 			}
 		}

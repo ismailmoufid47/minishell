@@ -1,27 +1,27 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-// Function C: Modifies the variable via pointer
-void C_modify(int *x) {
-    *x = 99;
-}
-
-// Function B: Passes the pointer to C
-void B_forward(int ptr) {
-    C_modify(&ptr);
-}
-
-// Function A: Declares the variable and calls B
-void A_call()
+// test to see if child leaks even if it frees its resources
+int	main(void)
 {
-    int number = 0;
-    printf("Before: number = %d\n", number);
+    char	*str = strdup("hello");
+    char	*str2 = strdup("world");
+    int		pid;
 
-    B_forward(number);
-
-    printf("After:  number = %d\n", number);
-}
-
-int main() {
-    A_call();
-    return 0;
+    pid = fork();
+    if (pid == 0)
+    {
+        printf("Child: %s %s\n", str, str2);
+        free(str);
+        free(str2);
+        return (0);
+    }
+    else
+    {
+        wait(NULL);
+        printf("Parent: %s %s\n", str, str2);
+        free(str);
+        free(str2);
+    }
+    return (0);
 }

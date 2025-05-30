@@ -1,12 +1,14 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I ../../libft/include\
-         -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
-LFLAGS = -L ../../libft -lft
+CFLAGS = -Wall -Wextra -Werror -I ../../libft/include \
+         -I /home/linuxbrew/.linuxbrew/opt/readline/include -I /home/linuxbrew/.linuxbrew/opt/ncurses/include
+
+#  -L /home/linuxbrew/.linuxbrew/opt/readline/lib -L /home/linuxbrew/.linuxbrew/opt/ncurses/lib 
+LFLAGS = -L ../../libft  -l ft -l readline -l ncurses
 
 LIBFT = ../../libft/libft.a 
 
-SRC = ../utils/errors.c ../utils/envp_handler.c
+SRC = ../utils/errors.c ../utils/envp_handler.c ../utils/envp_handler_utils.c
 
 NAME = bin
 

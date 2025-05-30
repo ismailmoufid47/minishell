@@ -21,15 +21,13 @@ void free_list(t_list *list)
 	{
 		temp = list;
 		list = list->next;
-		
+		free(temp->value);
 		if (temp->type == CMD)
 		{
 			ft_free_split(temp->args);
 			if (temp->is_redirected)
 				free_list(temp->redirections);
 		}
-		free(temp->value);
-
 		free(temp);
 	}
 }

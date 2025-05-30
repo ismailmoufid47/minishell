@@ -103,7 +103,7 @@ void	close_2(int fd1, int fd2);
 
 // Errors: 
 void	error(char *error_prefix);
-void	exec_error(t_list *cmd);
+void	exec_error(t_list **cmd);
 void	identifier_error(char *cmd, char *identifier, t_envp *envp);
 int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
 void	error_fork(t_envp **envp, char *error_prefix);
