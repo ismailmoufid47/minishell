@@ -154,7 +154,7 @@ t_list	*extract_args_and_remove_them(t_list *head)
 			cmd = current;
 			while (current && current->type == CMD)
 			{
-				cmd->args[i] = ft_strdup(current->value);
+				cmd->args[i] = current->value;
 				if (current != cmd)
 				{
 					cmd->next = current->next;

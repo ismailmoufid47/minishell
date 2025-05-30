@@ -21,7 +21,7 @@ void free_list(t_list *list)
 	{
 		temp = list;
 		list = list->next;
-		free(temp->value);
+		// free(temp->value);
 		if (temp->type == CMD)
 		{
 			ft_free_split(temp->args);

@@ -51,7 +51,7 @@ void	exec_error(t_list **cmd)
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd((*cmd)->args[0], 2);
 		ft_putstr_fd(": is a directory\n", 2);
-		// ft_free_split((*cmd)->args);
+		free_list(*cmd);
 		exit (126);
 	}
 	if (ft_strchr((*cmd)->args[0], '/') && access((*cmd)->args[0], F_OK) == -1)
@@ -59,14 +59,12 @@ void	exec_error(t_list **cmd)
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd((*cmd)->args[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
-		// ft_free_split((*cmd)->args);
+		free_list(*cmd);
 		exit (127);
 	}
 	ft_putstr_fd("Minishell: ", 2);
 	ft_putstr_fd((*cmd)->args[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
-	// ft_free_split((*cmd)->args);
+	free_list(*cmd);
 	exit (127);
 }
-
-
