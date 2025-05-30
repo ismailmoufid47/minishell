@@ -99,7 +99,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
 		cmd_path = get_cmd_path(cmd->args[0], envp_char);
 	if (cmd_path)
 		execve(cmd_path, cmd->args, envp_char);
-	exec_error(cmd->args[0]);
+	exec_error(cmd);
 }
 
 void	execute(t_list *list, t_envp **envp)

@@ -42,30 +42,30 @@ void	identifier_error(char *cmd, char *identifier, t_envp *envp)
 	envp->value = ft_strdup("1");
 }
 
-void	exec_error(char *cmd)
+void	exec_error(t_list *cmd)
 {
 	struct stat	buf;
-	stat(cmd, &buf);
-	if (ft_strcmp(cmd, "." ) && ft_strcmp(cmd, "..") && S_ISDIR(buf.st_mode))
+	stat(cmd->args[0], &buf);
+	if (ft_strcmp(cmd->args[0], "." ) && ft_strcmp(cmd->args[0], "..") && S_ISDIR(buf.st_mode))
 	{
 		ft_putstr_fd("Minishell: ", 2);
-		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": is a directory\n", 2);
-		free(cmd);
+		free_list(cmd);
 		exit (126);
 	}
-	if (ft_strchr(cmd, '/') && access(cmd, F_OK) == -1)
+	if (ft_strchr(cmd->args[0], '/') && access(cmd->args[0], F_OK) == -1)
 	{
 		ft_putstr_fd("Minishell: ", 2);
-		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
-		free(cmd);
+		free_list(cmd);
 		exit (127);
 	}
 	ft_putstr_fd("Minishell: ", 2);
-	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(cmd->args[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
-	free(cmd);
+	free_list(cmd);
 	exit (127);
 }
 

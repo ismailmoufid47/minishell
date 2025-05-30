@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.exp": "note",
+        "shell.h": "c"
+    }
+}

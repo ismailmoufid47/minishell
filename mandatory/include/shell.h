@@ -4,10 +4,11 @@
 
 # include "../../libft/include/libft.h"
 # include <stdio.h>    		    		// printf
+# include <stdlib.h>        			// malloc, free, exit, getenv
+# include <sys/stat.h>       			// stat, lstat, fstat
 # include "readline/readline.h" 		// readline, rl_on_new_line, rl_replace_line, rl_redisplay
 # include "readline/history.h"  		// rl_clear_history, add_history
 # include "ncurses/ncurses.h"			// ncurses, tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
-# include <stdlib.h>        			// malloc, free, exit, getenv
 # include <unistd.h>         			// write, access, open, read, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname
 # include <string.h>         			// strerror
 # include <signal.h>         			// signal, sigaction, sigemptyset, sigaddset, kill
@@ -19,10 +20,15 @@
 # include <term.h>           			// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (alternative to <curses.h>)
 # include <errno.h>          			// perror
 # include <sys/wait.h>					// wait, waitpid, WIFEXITED, WEXITSTATUS, WTERMSIG
-# include <sys/stat.h>       			// stat, lstat, fstat
 #include <termios.h>
 
 extern char	**environ;
+
+typedef struct s_envp{
+	char			*name;
+	char			*value;
+	struct s_envp	*next;
+}	t_envp;
 
 typedef enum e_node_type
 {
@@ -41,12 +47,6 @@ typedef enum e_quotation
 	DOQUOTED,
 	SIQUOTED
 }	t_quotation;
-
-typedef struct s_envp{
-	char			*name;
-	char			*value;
-	struct s_envp	*next;
-}	t_envp;
 
 typedef struct s_list
 {
@@ -103,7 +103,7 @@ void	close_2(int fd1, int fd2);
 
 // Errors: 
 void	error(char *error_prefix);
-void	exec_error(char *cmd);
+void	exec_error(t_list *cmd);
 void	identifier_error(char *cmd, char *identifier, t_envp *envp);
 int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
 void	error_fork(t_envp **envp, char *error_prefix);
@@ -135,5 +135,9 @@ int		is_numeric(char *arg);
 // command line Utils:
 char	*get_prompt(t_envp *envp);
 void	load_history(int fd);
+
+// Free resources:
+void	free_envp(t_envp *envp);
+void	free_list(t_list *list);
 
 #endif

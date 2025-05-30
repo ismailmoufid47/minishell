@@ -102,6 +102,7 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 		if (current->type == IN || current->type == OUT
 			|| current->type == APP || current->type == HDOC)
 		{
+			
 			if (prev)
 				prev->next = cmd;
 			if (head == current)
@@ -109,6 +110,11 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 			cmd->is_redirected = 1;
 			cmd->redirections = redirections(current, cmd);
 			current = cmd;
+		}
+		else if (cmd->value == NULL)
+		{
+			free(cmd);
+			cmd = NULL;
 		}
 		prev = current;
 		if (current == cmd)
@@ -148,7 +154,7 @@ t_list	*extract_args_and_remove_them(t_list *head)
 			cmd = current;
 			while (current && current->type == CMD)
 			{
-				cmd->args[i] = current->value;
+				cmd->args[i] = ft_strdup(current->value);
 				if (current != cmd)
 				{
 					cmd->next = current->next;

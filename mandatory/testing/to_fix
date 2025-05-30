@@ -4,3 +4,8 @@
 - sort the * output
 
 - don't expand when the heredoc delimiter, eg: << *, <<  $HOME
+
+
+- leaks echo $HOME
+
+-cd /tmp

@@ -37,15 +37,18 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	cmd_line = expand_env_variable(cmd_line, envp);
 	if (!cmd_line || !*cmd_line)
 	{
+		free(cmd_line);
 		return (NULL);
 	}
 	
 	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
+	free(cmd_line);
 	if (!validate_tokens(tokens, envp))
 		return (NULL);
 	// print_tokens(tokens);
 	list = create_list(tokens);
+	free(tokens);
 	// print_list(list, 0);
 	return (list);
 }
@@ -82,7 +85,11 @@ int	main(void)
 		}
 		free(prompt);
 		if (input == NULL)
-			return (printf("exit\n"), ft_atoi(ft_get_env_val(envp, "?")));
+		{
+			int re = ft_atoi(ft_get_env_val(envp, "?"));
+			free_envp(envp);
+			return (printf("exit\n"), re);
+		}
 		if (*input == 0)
 			continue ;
 		if (*input)
@@ -95,6 +102,7 @@ int	main(void)
 		if (list)
 			execute(list, &envp);
 		free(input);
+		free_list(list);
 	}
 	close(history_fd);
 	return (0);

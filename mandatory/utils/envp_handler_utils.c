@@ -11,7 +11,7 @@ t_envp	*replace_missing_envp(t_envp *envp)
 		*(ft_strchr(str, '=')) = 0;
 		node = create_envp_node(str);
 		free(str);
-		node->value = getcwd(NULL, 0);
+		node->value = ft_strdup(getcwd(NULL, 0));
 		node->next = envp;
 		envp = node;
 	}

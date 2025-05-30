@@ -13,7 +13,7 @@ char	*get_cwd(t_envp *envp)
 	return (getcwd(NULL, 0));
 }
 
-void	pwd(t_envp *envp)
+void	ft_pwd(t_envp *envp)
 {
 	printf("%s\n", get_cwd(envp));
 }
@@ -29,6 +29,6 @@ int main()
 		ft_putstr_fd("Error initializing environment variables\n", 2);
 		return (1);
 	}
-	pwd(envp);
+	ft_pwd(envp);
 	return (0);
 }
