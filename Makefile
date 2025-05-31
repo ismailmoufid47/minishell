@@ -81,8 +81,8 @@ all: $(NAME)
 
 $(NAME): $(MANDATORY_FILES) $(LIBFT_SRC)
 	make -C mandatory
-	cp mandatory/minishell .
-	cp -r mandatory/bin /tmp/bin/
+	mv mandatory/minishell .
+	mv mandatory/bin /tmp/bin/
 
 bonus: $(BONUS_FILES)
 	make -C bonus
@@ -93,8 +93,9 @@ clean:
 # 	make -C bonus clean
 m:
 	make m -C mandatory
-	cp mandatory/minishell .
-	cp -r mandatory/bin /tmp/bin/
+	mv mandatory/minishell .
+	mv mandatory/bin /tmp/bin/
+
 fclean:
 	make -C mandatory fclean
 # 	make -C bonus fclean

@@ -5,22 +5,25 @@ CC = cc
 FSANITIZE = -fsanitize=address -g
 
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-         -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
 LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-         -l ft -l readline -l ncurses
+		 -l ft -l readline -l ncurses
 
 
 LIBFT = ../libft/libft.a
 
-BIN = bin/env \
-		bin/echo \
-		bin/pwd
+# Directory for binaries
+BIN_DIR = bin
+
+BIN = $(BIN_DIR)/env \
+	  $(BIN_DIR)/echo \
+	  $(BIN_DIR)/pwd
 
 BIN_SRC = utils/errors.c \
-		utils/envp_handler.c \
-		utils/envp_handler_utils.c \
-		utils/free_resources.c 
+		  utils/envp_handler.c \
+		  utils/envp_handler_utils.c \
+		  utils/free_resources.c 
 
 LIBFT_SRC =  ../libft/include/libft.h \
 		../libft/Makefile \
@@ -90,15 +93,17 @@ SRC = 1_expansion/expand.c \
 
 all: $(NAME)
 
-bin/env: builtins/env.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/env.c $(LFLAGS) -o bin/env
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
-bin/echo: builtins/echo.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/echo.c $(LFLAGS) -o bin/echo
+$(BIN_DIR)/env: $(BIN_DIR) include/shell.h builtins/env.c $(BIN_SRC) $(LIBFT)
+	$(CC) $(CFLAGS) $(BIN_SRC) builtins/env.c $(LFLAGS) -o $(BIN_DIR)/env
 
-bin/pwd: builtins/pwd.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/pwd.c $(LFLAGS) -o bin/pwd
+$(BIN_DIR)/echo: $(BIN_DIR) include/shell.h builtins/echo.c $(BIN_SRC) $(LIBFT)
+	$(CC) $(CFLAGS) $(BIN_SRC) builtins/echo.c $(LFLAGS) -o $(BIN_DIR)/echo
 
+$(BIN_DIR)/pwd: $(BIN_DIR) include/shell.h builtins/pwd.c $(BIN_SRC) $(LIBFT)
+	$(CC) $(CFLAGS) $(BIN_SRC) builtins/pwd.c $(LFLAGS) -o $(BIN_DIR)/pwd
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC) $(BIN)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) 
@@ -115,7 +120,7 @@ fclean: clean
 	make -C ../libft fclean
 
 re: fclean all
-m :fclean include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC) 
+m :fclean include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)  $(BIN)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) $(FSANITIZE)
 
 .PHONY: all clean fclean re bonus

@@ -63,7 +63,6 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 		perror(path);
 		free(envp->value);
 		envp->value = ft_strdup("1");
-		ft_free_split(args);
 		return ;
 	}
 	chdir(path);
@@ -72,7 +71,6 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 	if ((prev &&  prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE))
 		return ;
-	ft_free_split(args);
 	old_pwd = get_cwd(envp);
 	while (envp)
 	{

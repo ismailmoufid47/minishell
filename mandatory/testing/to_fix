@@ -8,6 +8,6 @@
 
 - leaks echo $HOME
 
--cd /tmp
+- cd /tmp
 
 - cd dd and from another terminal remove dd  then do pwd

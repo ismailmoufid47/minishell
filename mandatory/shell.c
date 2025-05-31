@@ -6,7 +6,7 @@
 /*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/05/29 20:57:30 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/05/31 16:47:08 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	main(void)
 			write(history_fd, "\n", 1);
 		}
 		list = parse(input, envp);
+		print_list(list, 1);
 		if (list)
 			execute(list, &envp);
 		free(input);
