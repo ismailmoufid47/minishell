@@ -27,6 +27,7 @@ void	print_envp(char **envp)
 		i++;
 	while (--i > 0)
 		printf("%s\n", envp[i]);
+	ft_free_split(envp);
 }
 
 char	*get_cwd(t_envp *envp)
