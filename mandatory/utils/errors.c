@@ -10,9 +10,6 @@ void	error(char *error_prefix)
 
 void	error_fork(t_envp **envp, char *error_prefix)
 {
-
-	// (void )(envp);
-
 	ft_putstr_fd("Minishell: ", 2);
 	perror(error_prefix);
 	free(error_prefix);

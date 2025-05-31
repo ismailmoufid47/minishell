@@ -2,6 +2,17 @@
 
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
+
+void print_split_result(char **result)
+{
+	int i = 0;
+	while (result && result[i])
+	{
+		printf("result[%d]: |%s|\n", i, result[i]);
+		i++;
+	}
+}
+
 char **ft_spit_and_add_quotes(char *var)
 {
 	char	**result;
@@ -33,32 +44,34 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 	char	*result;
 	char	*var;
 	int		i;
-	int		variable_len;
+	int		variable_name_len;
 	char	*tmp;
 	char	**split_result;
 
-	variable_len = ft_isdigit(cmd[start]);
+	variable_name_len = ft_isdigit(cmd[start]);
 	i = start - 1;
+	result = NULL;
 	while (cmd[++i]
 		&& (ft_isalnum(cmd[i]) || cmd[i] == '_' || cmd[i] == '?')
 		&& !ft_isdigit(cmd[start]))
-		variable_len++;
-	ft_strlcpy(variable_name, cmd + start, variable_len + 1);
+		variable_name_len++;
+	ft_strlcpy(variable_name, cmd + start, variable_name_len + 1);
 	var = ft_get_env_val(envp, variable_name);
-	if (variable_len == 0)
+	if (variable_name_len == 0)
 		return (ft_strdup(cmd));
 	cmd[start - 1] = '\0';
-	if (!var || ft_isdigit(cmd[start]) || cmd[start] == '\"' || cmd[start] == '\'')
+	if (!var || !*var || ft_isdigit(cmd[start]) || cmd[start] == '\"' || cmd[start] == '\'')
 	{
 		var = strdup("");
 		result = ft_strjoin(cmd, var);
 		free(var);
 		var = result;
-		result = ft_strjoin(result, cmd + start + variable_len);
+		result = ft_strjoin(result, cmd + start + variable_name_len);
 		free(var);
 		return (result);
 	}
 	split_result = ft_spit_and_add_quotes(var);
+	print_split_result(split_result);
 	i = 0;
 	while (split_result && split_result[i])
 	{
@@ -77,7 +90,7 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 	if (i)
 	{
 		var = result;
-		result = ft_strjoin(result, cmd + start + variable_len);
+		result = ft_strjoin(result, cmd + start + variable_name_len);
 		free(var);
 	}
 	free(split_result);
@@ -87,13 +100,12 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 char	*expand_env_variable(char *cmd_line, t_envp *envp)
 {
 	int		i;
-	int		expanded;
 	int		dq_flag;
 	int		sq_flag;
 	int		here_doc_is_prev;
+	char	*tmp;
 
 	i = 0;
-	expanded = 0;
 	dq_flag = 0;
 	sq_flag = 0;
 	here_doc_is_prev = 0;
@@ -121,16 +133,15 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp)
 			dq_flag = !dq_flag;
 		if (cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
 		{
-			expanded = 1;
 			if (cmd_line[i + 1] && (strchr("_?", cmd_line[i + 1]) || ft_isalpha(cmd_line[i + 1])))
 			{
+				tmp = cmd_line;
 				cmd_line = search_and_replace(cmd_line, i + 1, envp);
+				free(tmp);
 			}
 		}
 		if (cmd_line && cmd_line[i])
 			i++;
 	}
-	if (!expanded)
-		cmd_line = ft_strdup(cmd_line);
 	return (cmd_line);
 }

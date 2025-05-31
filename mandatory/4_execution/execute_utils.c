@@ -16,7 +16,6 @@ void	handle_here_doc(char *delimiter, t_envp *envp)
 	{
 		input = expand_env_variable(tmp, envp);
 		ft_putendl_fd(input, fd1);
-		free(tmp);
 		free(input);
 		tmp = readline("> ");
 	}

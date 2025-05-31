@@ -46,7 +46,9 @@ char	*get_cmd_path(char *cmd, char *envp[])
 		i++;
 	if (!envp[i])
 	{
-		tmp = ft_strjoin(getcwd(NULL, 0), "/");
+		cmd_path = getcwd(NULL, 0);
+		tmp = ft_strjoin(cmd_path, "/");
+		free(cmd_path);
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (!access(cmd_path, X_OK))

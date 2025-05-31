@@ -27,6 +27,8 @@ void free_list(t_list *list)
 			if (temp->is_redirected)
 				free_list(temp->redirections);
 		}
+		else
+			free(temp->value);
 		free(temp);
 	}
 }

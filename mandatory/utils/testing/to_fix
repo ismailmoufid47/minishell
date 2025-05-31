@@ -5,9 +5,3 @@
 
 - don't expand when the heredoc delimiter, eg: << *, <<  $HOME
 
-
-- leaks echo $HOME
-
-- cd /tmp
-
-- cd dd and from another terminal remove dd  then do pwd

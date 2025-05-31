@@ -75,7 +75,7 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 	while (envp)
 	{
 		if (!strcmp(envp->name, "PWD"))
-			envp->value = ft_strdup(getcwd(NULL, 0));
+			envp->value = getcwd(NULL, 0);
 		if (!strcmp(envp->name, "OLDPWD"))
 		{
 			free(envp->value);

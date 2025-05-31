@@ -46,16 +46,16 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	free(cmd_line);
 	if (!validate_tokens(tokens, envp))
 		return (NULL);
-	print_tokens(tokens);
+	// print_tokens(tokens);
 	list = create_list(tokens);
 	free(tokens);
-	print_list(list, 0);
+	// print_list(list, 0);
 	return (list);
 }
 
 int	main(void)
 {
-	char	*input;
+	char	*cmd_line;
 	t_list	*list;
 	int		history_fd;
 	t_envp	*envp;
@@ -66,17 +66,17 @@ int	main(void)
 	rl_catch_signals = 0;
 	envp = set_envp();
 	if (ft_get_env_val(envp, "HOME"))
-		input = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
+		cmd_line = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
 	else
-		input = ft_strdup("/tmp/.bash_history");
-	history_fd = open_wrapper(input, O_RDWR | O_CREAT | O_APPEND, 0666);
+		cmd_line = ft_strdup("/tmp/.bash_history");
+	history_fd = open_wrapper(cmd_line, O_RDWR | O_CREAT | O_APPEND, 0666);
 	load_history(history_fd);
-	free(input);
+	free(cmd_line);
 	while (1)
 	{
 		prompt = get_prompt(envp);
 		
-		input = readline(prompt);
+		cmd_line = readline(prompt);
 		if (g_signal == SIGINT)
 		{
 			g_signal = 0;
@@ -84,25 +84,26 @@ int	main(void)
 			envp->value = ft_strdup("1");
 		}
 		free(prompt);
-		if (input == NULL)
+		if (cmd_line == NULL)
 		{
 			int re = ft_atoi(ft_get_env_val(envp, "?"));
 			free_envp(envp);
 			return (printf("exit\n"), re);
 		}
-		if (*input == 0)
-			continue ;
-		if (*input)
+		if (*cmd_line == 0)
 		{
-			add_history(input);
-			write(history_fd, input, strlen(input));
+			free(cmd_line);
+			continue ;
+		}
+		if (*cmd_line)
+		{
+			add_history(cmd_line);
+			write(history_fd, cmd_line, strlen(cmd_line));
 			write(history_fd, "\n", 1);
 		}
-		list = parse(input, envp);
-		print_list(list, 1);
+		list = parse(cmd_line, envp);
 		if (list)
 			execute(list, &envp);
-		free(input);
 		free_list(list);
 	}
 	close(history_fd);

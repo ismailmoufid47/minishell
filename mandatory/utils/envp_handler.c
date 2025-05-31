@@ -31,6 +31,8 @@ t_envp	*remove_envp_var(t_envp *head, char *var_name)
 				return (head); 
 			}
 			prev->next = envp->next;
+			free(envp->name);
+			free(envp->value);
 			free(envp);
 			return (head);
 		}

@@ -23,5 +23,14 @@ int	main(void)
         free(str);
         free(str2);
     }
+
+
+
+
+
+
+
+
+    
     return (0);
 }
