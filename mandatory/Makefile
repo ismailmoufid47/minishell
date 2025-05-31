@@ -13,18 +13,6 @@ LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 
 LIBFT = ../libft/libft.a
 
-# Directory for binaries
-BIN_DIR = bin
-
-BIN = $(BIN_DIR)/env \
-	  $(BIN_DIR)/echo \
-	  $(BIN_DIR)/pwd
-
-BIN_SRC = utils/errors.c \
-		  utils/envp_handler.c \
-		  utils/envp_handler_utils.c \
-		  utils/free_resources.c 
-
 LIBFT_SRC =  ../libft/include/libft.h \
 		../libft/Makefile \
 		../libft/src/ft_atoi.c \
@@ -79,6 +67,7 @@ SRC = 1_expansion/expand.c \
 	3_listification/classed_list_utils.c \
 	4_execution/execute.c \
 	4_execution/execute_utils.c \
+	builtins/bins.c \
 	builtins/builtins.c \
 	builtins/builtins_utils.c \
 	utils/cmdline_utils.c \
@@ -92,18 +81,6 @@ SRC = 1_expansion/expand.c \
 
 
 all: $(NAME)
-
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
-
-$(BIN_DIR)/env: $(BIN_DIR) include/shell.h builtins/env.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/env.c $(LFLAGS) -o $(BIN_DIR)/env
-
-$(BIN_DIR)/echo: $(BIN_DIR) include/shell.h builtins/echo.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/echo.c $(LFLAGS) -o $(BIN_DIR)/echo
-
-$(BIN_DIR)/pwd: $(BIN_DIR) include/shell.h builtins/pwd.c $(BIN_SRC) $(LIBFT)
-	$(CC) $(CFLAGS) $(BIN_SRC) builtins/pwd.c $(LFLAGS) -o $(BIN_DIR)/pwd
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC) $(BIN)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) 

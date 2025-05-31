@@ -95,10 +95,8 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
 	if (cmd->value == NULL)
 		exit (0);
 	envp_char = envp_to_char(envp);
-	if (is_bin(cmd->args[0]))
-		cmd_path = ft_strjoin("/tmp/bin/", cmd->args[0]);
-	else
-		cmd_path = get_cmd_path(cmd->args[0], envp_char);
+	is_bin(cmd, envp);
+	cmd_path = get_cmd_path(cmd->args[0], envp_char);
 	if (cmd_path)
 		execve(cmd_path, cmd->args, envp_char);
 	exec_error(&cmd);
@@ -126,7 +124,7 @@ void	execute(t_list *list, t_envp **envp)
 			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
 		if (!ft_strcmp(current->value, "cd"))
 			cd(current->args, *envp, current, prev);
-		else if (!ft_strcmp(current->value, "export"))
+		else if (!prev && !current->next && !ft_strcmp(current->value, "export"))
 			export(current->args, *envp, current, prev);
 		else if (!ft_strcmp(current->value, "unset"))
 			unset(current->args, *envp, current, prev);

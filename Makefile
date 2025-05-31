@@ -82,7 +82,6 @@ all: $(NAME)
 $(NAME): $(MANDATORY_FILES) $(LIBFT_SRC)
 	make -C mandatory
 	mv mandatory/minishell .
-	mv mandatory/bin /tmp/bin/
 
 bonus: $(BONUS_FILES)
 	make -C bonus
@@ -94,7 +93,6 @@ clean:
 m:
 	make m -C mandatory
 	mv mandatory/minishell .
-	mv mandatory/bin /tmp/bin/
 
 fclean:
 	make -C mandatory fclean

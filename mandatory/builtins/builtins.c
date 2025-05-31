@@ -18,18 +18,24 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int		i;
 	t_envp	*node;
+	int 	in;
+	int		out;
 
-	redirect_builtins(current, envp);
+	in = dup(STDIN_FILENO);
+	out = dup(STDOUT_FILENO);
+	if (!prev && !current->next)
+		redirect(current->redirections, envp, STDIN_FILENO);
 	i = 1;
 	while (args[i])
 	{
 		if (!is_valid_export_argument(args[i]))
+		{
+			ft_dup2(in, STDIN_FILENO);
+			ft_dup2(out, STDOUT_FILENO);
 			return (identifier_error("export", args[i], envp));
+		}
 		free(envp->value);
 		envp->value = ft_strdup("0");
-		if ((prev &&  prev->type == PIPE)
-			|| (current->next && current->next->type == PIPE))
-			return ;
 		if (ft_strchr(args[i], '='))
 		{
 			*(ft_strchr(args[i], '=')) = '\0';
@@ -40,6 +46,18 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 		}
 		i++;
 	}
+	if (i == 1)
+	{
+		envp = envp->next;
+		while (envp)
+		{
+			if (envp->name && envp->value)
+				printf("declare -x %s=\"%s\"\n", envp->name, envp->value);
+			envp = envp->next;
+		}
+	}
+	ft_dup2(in, STDIN_FILENO);
+	ft_dup2(out, STDOUT_FILENO);
 }
 
 void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)

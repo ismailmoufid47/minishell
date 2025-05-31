@@ -1,21 +1,34 @@
 #include "../include/shell.h"
 
-int	is_bin(char *cmd)
+void	is_bin(t_list *cmd, t_envp *envp)
 {
-	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "pwd"));
-}
-
-
-char	*get_cwd(t_envp *envp)
-{
-	while (envp)
+	if (!ft_strcmp(cmd->value, "echo"))
 	{
-		if (!ft_strcmp(envp->name, "PWD"))
-			return (envp->value);
-		envp = envp->next;
+		if (!cmd->args[1])
+		{
+			write(1, "\n", 1);
+			exit (0);
+		}
+		print_argument(cmd->args);
+		exit (0);
 	}
-	return (NULL);
+	else if (!ft_strcmp(cmd->value, "env"))
+	{
+		print_envp(envp_to_char(envp));
+		exit (0);
+	}
+	else if (!ft_strcmp(cmd->value, "pwd"))
+	{
+		printf("%s\n", get_cwd(envp));
+		exit (0);
+	}
+	else if (!ft_strcmp(cmd->value, "export"))
+	{
+		if (!cmd->args[1])
+			return ;
+		export(cmd->args, envp, cmd, NULL);
+		exit (0);
+	}
 }
 
 int	is_valid_export_argument(char *arg)

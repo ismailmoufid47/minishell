@@ -78,6 +78,9 @@ t_list	*create_list(char **tokens);
 void	execute(t_list *list, t_envp **envp);
 
 // Built-ins:
+char	*get_cwd(t_envp *envp);
+void	print_envp(char **envp);
+void	print_argument(char **argv);
 void	pwd(t_envp *envp, t_list *current, t_list *prev);
 void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev);
 void	export(char **args, t_envp *envp, t_list *current, t_list *prev);
@@ -126,8 +129,7 @@ void	redirect(t_list *redirections, t_envp *envp, int stdin_fd);
 void	handle_here_doc(char *delimiter, t_envp *envp);
 
 // Built-ins utils:
-char	*get_cwd(t_envp *envp);
-int		is_bin(char *cmd);
+void	is_bin(t_list *cmd, t_envp *envp);
 int		is_valid_export_argument(char *arg);
 int		is_valid_unset_argument(char *arg);
 int		is_numeric(char *arg);
