@@ -58,9 +58,7 @@ MANDATORY_FILES = mandatory/shell.c \
 				mandatory/utils/free_resources.c \
 				mandatory/utils/envp_handler_utils.c \
 				mandatory/utils/cmdline_utils.c \
-				mandatory/builtins/env.c \
-				mandatory/builtins/echo.c \
-				mandatory/builtins/pwd.c \
+				mandatory/builtins/bins.c \
 				mandatory/include/shell.h \
 				mandatory/Makefile \
 				mandatory/2_tokenization/tokenize_utils.c \
