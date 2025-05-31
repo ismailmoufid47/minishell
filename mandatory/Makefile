@@ -4,6 +4,11 @@ CC = cc
 
 FSANITIZE = -fsanitize=address -g
 
+# CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
+# 		 -I /usr/include -I /home/codespace -I ../libft
+
+# LFLAGS = -L../libft -l ft -l readline -l ncurses
+
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
