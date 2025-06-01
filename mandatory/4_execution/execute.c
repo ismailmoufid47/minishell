@@ -2,12 +2,14 @@
 
 extern int	g_signal;
 
-void	redirect(t_list *redirections, t_envp *envp, int stdin_fd)
+void	redirect(t_list *cmd)
 {
 	t_list	*current;
 	char	*file;
+	current = cmd->redirections;
+	int		herdoc_visited;
 
-	current = redirections;
+	herdoc_visited = 0;
 	while (current)
 	{
 		file = current->next->value;
@@ -17,15 +19,13 @@ void	redirect(t_list *redirections, t_envp *envp, int stdin_fd)
 			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT, 0666), 1);
 		if (current->type == APP)
 			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT | O_APPEND, 0666), 1);
-		if (current->type == HDOC)
+		if (cmd->here_doc && current->type == HDOC && !herdoc_visited)
 		{
-			dup2(stdin_fd, 0);
-			handle_here_doc(file, envp);
+			herdoc_visited = 1;
+			ft_dup2(cmd->here_doc, 0);
 		}
 		current = current->next->next;
 	}
-	signal(SIGQUIT, SIG_DFL);
-	close(stdin_fd);
 }
 
 char	*get_cmd_path(char *cmd, char *envp[])
@@ -71,7 +71,7 @@ char	*get_cmd_path(char *cmd, char *envp[])
 	return (free(cmd_path), NULL);
 }
 
-void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
+void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
 	char	*cmd_path;
@@ -89,7 +89,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev, int stdin_fd)
 		close(cmd->next->pipe_fds[0]);
 	}
 	if (cmd->is_redirected)
-		redirect(cmd->redirections, envp, stdin_fd);
+		redirect(cmd);
 	if (cmd->value == NULL)
 		exit (0);
 	envp_char = envp_to_char(envp);
@@ -107,14 +107,10 @@ void	execute(t_list *list, t_envp **envp)
 	t_list	*prev_pipe;
 	int		status;
 	int		is_built_in;
-	int 	stdin_fd;
-	struct termios old;
-
+	
 	current = list;
 	prev = NULL;
 	prev_pipe = NULL;
-	stdin_fd = dup(STDIN_FILENO);
-	tcgetattr(STDIN_FILENO, &old);
 	while (current)
 	{
 		is_built_in = 1;
@@ -131,21 +127,15 @@ void	execute(t_list *list, t_envp **envp)
 		else if (current->type == CMD)
 		{
 			is_built_in = 0;
-			current->pid = fork();
+			current->pid = fork_wrapper(*envp);
 			if (current->pid == 0)
-				execute_cmd(current, *envp, prev, stdin_fd);
-			else if (current->pid == -1)
-			{
-				error_fork(envp, ft_strdup("fork"));
-				break ;
-			}
+				execute_cmd(current, *envp, prev);
 		}
 		prev = current;
 		if (current->type == PIPE)
 			prev_pipe = current;
 		current = current->next;
 	}
-	close(stdin_fd);
 	if (prev_pipe)
 		close_2(prev_pipe->pipe_fds[1], prev_pipe->pipe_fds[1]);
 	while (list)
@@ -172,6 +162,5 @@ void	execute(t_list *list, t_envp **envp)
 	}
 	while (wait(NULL) > 0)
 		;
-	tcsetattr(STDIN_FILENO, TCSANOW, &old);
 	signal(SIGINT, print_prompt);
 }

@@ -8,13 +8,12 @@ void	error(char *error_prefix)
 	exit(EXIT_FAILURE);
 }
 
-void	error_fork(t_envp **envp, char *error_prefix)
+void	error_fork(t_envp *envp)
 {
 	ft_putstr_fd("Minishell: ", 2);
-	perror(error_prefix);
-	free(error_prefix);
-	free((*envp)->value);
-	(*envp)->value = ft_strdup("1");
+	perror("fork");
+	free(envp->value);
+	envp->value = ft_strdup("1");
 }
 
 int	syntax_error(char **tokens, char *error_prefix, t_envp *envp)

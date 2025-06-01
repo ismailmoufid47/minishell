@@ -9,6 +9,7 @@ t_list	*create_list_node(char *token, int type)
 	node->type = type;
 	node->quote_type = UNQUOTED;
 	node->next = NULL;
+	node->here_doc = 0;
 	return (node);
 }
 

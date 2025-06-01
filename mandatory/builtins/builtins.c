@@ -1,6 +1,6 @@
 #include "../include/shell.h"
 
-void  redirect_builtins(t_list *current, t_envp *envp)
+void  redirect_builtins(t_list *current)
 {
 	int	stdout_fd;
 	int	stdin_fd;
@@ -9,7 +9,7 @@ void  redirect_builtins(t_list *current, t_envp *envp)
 		return ;
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);
-	redirect(current->redirections, envp, STDIN_FILENO);
+	redirect(current);
 	ft_dup2(stdout_fd, STDOUT_FILENO);
 	ft_dup2(stdin_fd, STDIN_FILENO);
 }
@@ -24,7 +24,7 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 	in = dup(STDIN_FILENO);
 	out = dup(STDOUT_FILENO);
 	if (!prev && !current->next)
-		redirect(current->redirections, envp, STDIN_FILENO);
+		redirect(current->redirections);
 	i = 1;
 	while (args[i])
 	{
@@ -69,7 +69,7 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 	t_envp	*prev_envp;
 
 	old_pwd_set = 0;
-	redirect_builtins(current, envp);
+	redirect_builtins(current);
 	path = args[1];
 	if (!path)
 		path = "/";
@@ -123,7 +123,7 @@ void	unset(char **args, t_envp *envp, t_list *current, t_list *prev)
 	int		i;
 
 
-	redirect_builtins(current, envp);
+	redirect_builtins(current);
 	i = 1;
 	if (args[i] && !is_valid_unset_argument(args[i]))
 			return (identifier_error("unset", args[i], envp));
@@ -149,7 +149,7 @@ void	exit_cmd(char **args, t_envp *envp, t_list *current, t_list *prev)
 	int subshell;
 
 
-	redirect_builtins(current, envp);
+	redirect_builtins(current);
 	subshell = (prev &&  prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE);
 	ft_putendl_fd("exit", 1);

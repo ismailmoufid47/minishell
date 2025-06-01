@@ -58,6 +58,7 @@ typedef struct s_list
 	char			**args;
 	int				pid;
 	int				pipe_fds[2];
+	int 			here_doc;
 	struct s_list	*next;
 }	t_list;
 
@@ -103,13 +104,14 @@ int		open_wrapper(char *file, int open_mode, int create_permissions);
 void	pipe_wrapper(int *pipe_fd);
 void	ft_dup2(int fd1, int fd2);
 void	close_2(int fd1, int fd2);
+pid_t	fork_wrapper(t_envp *envp);
 
 // Errors: 
 void	error(char *error_prefix);
 void	exec_error(t_list **cmd);
 void	identifier_error(char *cmd, char *identifier, t_envp *envp);
 int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
-void	error_fork(t_envp **envp, char *error_prefix);
+void	error_fork(t_envp *envp);
 
 //tokenize utils:
 int		is_special_token(char *token);
@@ -125,8 +127,10 @@ t_list	*closest_cmd(t_list *head);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
-void	redirect(t_list *redirections, t_envp *envp, int stdin_fd);
-void	handle_here_doc(char *delimiter, t_envp *envp);
+void	redirect(t_list *cmd);
+
+// Handle here-documents:
+void	handle_here_doc(char *delimiter, t_envp *envp, int out);
 
 // Built-ins utils:
 void	is_bin(t_list *cmd, t_envp *envp);

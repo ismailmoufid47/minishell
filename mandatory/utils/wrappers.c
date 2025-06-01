@@ -32,3 +32,13 @@ void	close_2(int fd1, int fd2)
 	close(fd1);
 	close(fd2);
 }
+
+pid_t	fork_wrapper(t_envp *envp)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+		error_fork(envp);
+	return (pid);
+}
