@@ -49,6 +49,7 @@ t_envp	*create_envp_node(char *var)
 	node = malloc(sizeof(t_envp));
 	node->name = ft_strdup(var);
 	node->value = ft_strdup(var + ft_strlen(var) + 1);
+	node->next = NULL;
 	return (node);
 }
 

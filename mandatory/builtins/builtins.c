@@ -65,8 +65,10 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 	struct stat	dir;
 	char	*path;
 	char	*old_pwd;
+	int		old_pwd_set;
+	t_envp	*prev_envp;
 
-
+	old_pwd_set = 0;
 	redirect_builtins(current, envp);
 	path = args[1];
 	if (!path)
@@ -99,10 +101,20 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 		}
 		if (!strcmp(envp->name, "OLDPWD"))
 		{
+			old_pwd_set = 1;
 			free(envp->value);
 			envp->value = old_pwd;
 		}
+		prev_envp = envp;
 		envp = envp->next;
+	}
+	if (!old_pwd_set)
+	{
+		path = ft_strjoin("OLDPWD=", old_pwd);
+		*(ft_strchr(path, '=')) = '\0';
+		prev_envp->next = create_envp_node(path);
+		free(old_pwd);
+		free(path);
 	}
 }
 
