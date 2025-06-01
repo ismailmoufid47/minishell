@@ -4,5 +4,3 @@
 - sort the * output
 
 - don't expand when the heredoc delimiter, eg: << *, <<  $HOME
-
-- qoutes in delimiter of heredoc mean you should not expand in the heredoc

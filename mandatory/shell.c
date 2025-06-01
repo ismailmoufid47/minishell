@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/06/01 21:11:37 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:24:57 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,9 @@ void	handle_here_doc(t_list *file, t_envp *envp, int out)
 	tmp = readline("> ");
 	while (tmp && ft_strcmp(tmp, file->value))
 	{
+		input = tmp;
 		if (file->quote_type == UNQUOTED)
 			input = expand_env_variable(tmp, envp, 1);
-		else
-			input = ft_strdup(tmp);
 		ft_putendl_fd(input, out);
 		free(input);
 		tmp = readline("> ");
@@ -146,7 +145,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	// print_tokens(tokens);
 	list = create_list(tokens);
 	free(tokens);
-	print_list(list, 0);
+	// print_list(list, 0);
 	
 	if (!handle_here_docs(envp, list))
 		return (free_list(list), NULL);
