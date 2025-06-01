@@ -24,7 +24,7 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 	in = dup(STDIN_FILENO);
 	out = dup(STDOUT_FILENO);
 	if (!prev && !current->next)
-		redirect(current->redirections);
+		redirect(current);
 	i = 1;
 	while (args[i])
 	{

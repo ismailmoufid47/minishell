@@ -5,21 +5,7 @@
 
 - don't expand when the heredoc delimiter, eg: << *, <<  $HOME
 
-
 - qoutes in delimiter of heredoc mean you should not expand in the heredoc
 
 - IN HEREDOC  > $HOME
 "/Users/jbelkerf/Desktop/Mini-Shell"
-
-
-a="'ls -la'"
-
-echo "'ls" "-la'" hh
-
-"ls" 
-"-la"
-
-dq = 1
-sq = 0
-
-"'ls'"

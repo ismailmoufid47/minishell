@@ -16,7 +16,7 @@ void	builtin_here_doc(char *delimiter, t_envp *envp)
 	tmp = readline("> ");
 	while (tmp && ft_strcmp(tmp, delimiter))
 	{
-		input = expand_env_variable(tmp, envp);
+		input = expand_env_variable(tmp, envp, 0);
 		ft_putendl_fd(input, fd1);
 		free(tmp);
 		free(input);

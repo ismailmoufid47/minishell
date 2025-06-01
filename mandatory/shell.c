@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/06/01 20:00:34 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/06/01 20:28:49 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	handle_here_doc(char *delimiter, t_envp *envp, int out)
 	tmp = readline("> ");
 	while (tmp && ft_strcmp(tmp, delimiter))
 	{
-		input = expand_env_variable(tmp, envp);
+		input = expand_env_variable(tmp, envp, 1);
 		ft_putendl_fd(input, out);
 		free(input);
 		tmp = readline("> ");
@@ -128,7 +128,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	t_list	*list;
 
 	list = NULL;
-	cmd_line = expand_env_variable(cmd_line, envp);
+	cmd_line = expand_env_variable(cmd_line, envp, 0);
 	if (!cmd_line || !*cmd_line)
 	{
 		free(cmd_line);

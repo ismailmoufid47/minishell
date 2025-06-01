@@ -67,7 +67,7 @@ void	print_tokens(char **tokens);
 void	print_list(t_list *list, int tab_count);
 
 //expander:
-char	*expand_env_variable(char *cmd_line, t_envp *envp);
+char    *expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
 
 // tokenize:
 char	**tokenize(char *cmd);

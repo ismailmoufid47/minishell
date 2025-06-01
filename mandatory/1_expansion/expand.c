@@ -3,7 +3,7 @@
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
 
-char **ft_spit_and_add_quotes(char *var)
+char **ft_split_and_add_quotes(char *var, int is_here_doc)
 {
 	char	**result;
 	char	*tmp;
@@ -14,21 +14,29 @@ char **ft_spit_and_add_quotes(char *var)
 	while (result[i])
 	{
 		tmp = result[i];
-		if (i > 0)
-			result[i] = ft_strjoin(" \"", result[i]);
+		if (!is_here_doc)
+		{
+			if (i > 0)
+				result[i] = ft_strjoin(" \"", result[i]);
+			else
+				result[i] = ft_strjoin("\"", result[i]);
+		}
 		else
-			result[i] = ft_strjoin("\"", result[i]);
-		free(tmp);
+			result[i] = ft_strjoin(result[i], " ");
+		free(tmp);	
 		tmp = result[i];
-		result[i] = ft_strjoin(result[i], "\"");
-		free(tmp);
+		if (!is_here_doc)
+		{
+			result[i] = ft_strjoin(result[i], "\"");
+			free(tmp);
+		}
 		i++;
 	}
 	return (result);
 
 }
 
-char	*search_and_replace(char *cmd, int start, t_envp *envp)
+char	*search_and_replace(char *cmd, int start, t_envp *envp, int is_here_doc)
 {
 	char	variable_name[1024];
 	char	*result;
@@ -62,7 +70,7 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 		free(var);
 		return (result);
 	}
-	split_result = ft_spit_and_add_quotes(var);
+	split_result = ft_split_and_add_quotes(var, is_here_doc);
 	i = 0;
 	while (split_result && split_result[i])
 	{
@@ -88,7 +96,7 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 	return (result);
 }
 
-char	*expand_env_variable(char *cmd_line, t_envp *envp)
+char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 {
 	int		i;
 	int		dq_flag;
@@ -127,7 +135,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp)
 			if (cmd_line[i + 1] && (strchr("_?", cmd_line[i + 1]) || ft_isalpha(cmd_line[i + 1])))
 			{
 				tmp = cmd_line;
-				cmd_line = search_and_replace(cmd_line, i + 1, envp);
+				cmd_line = search_and_replace(cmd_line, i + 1, envp, is_here_doc);
 				free(tmp);
 			}
 		}
