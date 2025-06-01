@@ -43,7 +43,7 @@ void	exec_error(t_list **cmd)
 {
 	struct stat	buf;
 	stat((*cmd)->args[0], &buf);
-	if (ft_strcmp((*cmd)->args[0], "." ) && ft_strcmp((*cmd)->args[0], "..") && S_ISDIR(buf.st_mode))
+	if (ft_strchr((*cmd)->args[0], '/') && ft_strcmp((*cmd)->args[0], "." ) && ft_strcmp((*cmd)->args[0], "..") && S_ISDIR(buf.st_mode))
 	{
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd((*cmd)->args[0], 2);
@@ -58,6 +58,14 @@ void	exec_error(t_list **cmd)
 		ft_putstr_fd(": No such file or directory\n", 2);
 		free_list(*cmd);
 		exit (127);
+	}
+	if (ft_strchr((*cmd)->args[0], '/') && !access((*cmd)->args[0], F_OK) && access((*cmd)->args[0], X_OK))
+	{
+		ft_putstr_fd("Minishell: ", 2);
+		ft_putstr_fd((*cmd)->args[0], 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		free_list(*cmd);
+		exit (126);
 	}
 	ft_putstr_fd("Minishell: ", 2);
 	ft_putstr_fd((*cmd)->args[0], 2);

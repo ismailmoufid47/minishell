@@ -152,7 +152,7 @@ void	exit_cmd(char **args, t_envp *envp, t_list *current, t_list *prev)
 	redirect_builtins(current, envp);
 	subshell = (prev &&  prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE);
-	ft_putendl_fd("exit", 2);
+	ft_putendl_fd("exit", 1);
 	if (!args[1])
 	{
 		free(envp->value);

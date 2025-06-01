@@ -42,9 +42,11 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 	i = start - 1;
 	result = NULL;
 	while (cmd[++i]
-		&& (ft_isalnum(cmd[i]) || cmd[i] == '_' || cmd[i] == '?')
+		&& (ft_isalnum(cmd[i]) || cmd[i] == '_' )
 		&& !ft_isdigit(cmd[start]))
 		variable_name_len++;
+	if (cmd[i] == '?')
+		variable_name_len = 1;
 	ft_strlcpy(variable_name, cmd + start, variable_name_len + 1);
 	var = ft_get_env_val(envp, variable_name);
 	if (variable_name_len == 0)
