@@ -52,9 +52,7 @@ char	*get_cmd_path(char *cmd, char *envp[])
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (!access(cmd_path, X_OK))
-		{
 			return (cmd_path);
-		}
 		return (free(cmd_path), NULL);
 	}
 	i = ((path = ft_split(envp[i] + 5, ':')), 0);
@@ -168,6 +166,7 @@ void	execute(t_list *list, t_envp **envp)
 	}
 	else if (WIFSIGNALED(status))
 	{
+		free((*envp)->value);
 		(*envp)->value = ft_itoa(WTERMSIG(status) + 128) ;
 		g_signal = -1;
 	}

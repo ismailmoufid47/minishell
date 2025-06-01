@@ -93,7 +93,10 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 	while (envp)
 	{
 		if (!strcmp(envp->name, "PWD"))
+		{
+			free(envp->value);
 			envp->value = getcwd(NULL, 0);
+		}
 		if (!strcmp(envp->name, "OLDPWD"))
 		{
 			free(envp->value);

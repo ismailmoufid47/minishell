@@ -8,9 +8,10 @@ void	handle_here_doc(char *delimiter, t_envp *envp)
 	char	*tmp;
 
 	input = "NULL";
-	fd1 = open_wrapper("read_line", O_WRONLY | O_CREAT | O_TRUNC , 0600);
-	fd2 = open_wrapper("read_line", O_RDONLY, 0);
-	unlink("read_line");
+	unlink("/tmp/read_line");
+	fd1 = open_wrapper("/tmp/read_line", O_WRONLY | O_CREAT | O_TRUNC , 0600);
+	fd2 = open_wrapper("/tmp/read_line", O_RDONLY, 0);
+	unlink("/tmp/read_line");
 	tmp = readline("> ");
 	while (tmp && ft_strcmp(tmp, delimiter))
 	{
