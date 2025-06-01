@@ -2,6 +2,8 @@
 
 void	is_bin(t_list *cmd, t_envp *envp)
 {
+	char *cwd;
+
 	if (!ft_strcmp(cmd->value, "echo"))
 	{
 		if (!cmd->args[1])
@@ -19,7 +21,9 @@ void	is_bin(t_list *cmd, t_envp *envp)
 	}
 	else if (!ft_strcmp(cmd->value, "pwd"))
 	{
-		printf("%s\n", get_cwd(envp));
+		cwd = get_cwd(envp);
+		printf("%s\n", cwd);
+		free(cwd);
 		exit (0);
 	}
 	else if (!ft_strcmp(cmd->value, "export"))

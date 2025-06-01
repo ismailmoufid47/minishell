@@ -48,7 +48,7 @@ t_envp	*create_envp_node(char *var)
 
 	node = malloc(sizeof(t_envp));
 	node->name = ft_strdup(var);
-	node->value = ft_strdup((var) + ft_strlen(var) + 1);
+	node->value = ft_strdup(var + ft_strlen(var) + 1);
 	return (node);
 }
 
@@ -56,26 +56,26 @@ t_envp	*set_envp(void)
 {
 	int		i;
 	char	*str;
-	t_envp	*head;
+	t_envp	*envp;
 	t_envp	*node;
 
 	i = 0;
-	head = NULL;
+	envp = NULL;
 	while (environ[i])
 	{
 		str = ft_strdup(environ[i]);
 		*(ft_strchr(str, '=')) = 0;
 		node = create_envp_node(str);
 		free(str);
-		node->next = head;
-		head = node;
+		node->next = envp;
+		envp = node;
 		i++;
 	}
-	head = replace_missing_envp(head);
+	envp = replace_missing_envp(envp);
 	node = create_envp_node("?\0000");
-	node->next = head;
-	head = node;
-	return (head);
+	node->next = envp;
+	envp = node;
+	return (envp);
 }
 
 char	**envp_to_char(t_envp *envp)

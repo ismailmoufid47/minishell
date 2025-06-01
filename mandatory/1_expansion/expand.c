@@ -3,23 +3,13 @@
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
 
-void print_split_result(char **result)
-{
-	int i = 0;
-	while (result && result[i])
-	{
-		printf("result[%d]: |%s|\n", i, result[i]);
-		i++;
-	}
-}
-
 char **ft_spit_and_add_quotes(char *var)
 {
 	char	**result;
 	char	*tmp;
 	int		i;
 
-	result = tokenize(var);
+	result = ft_split(var, ' ');
 	i = 0;
 	while (result[i])
 	{
@@ -71,7 +61,6 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 		return (result);
 	}
 	split_result = ft_spit_and_add_quotes(var);
-	print_split_result(split_result);
 	i = 0;
 	while (split_result && split_result[i])
 	{

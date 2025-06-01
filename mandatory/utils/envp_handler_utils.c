@@ -4,14 +4,16 @@ t_envp	*replace_missing_envp(t_envp *envp)
 {
 	t_envp	*node;
 	char	*str;
+	char	*tmp;
 
 	if (ft_get_env_val(envp, "PWD") == NULL)
 	{
-		str = ft_strjoin("PWD=", getcwd(NULL, 0));
+		tmp = getcwd(NULL, 0);
+		str = ft_strjoin("PWD=", tmp);
+		free(tmp);
 		*(ft_strchr(str, '=')) = 0;
 		node = create_envp_node(str);
 		free(str);
-		node->value = ft_strdup(getcwd(NULL, 0));
 		node->next = envp;
 		envp = node;
 	}

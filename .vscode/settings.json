@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.exp": "note",
-        "shell.h": "c"
+        "shell.h": "c",
+        "sstream": "c"
     }
 }

@@ -35,7 +35,7 @@ char	*get_cwd(t_envp *envp)
 	while (envp)
 	{
 		if (!ft_strcmp(envp->name, "PWD"))
-			return (envp->value);
+			return (ft_strdup(envp->value));
 		envp = envp->next;
 	}
 	return (getcwd(NULL, 0));
