@@ -6,7 +6,7 @@
 /*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/06/01 20:28:49 by jbelkerf         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:11:37 by jbelkerf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	print_tokens(char **tokens)
 	printf("\n");
 }
 
-void	handle_here_doc(char *delimiter, t_envp *envp, int out)
+void	handle_here_doc(t_list *file, t_envp *envp, int out)
 {
 	char	*input;
 	char	*tmp;
@@ -36,9 +36,12 @@ void	handle_here_doc(char *delimiter, t_envp *envp, int out)
 	signal(SIGINT, SIG_DFL);
 	input = "NULL";
 	tmp = readline("> ");
-	while (tmp && ft_strcmp(tmp, delimiter))
+	while (tmp && ft_strcmp(tmp, file->value))
 	{
-		input = expand_env_variable(tmp, envp, 1);
+		if (file->quote_type == UNQUOTED)
+			input = expand_env_variable(tmp, envp, 1);
+		else
+			input = ft_strdup(tmp);
 		ft_putendl_fd(input, out);
 		free(input);
 		tmp = readline("> ");
@@ -81,7 +84,7 @@ int	set_cmd_here_doc(t_list *list, t_envp *envp)
 			list->here_doc = file_fd[0];
 			pid = fork_wrapper(envp);
 			if (pid == 0)
-				handle_here_doc(current->next->value, envp, file_fd[1]);
+				handle_here_doc(current->next, envp, file_fd[1]);
 			else
 			{
 				signal(SIGINT, SIG_IGN);
@@ -143,7 +146,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	// print_tokens(tokens);
 	list = create_list(tokens);
 	free(tokens);
-	// print_list(list, 0);
+	print_list(list, 0);
 	
 	if (!handle_here_docs(envp, list))
 		return (free_list(list), NULL);

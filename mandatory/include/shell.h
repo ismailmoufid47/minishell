@@ -130,7 +130,7 @@ t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 void	redirect(t_list *cmd);
 
 // Handle here-documents:
-void	handle_here_doc(char *delimiter, t_envp *envp, int out);
+void	handle_here_doc(t_list *file, t_envp *envp, int out);
 
 // Built-ins utils:
 void	is_bin(t_list *cmd, t_envp *envp);

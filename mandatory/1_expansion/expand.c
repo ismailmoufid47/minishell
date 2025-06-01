@@ -1,5 +1,19 @@
 #include "../include/shell.h"
 
+int check_delimiter_quotes(char *cmd_line)
+{
+	int i;
+
+	i = 0;
+	while (cmd_line[i] && !is_special_operator(cmd_line[i])
+				&& cmd_line[i] != ' ')
+	{
+		if (cmd_line[i] == '\'' || cmd_line[i] == '"')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
 
@@ -103,6 +117,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 	int		sq_flag;
 	int		here_doc_is_prev;
 	char	*tmp;
+	char	*tmp2;
 
 	i = 0;
 	dq_flag = 0;
@@ -114,6 +129,16 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 		{
 			while (cmd_line[i] && cmd_line[i] == ' ')
 				i++;
+			if (check_delimiter_quotes(cmd_line + i))
+			{
+				tmp = ft_substr(cmd_line, 0, i);
+				tmp2 = ft_strjoin(tmp, "''");
+				free(tmp);
+				tmp = ft_strjoin(tmp2, cmd_line + i );
+				free(tmp2);
+				free(cmd_line);
+				cmd_line = tmp;
+			}
 			while (cmd_line[i] && !is_special_operator(cmd_line[i])
 				&& cmd_line[i] != ' ')
 				i++;

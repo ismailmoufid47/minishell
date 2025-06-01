@@ -2,6 +2,7 @@
     "files.associations": {
         "*.exp": "note",
         "shell.h": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "libft.h": "c"
     }
 }
