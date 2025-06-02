@@ -1,7 +1,5 @@
 #include "../include/shell.h"
 
-
-
 void	builtin_here_doc(char *delimiter, t_envp *envp)
 {
 	int		fd1;
@@ -10,7 +8,7 @@ void	builtin_here_doc(char *delimiter, t_envp *envp)
 	char	*tmp;
 
 	input = "NULL";
-	fd1 = open_wrapper("read_line", O_WRONLY | O_CREAT | O_TRUNC , 0600);
+	fd1 = open_wrapper("read_line", O_W | O_C | O_T, 0600);
 	fd2 = open_wrapper("read_line", O_RDONLY, 0);
 	unlink("read_line");
 	tmp = readline("> ");

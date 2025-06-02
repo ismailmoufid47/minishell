@@ -2,9 +2,10 @@
 
 void	is_bin(t_list *cmd, t_envp *envp)
 {
-	char *cwd;
+	char	*cwd;
 
-	if (!ft_strcmp(cmd->value, "echo"))
+	if (!ft_strcmp(cmd->value, "echo")
+		|| !ft_strcmp(cmd->value, "ECHO"))
 	{
 		if (!cmd->args[1])
 		{
@@ -19,7 +20,8 @@ void	is_bin(t_list *cmd, t_envp *envp)
 		print_envp(envp_to_char(envp));
 		exit (0);
 	}
-	else if (!ft_strcmp(cmd->value, "pwd"))
+	else if (!ft_strcmp(cmd->value, "pwd")
+		|| !ft_strcmp(cmd->value, "PWD"))
 	{
 		cwd = get_cwd(envp);
 		printf("%s\n", cwd);
@@ -67,12 +69,11 @@ int	is_valid_unset_argument(char *arg)
 	return (1);
 }
 
-
 int	is_numeric(char *arg)
 {
 	int		i;
 	int		sign;
-	long 	res;
+	long	res;
 
 	i = 0;
 	sign = 1;
@@ -89,7 +90,7 @@ int	is_numeric(char *arg)
 	{
 		if (!ft_isdigit(arg[i]))
 			return (0);
-		 if (sign == 1 && (res * 10 + (arg[i] - '0')) * sign < res * sign)
+		if (sign == 1 && (res * 10 + (arg[i] - '0')) * sign < res * sign)
 			return (0);
 		if (sign == -1 && (res * 10 + (arg[i] - '0')) * sign > res * sign)
 			return (0);

@@ -1,6 +1,9 @@
 #include "../include/shell.h"
 
-void  redirect_builtins(t_list *current)
+#define FOUND_PWD     1
+#define FOUND_OLDPWD  2 
+
+void	redirect_builtins(t_list *current)
 {
 	int	stdout_fd;
 	int	stdin_fd;
@@ -18,7 +21,7 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int		i;
 	t_envp	*node;
-	int 	in;
+	int		in;
 	int		out;
 
 	in = dup(STDIN_FILENO);
@@ -63,12 +66,11 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 {
 	struct stat	dir;
-	char	*path;
-	char	*old_pwd;
-	int		old_pwd_set;
-	t_envp	*prev_envp;
+	char		*path;
+	char		*old_pwd;
+	int			vars_found;
+	t_envp		*prev_envp;
 
-	old_pwd_set = 0;
 	redirect_builtins(current);
 	path = args[1];
 	if (!path)
@@ -85,35 +87,47 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 		envp->value = ft_strdup("1");
 		return ;
 	}
-	chdir(path);
 	free(envp->value);
 	envp->value = ft_strdup("0");
-	if ((prev &&  prev->type == PIPE)
+	if ((prev && prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE))
 		return ;
 	old_pwd = get_cwd(envp);
+	chdir(path);
+	vars_found = 0;
 	while (envp)
 	{
 		if (!strcmp(envp->name, "PWD"))
 		{
+			vars_found |= FOUND_PWD;
 			free(envp->value);
 			envp->value = getcwd(NULL, 0);
 		}
 		if (!strcmp(envp->name, "OLDPWD"))
 		{
-			old_pwd_set = 1;
+			vars_found |= FOUND_OLDPWD;
 			free(envp->value);
-			envp->value = old_pwd;
+			envp->value = ft_strdup(old_pwd);
 		}
 		prev_envp = envp;
 		envp = envp->next;
 	}
-	if (!old_pwd_set)
+	if (!(vars_found & FOUND_OLDPWD))
 	{
 		path = ft_strjoin("OLDPWD=", old_pwd);
 		*(ft_strchr(path, '=')) = '\0';
 		prev_envp->next = create_envp_node(path);
+		prev_envp = prev_envp->next;
+		free(path);
+	}
+	free(old_pwd);
+	if (!(vars_found & FOUND_PWD))
+	{
+		old_pwd = get_cwd(envp);
+		path = ft_strjoin("PWD=", old_pwd);
 		free(old_pwd);
+		*(ft_strchr(path, '=')) = '\0';
+		prev_envp->next = create_envp_node(path);
 		free(path);
 	}
 }
@@ -122,16 +136,15 @@ void	unset(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int		i;
 
-
 	redirect_builtins(current);
 	i = 1;
 	if (args[i] && !is_valid_unset_argument(args[i]))
-			return (identifier_error("unset", args[i], envp));
+		return (identifier_error("unset", args[i], envp));
 	free(envp->value);
 	envp->value = ft_strdup("0");
-	if ((prev &&  prev->type == PIPE)
+	if ((prev && prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE))
-			return ;
+		return ;
 	while (args[i])
 	{
 		if (!ft_strcmp(args[i], "?"))
@@ -146,11 +159,10 @@ void	unset(char **args, t_envp *envp, t_list *current, t_list *prev)
 
 void	exit_cmd(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
-	int subshell;
-
+	int	subshell;
 
 	redirect_builtins(current);
-	subshell = (prev &&  prev->type == PIPE)
+	subshell = (prev && prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE);
 	ft_putendl_fd("exit", 1);
 	if (!args[1])

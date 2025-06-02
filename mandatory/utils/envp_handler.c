@@ -28,7 +28,7 @@ t_envp	*remove_envp_var(t_envp *head, char *var_name)
 				removable = envp;
 				head = head->next;
 				free(removable);
-				return (head); 
+				return (head);
 			}
 			prev->next = envp->next;
 			free(envp->name);

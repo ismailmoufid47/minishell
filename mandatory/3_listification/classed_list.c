@@ -1,63 +1,63 @@
 #include "../include/shell.h"
 
-void	print_list(t_list *list, int tab_count)
-{
-	int	i;
+// void	print_list(t_list *list, int tab_count)
+// {
+// 	int	i;
 
-	i = 0;
-	if (tab_count == 0)
-	{
-		printf("\n");
-		while (i++ < tab_count)
-			printf("		");
-		printf("		LIST\n\n");
-	}
-	while (list)
-	{
-		i = 0;
-		while (i++ < tab_count)
-			printf("		");
-		if (list->type == HDOC)
-			printf("      HEREDOC");
-		else if (list->type == APP)
-			printf("       APPEND");
-		else if (list->type == IN)
-			printf("	 IN");
-		else if (list->type == OUT)
-			printf("	 OUT");
-		else if (list->type == PIPE)
-		{
-			printf("       PIPE  FDS:\n");
-			printf("		IN:%d\n", list->pipe_fds[0]);
-			printf("		OUT:%d\n", list->pipe_fds[1]);
-		}
-		else if (list->type == FIL)
-			printf("      FILE: %s, quote: %d", list->value, list->quote_type);
-		else
-		{
-			printf("       CMD:  %s, quote: %d", list->value, list->quote_type);
-			if (list->is_redirected)
-			{
-				printf(",  REDIRECTIONS:\n");
-				print_list(list->redirections, tab_count + 1);
-			}
-			printf(" args: \n");
-			print_tokens(list->args);
-		}
-		list = list->next;
-		if (list)
-		{
-			i = 0;
-			printf("\n");
-			while (i++ < tab_count)
-				printf("		");
-			printf("	  ↓\n");
-		}
-	}
-	printf("\n\n");
-}
+// 	i = 0;
+// 	if (tab_count == 0)
+// 	{
+// 		printf("\n");
+// 		while (i++ < tab_count)
+// 			printf("		");
+// 		printf("		LIST\n\n");
+// 	}
+// 	while (list)
+// 	{
+// 		i = 0;
+// 		while (i++ < tab_count)
+// 			printf("		");
+// 		if (list->type == HDOC)
+// 			printf("      HEREDOC");
+// 		else if (list->type == APP)
+// 			printf("       APPEND");
+// 		else if (list->type == IN)
+// 			printf("	 IN");
+// 		else if (list->type == OUT)
+// 			printf("	 OUT");
+// 		else if (list->type == PIPE)
+// 		{
+// 			printf("       PIPE  FDS:\n");
+// 			printf("		IN:%d\n", list->pipe_fds[0]);
+// 			printf("		OUT:%d\n", list->pipe_fds[1]);
+// 		}
+// 		else if (list->type == FIL)
+// 			printf("      FILE: %s, quote: %d", list->value, list->quote_type);
+// 		else
+// 		{
+// 			printf("       CMD:  %s, quote: %d", list->value, list->quote_type);
+// 			if (list->is_redirected)
+// 			{
+// 				printf(",  REDIRECTIONS:\n");
+// 				print_list(list->redirections, tab_count + 1);
+// 			}
+// 			printf(" args: \n");
+// 			print_tokens(list->args);
+// 		}
+// 		list = list->next;
+// 		if (list)
+// 		{
+// 			i = 0;
+// 			printf("\n");
+// 			while (i++ < tab_count)
+// 				printf("		");
+// 			printf("	  ↓\n");
+// 		}
+// 	}
+// 	printf("\n\n");
+// }
 
-t_list	*handle_cmd_red(t_list *head, t_node_type type , int *changed)
+t_list	*handle_cmd_red(t_list *head, t_node_type type, int *changed)
 {
 	t_list	*current;
 	t_list	*prev;
@@ -88,7 +88,7 @@ t_list	*handle_cmd_red(t_list *head, t_node_type type , int *changed)
 }
 
 // the cmd is always after the redirections
-t_list *remove_red_and_add_it_to_cmd(t_list *head)
+t_list	*remove_red_and_add_it_to_cmd(t_list *head)
 {
 	t_list	*current;
 	t_list	*prev;
@@ -102,7 +102,6 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 		if (current->type == IN || current->type == OUT
 			|| current->type == APP || current->type == HDOC)
 		{
-			
 			if (prev)
 				prev->next = cmd;
 			if (head == current)
@@ -121,7 +120,6 @@ t_list *remove_red_and_add_it_to_cmd(t_list *head)
 			cmd->redirections = keep_only_redirections(cmd->redirections);
 		current = current->next;
 	}
-
 	return (head);
 }
 
@@ -197,7 +195,6 @@ t_list	*create_list(char **tokens)
 			node = token_to_node(&head, &nav, tokens[i], PIPE);
 			pipe_wrapper(node->pipe_fds);
 		}
-
 		else if (i && (!ft_strcmp(tokens[i - 1], "<")
 				|| !ft_strcmp(tokens[i - 1], ">")
 				|| !ft_strcmp(tokens[i - 1], ">>")

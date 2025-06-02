@@ -6,7 +6,7 @@ int	get_token_count(char *input)
 	int	token_count;
 	int	sq_flag;
 	int	dq_flag;
-	int broke_for_special;
+	int	broke_for_special;
 
 	i = 0;
 	token_count = 0;
@@ -79,8 +79,8 @@ int	get_token_length(char *input, int *i)
 char	*allocate_token(char *input, int start, int length)
 {
 	char	*token;
-	int	sq_flag;
-	int	dq_flag;
+	int		sq_flag;
+	int		dq_flag;
 	int		j;
 	int		i;
 

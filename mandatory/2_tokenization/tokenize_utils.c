@@ -26,8 +26,8 @@ int	is_special_token(char *token)
 
 int	is_double_symbol(char *input, int pos)
 {
-	return ((input[pos] == '<' && input[pos + 1] == '<') || 
-		(input[pos] == '>' && input[pos + 1] == '>'));
+	return ((input[pos] == '<' && input[pos + 1] == '<')
+		|| (input[pos] == '>' && input[pos + 1] == '>'));
 }
 
 int	is_special_operator(char c)

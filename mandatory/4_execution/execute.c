@@ -6,19 +6,19 @@ void	redirect(t_list *cmd)
 {
 	t_list	*current;
 	char	*file;
-	current = cmd->redirections;
 	int		herdoc_visited;
 
 	herdoc_visited = 0;
+	current = cmd->redirections;
 	while (current)
 	{
 		file = current->next->value;
 		if (current->type == IN)
 			ft_dup2(open_wrapper(file, O_RDONLY, 0), 0);
 		if (current->type == OUT)
-			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT, 0666), 1);
+			ft_dup2(open_wrapper(file, O_W | O_C, 0666), 1);
 		if (current->type == APP)
-			ft_dup2(open_wrapper(file, O_WRONLY | O_CREAT | O_APPEND, 0666), 1);
+			ft_dup2(open_wrapper(file, O_W | O_C | O_APPEND, 0666), 1);
 		if (cmd->here_doc && current->type == HDOC && !herdoc_visited)
 		{
 			herdoc_visited = 1;
@@ -107,7 +107,7 @@ void	execute(t_list *list, t_envp **envp)
 	t_list	*prev_pipe;
 	int		status;
 	int		is_built_in;
-	
+
 	current = list;
 	prev = NULL;
 	prev_pipe = NULL;
@@ -118,7 +118,8 @@ void	execute(t_list *list, t_envp **envp)
 			close_2(prev_pipe->pipe_fds[0], prev_pipe->pipe_fds[1]);
 		if (!ft_strcmp(current->value, "cd"))
 			cd(current->args, *envp, current, prev);
-		else if (!prev && !current->next && !ft_strcmp(current->value, "export"))
+		else if (!prev && !current->next
+			&& !ft_strcmp(current->value, "export"))
 			export(current->args, *envp, current, prev);
 		else if (!ft_strcmp(current->value, "unset"))
 			unset(current->args, *envp, current, prev);
@@ -157,7 +158,7 @@ void	execute(t_list *list, t_envp **envp)
 	else if (WIFSIGNALED(status))
 	{
 		free((*envp)->value);
-		(*envp)->value = ft_itoa(WTERMSIG(status) + 128) ;
+		(*envp)->value = ft_itoa(WTERMSIG(status) + 128);
 		g_signal = -1;
 	}
 	while (wait(NULL) > 0)

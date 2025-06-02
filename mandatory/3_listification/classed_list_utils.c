@@ -33,7 +33,7 @@ t_list	*keep_only_redirections(t_list *head)
 	prev = NULL;
 	while (current)
 	{
-		if (current->type != FIL && current->type != IN && current->type != OUT 
+		if (current->type != FIL && current->type != IN && current->type != OUT
 			&& current->type != APP && current->type != HDOC)
 		{
 			if (prev)

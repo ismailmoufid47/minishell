@@ -1,4 +1,7 @@
 #include "../include/shell.h"
+#define W "\033[0m"
+#define B "\033[1;34m"
+#define R "\033[1;32m"
 
 void	execute_hostname_command(const char *cmd, int fd[2])
 {
@@ -71,19 +74,18 @@ char	*get_prompt(t_envp *envp)
 	else
 		pwd = replace_home_with_tilde(envp, pwd);
 	if (ft_get_env_val(envp, "USER"))
-		prmpt = ft_strjoin("\033[1;34m", ft_get_env_val(envp, "USER"));
+		prmpt = ft_strjoin(B, ft_get_env_val(envp, "USER"));
 	else
-		prmpt = ft_strdup("\033[1;34muser");
+		prmpt = ft_strdup(B"user");
 	tmp = prmpt;
 	tmp = ((prmpt = ft_strjoin(prmpt, "@")), free(tmp), prmpt);
 	tmp = ((prmpt = ft_strjoin(prmpt, host)), free(tmp), free(host), prmpt);
-	tmp = ((prmpt = ft_strjoin(prmpt, "\033[0m: \033[1;32m")), free(tmp), prmpt);
+	tmp = ((prmpt = ft_strjoin(prmpt, W": "R)), free(tmp), prmpt);
 	tmp = ((prmpt = ft_strjoin(prmpt, pwd)), free(tmp), free(pwd), prmpt);
-	prmpt = ft_strjoin(prmpt, "\033[0m$ ");
+	prmpt = ft_strjoin(prmpt, W"$ ");
 	free(tmp);
 	return (prmpt);
 }
-
 
 void	load_history(int fd)
 {

@@ -1,12 +1,12 @@
 #include "../include/shell.h"
 
-int check_delimiter_quotes(char *cmd_line)
+int	check_delimiter_quotes(char *cmd_line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (cmd_line[i] && !is_special_operator(cmd_line[i])
-				&& cmd_line[i] != ' ')
+		&& cmd_line[i] != ' ')
 	{
 		if (cmd_line[i] == '\'' || cmd_line[i] == '"')
 			return (1);
@@ -14,10 +14,8 @@ int check_delimiter_quotes(char *cmd_line)
 	}
 	return (0);
 }
-// can't start with a digit expample: $12var expands to 2var
-// can only contain alphanumeric characters and underscores
 
-char **ft_split_and_add_quotes(char *var, int is_here_doc)
+char	**ft_split_and_add_quotes(char *var, int is_here_doc)
 {
 	char	**result;
 	char	*tmp;
@@ -37,7 +35,7 @@ char **ft_split_and_add_quotes(char *var, int is_here_doc)
 		}
 		else
 			result[i] = ft_strjoin(result[i], " ");
-		free(tmp);	
+		free(tmp);
 		tmp = result[i];
 		if (!is_here_doc)
 		{
@@ -47,9 +45,10 @@ char **ft_split_and_add_quotes(char *var, int is_here_doc)
 		i++;
 	}
 	return (result);
-
 }
 
+// can't start with a digit expample: $12var expands to 2var
+// can only contain alphanumeric characters and underscores
 char	*search_and_replace(char *cmd, int start, t_envp *envp, int is_here_doc)
 {
 	char	variable_name[1024];
@@ -71,10 +70,13 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp, int is_here_doc)
 		variable_name_len = 1;
 	ft_strlcpy(variable_name, cmd + start, variable_name_len + 1);
 	var = ft_get_env_val(envp, variable_name);
+	if (variable_name_len == 0 && (cmd[i] == '\'' || cmd[i] == '"'))
+		cmd[i - 1] = ' ';
 	if (variable_name_len == 0)
 		return (ft_strdup(cmd));
 	cmd[start - 1] = '\0';
-	if (!var || !*var || ft_isdigit(cmd[start]) || cmd[start] == '\"' || cmd[start] == '\'')
+	if (!var || !*var || ft_isdigit(cmd[start]) || cmd[start] == '\"'
+		|| cmd[start] == '\'')
 	{
 		var = strdup("");
 		result = ft_strjoin(cmd, var);
@@ -134,7 +136,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 				tmp = ft_substr(cmd_line, 0, i);
 				tmp2 = ft_strjoin(tmp, "''");
 				free(tmp);
-				tmp = ft_strjoin(tmp2, cmd_line + i );
+				tmp = ft_strjoin(tmp2, cmd_line + i);
 				free(tmp2);
 				free(cmd_line);
 				cmd_line = tmp;
@@ -144,7 +146,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 				i++;
 			here_doc_is_prev = 0;
 		}
-		if (cmd_line[i] == '<'  && cmd_line[i + 1] == '<' 
+		if (cmd_line[i] == '<' && cmd_line[i + 1] == '<'
 			&& !dq_flag && !sq_flag)
 		{
 			here_doc_is_prev = 1;
@@ -157,10 +159,12 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 			dq_flag = !dq_flag;
 		if (cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
 		{
-			if (cmd_line[i + 1] && (strchr("_?", cmd_line[i + 1]) || ft_isalpha(cmd_line[i + 1])))
+			if (cmd_line[i + 1] && (strchr("_?'\"", cmd_line[i + 1])
+					|| ft_isalpha(cmd_line[i + 1])))
 			{
 				tmp = cmd_line;
-				cmd_line = search_and_replace(cmd_line, i + 1, envp, is_here_doc);
+				cmd_line
+					= search_and_replace(cmd_line, i + 1, envp, is_here_doc);
 				free(tmp);
 			}
 		}

@@ -1,30 +1,34 @@
 #ifndef SHELL_H
 # define SHELL_H
 
+# define O_W O_WRONLY
+# define O_C O_CREAT
+# define O_T O_TRUNC
 
 # include "../../libft/include/libft.h"
-# include <stdio.h>    		    		// printf
-# include <stdlib.h>        			// malloc, free, exit, getenv
-# include <sys/stat.h>       			// stat, lstat, fstat
-# include "readline/readline.h" 		// readline, rl_on_new_line, rl_replace_line, rl_redisplay
-# include "readline/history.h"  		// rl_clear_history, add_history
-# include "ncurses/ncurses.h"			// ncurses, tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
-# include <unistd.h>         			// write, access, open, read, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname
-# include <string.h>         			// strerror
-# include <signal.h>         			// signal, sigaction, sigemptyset, sigaddset, kill
-# include <dirent.h>         			// opendir, readdir, closedir
-# include <sys/types.h>      			// wait, waitpid, wait3, wait4, stat, lstat, fstat
-# include <fcntl.h>          			// open, unlink
-# include <sys/ioctl.h>      			// ioctl
-# include <termios.h>        			// tcsetattr, tcgetattr
-# include <term.h>           			// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (alternative to <curses.h>)
-# include <errno.h>          			// perror
-# include <sys/wait.h>					// wait, waitpid, WIFEXITED, WEXITSTATUS, WTERMSIG
-#include <termios.h>
+# include <stdio.h>    		    
+# include <stdlib.h>        	
+# include <sys/stat.h>       	
+# include "readline/readline.h" 
+# include "readline/history.h"  
+# include "ncurses/ncurses.h"	
+# include <unistd.h>         	
+# include <string.h>         	
+# include <signal.h>         	
+# include <dirent.h>         	
+# include <sys/types.h>      	
+# include <fcntl.h>          	
+# include <sys/ioctl.h>      	
+# include <termios.h>        	
+# include <term.h>           	
+# include <errno.h>          	
+# include <sys/wait.h>			
+# include <termios.h>
 
 extern char	**environ;
 
-typedef struct s_envp{
+typedef struct s_envp
+{
 	char			*name;
 	char			*value;
 	struct s_envp	*next;
@@ -58,7 +62,7 @@ typedef struct s_list
 	char			**args;
 	int				pid;
 	int				pipe_fds[2];
-	int 			here_doc;
+	int				here_doc;
 	struct s_list	*next;
 }	t_list;
 
@@ -67,7 +71,7 @@ void	print_tokens(char **tokens);
 void	print_list(t_list *list, int tab_count);
 
 //expander:
-char    *expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
+char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
 
 // tokenize:
 char	**tokenize(char *cmd);

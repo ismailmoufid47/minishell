@@ -8,14 +8,11 @@ void	free_envp(t_envp *envp)
 	free(envp->value);
 	free_envp(envp->next);
 	return (free(envp));
-
 }
 
-
-
-void free_list(t_list *list)
+void	free_list(t_list *list)
 {
-	t_list *temp;
+	t_list	*temp;
 
 	while (list)
 	{
@@ -32,4 +29,3 @@ void free_list(t_list *list)
 		free(temp);
 	}
 }
-

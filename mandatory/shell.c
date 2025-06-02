@@ -1,66 +1,54 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   shell.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jbelkerf <jbelkerf@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 20:50:44 by jbelkerf          #+#    #+#             */
-/*   Updated: 2025/06/01 21:24:57 by jbelkerf         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "include/shell.h"
 
 int	g_signal = 0;
 
-void	print_tokens(char **tokens)
-{
-	int	i;
+// void	print_tokens(char **tokens)
+// {
+// 	int	i;
 
-	i = 0;
-	printf("\n		TOKENS\n\n");
-	while (tokens[i])
-	{
-		printf("	%d: %s\n", i, tokens[i]);
-		i++;
-	}
-	printf("\n");
-}
+// 	i = 0;
+// 	printf("\n		TOKENS\n\n");
+// 	while (tokens[i])
+// 	{
+// 		printf("	%d: %s\n", i, tokens[i]);
+// 		i++;
+// 	}
+// 	printf("\n");
+// }
 
-void	handle_here_doc(t_list *file, t_envp *envp, int out)
-{
-	char	*input;
-	char	*tmp;
+// void	handle_here_doc(t_list *file, t_envp *envp, int out)
+// {
+// 	char	*input;
+// 	char	*tmp;
 
-	signal(SIGINT, SIG_DFL);
-	input = "NULL";
-	tmp = readline("> ");
-	while (tmp && ft_strcmp(tmp, file->value))
-	{
-		input = tmp;
-		if (file->quote_type == UNQUOTED)
-			input = expand_env_variable(tmp, envp, 1);
-		ft_putendl_fd(input, out);
-		free(input);
-		tmp = readline("> ");
-	}
-	if (!tmp)
-		exit(1);
-	free(tmp);
-	exit (0);
-}
+// 	signal(SIGINT, SIG_DFL);
+// 	input = "NULL";
+// 	tmp = readline("> ");
+// 	while (tmp && ft_strcmp(tmp, file->value))
+// 	{
+// 		input = tmp;
+// 		if (file->quote_type == UNQUOTED)
+// 			input = expand_env_variable(tmp, envp, 1);
+// 		ft_putendl_fd(input, out);
+// 		free(input);
+// 		tmp = readline("> ");
+// 	}
+// 	if (!tmp)
+// 		exit(1);
+// 	free(tmp);
+// 	exit (0);
+// }
 
 int	set_cmd_here_doc(t_list *list, t_envp *envp)
 {
-	pid_t		pid;
-	t_list		*current;
-	static int	here_doc_count = 0;
-	int			file_fd[2];
-	char		*file_name;
-	int			status;
-	char 		*tmp;
-	struct termios old;
+	pid_t			pid;
+	t_list			*current;
+	static int		here_doc_count = 0;
+	int				file_fd[2];
+	char			*file_name;
+	int				status;
+	char			*tmp;
+	struct termios	old;
 
 	tcgetattr(STDIN_FILENO, &old);
 	file_fd[0] = 0;
@@ -75,7 +63,7 @@ int	set_cmd_here_doc(t_list *list, t_envp *envp)
 			unlink(file_name);
 			if (file_fd[0])
 				close(file_fd[0]);
-			file_fd[1] = open_wrapper(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			file_fd[1] = open_wrapper(file_name, O_W | O_C | O_T, 0666);
 			file_fd[0] = open_wrapper(file_name, O_RDONLY, 0);
 			unlink(file_name);
 			free(file_name);
@@ -99,14 +87,13 @@ int	set_cmd_here_doc(t_list *list, t_envp *envp)
 				else if (WIFSIGNALED(status))
 				{
 					free(envp->value);
-					envp->value = ft_itoa(WTERMSIG(status) + 128) ;
+					envp->value = ft_itoa(WTERMSIG(status) + 128);
 					return (0);
 				}
 			}
 		}
 		current = current->next;
 	}
-	
 	return (1);
 }
 
@@ -136,7 +123,6 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 		free(cmd_line);
 		return (NULL);
 	}
-	
 	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
 	free(cmd_line);
@@ -146,7 +132,6 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	list = create_list(tokens);
 	free(tokens);
 	// print_list(list, 0);
-	
 	if (!handle_here_docs(envp, list))
 		return (free_list(list), NULL);
 	return (list);
@@ -159,8 +144,9 @@ int	main(void)
 	int		history_fd;
 	t_envp	*envp;
 	char	*prompt;
+	int		re;
 
-	signal(SIGQUIT, SIG_IGN);	
+	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, print_prompt);
 	rl_catch_signals = 0;
 	envp = set_envp();
@@ -174,7 +160,6 @@ int	main(void)
 	while (1)
 	{
 		prompt = get_prompt(envp);
-		
 		cmd_line = readline(prompt);
 		if (g_signal == SIGINT)
 		{
@@ -185,7 +170,7 @@ int	main(void)
 		free(prompt);
 		if (cmd_line == NULL)
 		{
-			int re = ft_atoi(ft_get_env_val(envp, "?"));
+			re = ft_atoi(ft_get_env_val(envp, "?"));
 			free_envp(envp);
 			return (printf("exit\n"), re);
 		}

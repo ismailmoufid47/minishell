@@ -41,8 +41,10 @@ void	identifier_error(char *cmd, char *identifier, t_envp *envp)
 void	exec_error(t_list **cmd)
 {
 	struct stat	buf;
+
 	stat((*cmd)->args[0], &buf);
-	if (ft_strchr((*cmd)->args[0], '/') && ft_strcmp((*cmd)->args[0], "." ) && ft_strcmp((*cmd)->args[0], "..") && S_ISDIR(buf.st_mode))
+	if (ft_strchr((*cmd)->args[0], '/') && ft_strcmp((*cmd)->args[0], "." )
+		&& ft_strcmp((*cmd)->args[0], "..") && S_ISDIR(buf.st_mode))
 	{
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd((*cmd)->args[0], 2);
@@ -58,7 +60,8 @@ void	exec_error(t_list **cmd)
 		free_list(*cmd);
 		exit (127);
 	}
-	if (ft_strchr((*cmd)->args[0], '/') && !access((*cmd)->args[0], F_OK) && access((*cmd)->args[0], X_OK))
+	if (ft_strchr((*cmd)->args[0], '/') && !access((*cmd)->args[0], F_OK)
+		&& access((*cmd)->args[0], X_OK))
 	{
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd((*cmd)->args[0], 2);

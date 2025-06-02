@@ -1,4 +1,3 @@
-
 #include "../include/shell.h"
 
 void	pipe_wrapper(int *pipe_fd)
