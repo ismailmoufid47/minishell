@@ -16,28 +16,28 @@ int	g_signal = 0;
 // 	printf("\n");
 // }
 
-// void	handle_here_doc(t_list *file, t_envp *envp, int out)
-// {
-// 	char	*input;
-// 	char	*tmp;
+void	handle_here_doc(t_list *file, t_envp *envp, int out)
+{
+	char	*input;
+	char	*tmp;
 
-// 	signal(SIGINT, SIG_DFL);
-// 	input = "NULL";
-// 	tmp = readline("> ");
-// 	while (tmp && ft_strcmp(tmp, file->value))
-// 	{
-// 		input = tmp;
-// 		if (file->quote_type == UNQUOTED)
-// 			input = expand_env_variable(tmp, envp, 1);
-// 		ft_putendl_fd(input, out);
-// 		free(input);
-// 		tmp = readline("> ");
-// 	}
-// 	if (!tmp)
-// 		exit(1);
-// 	free(tmp);
-// 	exit (0);
-// }
+	signal(SIGINT, SIG_DFL);
+	input = "NULL";
+	tmp = readline("> ");
+	while (tmp && ft_strcmp(tmp, file->value))
+	{
+		input = tmp;
+		if (file->quote_type == UNQUOTED)
+			input = expand_env_variable(tmp, envp, 1);
+		ft_putendl_fd(input, out);
+		free(input);
+		tmp = readline("> ");
+	}
+	if (!tmp)
+		exit(1);
+	free(tmp);
+	exit (0);
+}
 
 int	set_cmd_here_doc(t_list *list, t_envp *envp)
 {
