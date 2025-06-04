@@ -1,47 +1,74 @@
 #include "../include/shell.h"
 
+// int	get_token_count(char *input)
+// {
+// 	int	i;
+// 	int	token_count;
+// 	int	sq_flag;
+// 	int	dq_flag;
+// 	int	broke_for_special;
+
+// 	i = 0;
+// 	sq_flag = ((token_count = 0), (broke_for_special = 1), (dq_flag = 0), 0);
+// 	while (input[i])
+// 	{
+// 		if (is_special_token(&input[i]) && !sq_flag && !dq_flag)
+// 		{
+// 			if (broke_for_special)
+// 				token_count++;
+// 			i++;
+// 			if (input[i] == input[i - 1])
+// 				i++;
+// 		}
+// 		broke_for_special = 0;
+// 		while (input[i] == ' ')
+// 			i++;
+// 		if (!input[i])
+// 			break ;
+// 		token_count++;
+// 		while (input[i] && (sq_flag || dq_flag || input[i] != ' '))
+// 		{
+// 			if (input[i] == '\'' && !dq_flag)
+// 				sq_flag = !sq_flag;
+// 			else if (input[i] == '"' && !sq_flag)
+// 				dq_flag = !dq_flag;
+// 			if (is_special_token(&input[i]) && !sq_flag && !dq_flag)
+// 				break ;
+// 			broke_for_special = 1;
+// 			i++;
+// 		}
+// 	}
+// 	return (token_count);
+// }
 int	get_token_count(char *input)
 {
 	int	i;
-	int	token_count;
+	int	count;
 	int	sq_flag;
 	int	dq_flag;
-	int	broke_for_special;
+	int	in_token;
 
-	i = 0;
-	token_count = 0;
-	broke_for_special = 1;
-	sq_flag = ((dq_flag = 0), 0);
+	sq_flag = ((in_token = 0), (i = 0), (count = 0), (dq_flag = 0), 0);
 	while (input[i])
 	{
-		if (is_special_token(&input[i]) && !sq_flag && !dq_flag)
-		{
-			if (broke_for_special)
-				token_count++;
+		if (!in_token)
+			count++;
+		while (input[i] == ' ' && !sq_flag && !dq_flag)
+			i = ((in_token = 0), i + 1);
+		if (input[i] && is_special_token(&input[i]) && !sq_flag && !dq_flag)
+			i = ((in_token = 0), i + 1 + (input[i] == input[i + 1]));
+		if (input[i] && !in_token)
+			in_token = ((count++), 1);
+		if (input[i] == '\'' && !dq_flag)
+			sq_flag = !sq_flag;
+		else if (input[i] == '"' && !sq_flag)
+			dq_flag = !dq_flag;
+		if (input[i])
 			i++;
-			if (input[i] == input[i - 1])
-				i++;
-		}
-		broke_for_special = 0;
-		while (input[i] == ' ')
-			i++;
-		if (!input[i])
-			break ;
-		token_count++;
-		while (input[i] && (sq_flag || dq_flag || input[i] != ' '))
-		{
-			if (input[i] == '\'' && !dq_flag)
-				sq_flag = !sq_flag;
-			else if (input[i] == '"' && !sq_flag)
-				dq_flag = !dq_flag;
-			if (is_special_token(&input[i]) && !sq_flag && !dq_flag)
-				break ;
-			broke_for_special = 1;
-			i++;
-		}
 	}
-	return (token_count);
+	return (count);
 }
+
 
 int	get_token_length(char *input, int *i)
 {

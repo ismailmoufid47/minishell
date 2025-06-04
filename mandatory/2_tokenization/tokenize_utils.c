@@ -21,11 +21,13 @@ int	validate_tokens(char **tokens, t_envp *envp)
 
 int	is_special_token(char *token)
 {
-	return (is_double_symbol(token, 0) || is_special_operator(token[0]));
+	return (is_special_operator(token[0]) || is_double_symbol(token, 0));
 }
 
 int	is_double_symbol(char *input, int pos)
 {
+	if (!input[pos] || !input[pos + 1])
+		return (0);
 	return ((input[pos] == '<' && input[pos + 1] == '<')
 		|| (input[pos] == '>' && input[pos + 1] == '>'));
 }

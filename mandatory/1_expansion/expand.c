@@ -136,41 +136,44 @@ void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start)
 		*cmd_line = tmp;
 	}
 }
+
+void	handle_hdoc_del(char **line, int *sq_flag, int *i, int *hdoc_is_prev)
+{
+	static int		dq_flag;
+
+	if (*hdoc_is_prev)
+	{
+		while ((*line)[*i] && (*line)[*i] == ' ')
+			(*i)++;
+		check_delimiter_quotes(line, (*line) + *i, *i);
+		while ((*line)[*i] && !is_special_operator((*line)[*i])
+			&& (*line)[*i] != ' ')
+			(*i)++;
+		*hdoc_is_prev = 0;
+	}
+	if ((*line)[*i] == '<' && (*line)[*i + 1] == '<'
+		&& !dq_flag && !*sq_flag)
+	{
+		*hdoc_is_prev = 1;
+		(*i)++;
+	}
+	if ((*line)[*i] == '\'' && !dq_flag)
+		*sq_flag = !*sq_flag;
+	else if ((*line)[*i] == '"' && !*sq_flag)
+		dq_flag = !dq_flag;
+}
+
 char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 {
 	int		i;
-	int		dq_flag;
 	int		sq_flag;
 	int		here_doc_is_prev;
 	char	*tmp;
 
-	i = 0;
-	dq_flag = 0;
-	sq_flag = 0;
-	here_doc_is_prev = 0;
+	here_doc_is_prev = ((i = 0), (sq_flag = 0), 0);
 	while (cmd_line && cmd_line[i])
 	{
-		if (here_doc_is_prev)
-		{
-			while (cmd_line[i] && cmd_line[i] == ' ')
-				i++;
-			check_delimiter_quotes(&cmd_line, cmd_line + i, i);
-			while (cmd_line[i] && !is_special_operator(cmd_line[i])
-				&& cmd_line[i] != ' ')
-				i++;
-			here_doc_is_prev = 0;
-		}
-		if (cmd_line[i] == '<' && cmd_line[i + 1] == '<'
-			&& !dq_flag && !sq_flag)
-		{
-			here_doc_is_prev = 1;
-			i += 2;
-			continue ;
-		}
-		if (cmd_line[i] == '\'' && !dq_flag)
-			sq_flag = !sq_flag;
-		else if (cmd_line[i] == '"' && !sq_flag)
-			dq_flag = !dq_flag;
+		handle_hdoc_del(&cmd_line, &sq_flag, &i, &here_doc_is_prev);
 		if (cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
 		{
 			if (cmd_line[i + 1] && (strchr("_?'\"", cmd_line[i + 1])

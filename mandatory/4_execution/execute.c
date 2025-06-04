@@ -77,7 +77,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	char	*cmd_path;
 
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_DFL);
 	if (prev)
 	{
 		ft_dup2(prev->pipe_fds[0], STDIN_FILENO);

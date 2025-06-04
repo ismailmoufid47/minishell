@@ -7,3 +7,6 @@
 
 
 - ambiguious file redirections 
+
+- DEC	OCT	 HEX	BIN	                    Symbol	HTML Number	HTML Name	Description
+  129    201 81	    10000001			 	Unused                          wlo
