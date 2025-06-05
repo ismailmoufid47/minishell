@@ -7,8 +7,10 @@ char	**ft_split_and_add_quotes(char *var, int is_here_doc)
 	int		i;
 
 	result = ((i = -1), ft_split(var, ' '));
-	if (!result || !*result)
-		return ((free (result)), NULL);
+	if (!result)
+		return (free(result), NULL);
+	if (!*result)
+		return ((free (*result)), free(result), NULL);
 	while (result[++i])
 	{
 		if (!is_here_doc)
