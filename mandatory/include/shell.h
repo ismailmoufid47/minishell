@@ -117,6 +117,10 @@ void	identifier_error(char *cmd, char *identifier, t_envp *envp);
 int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
 void	error_fork(t_envp *envp);
 
+// expand utils:
+char	**ft_split_and_add_quotes(char *var, int is_here_doc);
+char	*join_split_result(char *cmd, char **split, int start, int varln);
+
 //tokenize utils:
 int		is_single_operator(char c);
 int		is_double_symbol(char *input, int pos);
