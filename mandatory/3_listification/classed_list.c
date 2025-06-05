@@ -93,8 +93,7 @@ t_list	*remove_red_and_add_it_to_cmd(t_list *head)
 	t_list	*prev;
 	t_list	*cmd;
 
-	current = head;
-	prev = NULL;
+	current = ((prev = NULL), head);
 	while (current)
 	{
 		cmd = closest_cmd(current);
@@ -106,14 +105,10 @@ t_list	*remove_red_and_add_it_to_cmd(t_list *head)
 			if (head == current)
 				head = cmd;
 			cmd->is_redirected = 1;
-			cmd->redirections = redirections(current, cmd);
-			current = cmd;
+			current = ((cmd->redirections = redirections(current, cmd)), cmd);
 		}
 		else if (cmd->value == NULL)
-		{
-			free(cmd);
-			cmd = NULL;
-		}
+			cmd = ((free(cmd)), NULL);
 		prev = current;
 		if (current == cmd)
 			cmd->redirections = keep_only_redirections(cmd->redirections);
@@ -132,39 +127,34 @@ int	count_args(t_list *cmd)
 		count++;
 		cmd = cmd->next;
 	}
-	return (count);
+	return (count + 1);
 }
 
 t_list	*extract_args_and_remove_them(t_list *head)
 {
-	t_list	*current;
+	t_list	*cur;
 	t_list	*cmd;
 	int		i;
 
-	current = head;
-	while (current)
+	cur = head;
+	while (cur)
 	{
-		if (current->type == CMD)
+		if (cur->type == CMD)
 		{
-			i = 0;
-			current->args = malloc(sizeof(char *) * (count_args(current) + 1));
-			cmd = current;
-			while (current && current->type == CMD)
+			cur->args = ((i = 0), malloc(sizeof(char *) * (count_args(cur))));
+			cmd = cur;
+			while (cur && cur->type == CMD)
 			{
-				cmd->args[i] = current->value;
-				if (current != cmd)
-				{
-					cmd->next = current->next;
-					free(current);
-					current = cmd;
-				}
+				cmd->args[i] = cur->value;
+				if (cur != cmd)
+					cur = ((cmd->next = cur->next), (free(cur)), cmd);
 				i++;
-				current = current->next;
+				cur = cur->next;
 			}
 			cmd->args[i] = NULL;
 		}
-		if (current)
-			current = current->next;
+		if (cur)
+			cur = cur->next;
 	}
 	return (head);
 }

@@ -46,8 +46,7 @@ char	*get_cmd_path(char *cmd, char *envp[])
 		i++;
 	if (!envp[i])
 	{
-		cmd_path = getcwd(NULL, 0);
-		tmp = ft_strjoin(cmd_path, "/");
+		tmp = ((cmd_path = getcwd(NULL, 0)), ft_strjoin(cmd_path, "/"));
 		free(cmd_path);
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
@@ -61,8 +60,7 @@ char	*get_cmd_path(char *cmd, char *envp[])
 		path[i - 1] = ((cmd_path = path[i - 1]), ft_strjoin(path[i - 1], "/"));
 		free(cmd_path);
 	}
-	i = 0;
-	cmd_path = ft_strjoin(path[i], cmd);
+	cmd_path = ((i = 0), ft_strjoin(path[i], cmd));
 	while (path[i] && cmd_path && access(cmd_path, X_OK))
 		cmd_path = ((free(cmd_path)), ft_strjoin(path[i++], cmd));
 	ft_free_split(path);
