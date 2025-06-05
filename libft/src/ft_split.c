@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ismail <ismail@student.42.fr>              +#+  +:+       +#+        */
+/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 23:07:48 by isel-mou          #+#    #+#             */
-/*   Updated: 2025/03/04 01:41:59 by ismail           ###   ########.fr       */
+/*   Updated: 2025/06/05 21:12:31 by isel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ void	*fill_table(char *string, char delimiter, char **table)
 			end++;
 	}
 	table[i] = NULL;
+	if (!table[0])
+		return (free(table), NULL);
 	return (table);
 }
 
