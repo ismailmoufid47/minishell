@@ -82,6 +82,7 @@ SRC = 1_expansion/expand.c \
 	utils/free_resources.c \
 	utils/wrappers.c \
 	utils/errors.c \
+	utils/string_utils.c \
 	shell.c
 
 

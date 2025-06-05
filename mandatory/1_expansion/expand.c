@@ -117,7 +117,7 @@ void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start)
 
 	i = 0;
 	quote_flag = 0;
-	while (delimiter[i] && !is_special_operator(delimiter[i])
+	while (delimiter[i] && !is_single_operator(delimiter[i])
 		&& delimiter[i] != ' ')
 	{
 		if (delimiter[i] == '\'' || delimiter[i] == '"')
@@ -146,7 +146,7 @@ void	handle_hdoc_del(char **line, int *sq_flag, int *i, int *hdoc_is_prev)
 		while ((*line)[*i] && (*line)[*i] == ' ')
 			(*i)++;
 		check_delimiter_quotes(line, (*line) + *i, *i);
-		while ((*line)[*i] && !is_special_operator((*line)[*i])
+		while ((*line)[*i] && !is_single_operator((*line)[*i])
 			&& (*line)[*i] != ' ')
 			(*i)++;
 		*hdoc_is_prev = 0;

@@ -70,9 +70,8 @@ t_list	*handle_cmd_red(t_list *head, t_node_type type, int *changed)
 			&& prev->type == CMD && current->next && prev_prev)
 		{
 			prev_prev->next = current;
-			prev->next = current->next->next;
+			prev->next = ((*changed = 1), current->next->next);
 			current->next->next = prev;
-			*changed = 1;
 		}
 		else if (current->type == type
 			&& prev && prev->type == CMD && current->next && !prev_prev)

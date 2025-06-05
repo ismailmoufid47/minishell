@@ -118,10 +118,13 @@ int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
 void	error_fork(t_envp *envp);
 
 //tokenize utils:
-int		is_special_token(char *token);
-int		is_special_operator(char c);
+int		is_single_operator(char c);
 int		is_double_symbol(char *input, int pos);
-void	skip_quoted_section(char *input, int *pos, char quote);
+int		is_special_token(char *token);
+int		handle_special_token(const char *input,
+			int i, int *count, int *special);
+void	update_quote_flags(char c, int *sq_flag, int *dq_flag);
+
 int		validate_tokens(char **tokens, t_envp *envp);
 
 // classed list utils:
@@ -149,5 +152,8 @@ void	load_history(int fd);
 // Free resources:
 void	free_envp(t_envp *envp);
 void	free_list(t_list *list);
+
+// string utils:
+int		skip_spaces(const char *input, int i);
 
 #endif

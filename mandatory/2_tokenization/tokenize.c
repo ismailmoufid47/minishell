@@ -1,70 +1,30 @@
 #include "../include/shell.h"
 
-// int	get_token_count(char *input)
-// {
-// 	int	i;
-// 	int	token_count;
-// 	int	sq_flag;
-// 	int	dq_flag;
-// 	int	broke_for_special;
-
-// 	i = 0;
-// 	sq_flag = ((token_count = 0), (broke_for_special = 1), (dq_flag = 0), 0);
-// 	while (input[i])
-// 	{
-// 		if (is_special_token(&input[i]) && !sq_flag && !dq_flag)
-// 		{
-// 			if (broke_for_special)
-// 				token_count++;
-// 			i++;
-// 			if (input[i] == input[i - 1])
-// 				i++;
-// 		}
-// 		broke_for_special = 0;
-// 		while (input[i] == ' ')
-// 			i++;
-// 		if (!input[i])
-// 			break ;
-// 		token_count++;
-// 		while (input[i] && (sq_flag || dq_flag || input[i] != ' '))
-// 		{
-// 			if (input[i] == '\'' && !dq_flag)
-// 				sq_flag = !sq_flag;
-// 			else if (input[i] == '"' && !sq_flag)
-// 				dq_flag = !dq_flag;
-// 			if (is_special_token(&input[i]) && !sq_flag && !dq_flag)
-// 				break ;
-// 			broke_for_special = 1;
-// 			i++;
-// 		}
-// 	}
-// 	return (token_count);
-// }
-int	get_token_count(char *input)
+int	token_count(char *input)
 {
 	int	i;
 	int	count;
 	int	sq_flag;
 	int	dq_flag;
-	int	in_token;
+	int	special;
 
-	sq_flag = ((in_token = 0), (i = 0), (count = 0), (dq_flag = 0), 0);
+	special = ((i = 0), (count = 0), (sq_flag = 0), (dq_flag = 0), 1);
 	while (input[i])
 	{
-		if (!in_token)
-			count++;
-		while (input[i] == ' ' && !sq_flag && !dq_flag)
-			i = ((in_token = 0), i + 1);
+		i = skip_spaces(input, i);
 		if (input[i] && is_special_token(&input[i]) && !sq_flag && !dq_flag)
-			i = ((in_token = 0), i + 1 + (input[i] == input[i + 1]));
-		if (input[i] && !in_token)
-			in_token = ((count++), 1);
-		if (input[i] == '\'' && !dq_flag)
-			sq_flag = !sq_flag;
-		else if (input[i] == '"' && !sq_flag)
-			dq_flag = !dq_flag;
-		if (input[i])
-			i++;
+			i = handle_special_token(input, i, &count, &special);
+		else
+		{
+			special = ((count++), 0);
+			while (input[i] && !(!sq_flag && !dq_flag && input[i] == ' '))
+			{
+				update_quote_flags(input[i], &sq_flag, &dq_flag);
+				if (is_special_token(&input[i]) && !sq_flag && !dq_flag)
+					break ;
+				special = ((i++), 1);
+			}
+		}
 	}
 	return (count);
 }
@@ -76,8 +36,7 @@ int	get_token_length(char *input, int *i)
 	int	sq_flag;
 	int	dq_flag;
 
-	start = *i;
-	sq_flag = ((dq_flag = 0), 0);
+	sq_flag = ((start = *i), (dq_flag = 0), 0);
 	if (is_special_token(input + *i))
 	{
 		(*i)++;
@@ -90,60 +49,42 @@ int	get_token_length(char *input, int *i)
 	}
 	while (input[*i])
 	{
-		if (input[*i] == '\'' && !dq_flag)
-			sq_flag = !sq_flag;
-		else if (input[*i] == '"' && !sq_flag)
-			dq_flag = !dq_flag;
-		else if (!sq_flag && !dq_flag && input[*i] == ' ')
-			break ;
-		if (!sq_flag && !dq_flag && is_special_token(input + *i))
+		update_quote_flags(input[*i], &sq_flag, &dq_flag);
+		if ((!sq_flag && !dq_flag && input[*i] == ' ')
+			|| (!sq_flag && !dq_flag && is_special_token(input + *i)))
 			break ;
 		(*i)++;
 	}
 	return (*i - start);
 }
 
-char	*allocate_token(char *input, int start, int length)
+char	*allocate_token(char *input, int start, int lgth)
 {
-	char	*token;
-	int		sq_flag;
-	int		dq_flag;
+	char	*tok;
+	int		sq_flg;
+	int		dq_flg;
 	int		j;
 	int		i;
 
-	token = malloc(length + 1);
-	j = 0;
-	i = start;
-	sq_flag = ((dq_flag = 0), 0);
-	if (!token)
+	sq_flg = ((tok = malloc(lgth + 1)), (j = 0), (i = start), (dq_flg = 0), 0);
+	if (!tok)
 		return (NULL);
 	if (input[start] == '"' || input[start] == '\'')
 	{
-		token[j] = input[start];
-		if (input[start] == '\'')
-			sq_flag = 1;
-		else
-			dq_flag = 1;
-		i++;
-		j++;
+		tok[j] = input[start];
+		update_quote_flags(input[start], &sq_flg, &dq_flg);
+		i = ((j++), 1 + 1);
 	}
-	while (i < start + length)
+	while (i < start + lgth)
 	{
-		if (input[i] == '\'' && !dq_flag)
-			sq_flag = !sq_flag;
-		else if (input[i] == '"' && !sq_flag)
-			dq_flag = !dq_flag;
-		token[j] = 0;
-		if (input[i] == '\'' && dq_flag)
-			token[j++] = input[i];
-		if (input[i] == '"' && sq_flag)
-			token[j++] = input[i];
-		if (input[i] != '\'' && input[i] != '"')
-			token[j++] = input[i];
+		update_quote_flags(input[i], &sq_flg, &dq_flg);
+		tok[j] = 0;
+		if ((input[i] != '\'' && input[i] != '"')
+			|| (input[i] == '\'' && dq_flg) || (input[i] == '"' && sq_flg))
+			tok[j++] = input[i];
 		i++;
 	}
-	token[j] = '\0';
-	return (token);
+	return ((tok[j] = '\0'), tok);
 }
 
 char	**extract_tokens(char **tokens, char *input)
@@ -171,11 +112,11 @@ char	**extract_tokens(char **tokens, char *input)
 
 char	**tokenize(char *input)
 {
-	int		token_count;
+	int		count;
 	char	**tokens;
 
-	token_count = get_token_count(input);
-	tokens = malloc(sizeof(char *) * (token_count + 1));
+	count = token_count(input);
+	tokens = malloc(sizeof(char *) * (count + 1));
 	if (!tokens)
 		return (NULL);
 	return (extract_tokens(tokens, input));

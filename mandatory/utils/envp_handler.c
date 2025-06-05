@@ -17,8 +17,7 @@ t_envp	*remove_envp_var(t_envp *head, char *var_name)
 	t_envp	*envp;
 	t_envp	*removable;
 
-	prev = NULL;
-	envp = head;
+	envp = ((prev = NULL), head);
 	while (envp)
 	{
 		if (!ft_strcmp(envp->name, var_name))
@@ -36,8 +35,7 @@ t_envp	*remove_envp_var(t_envp *head, char *var_name)
 			free(envp);
 			return (head);
 		}
-		prev = envp;
-		envp = envp->next;
+		envp = ((prev = envp), envp->next);
 	}
 	return (head);
 }

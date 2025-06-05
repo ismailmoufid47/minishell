@@ -21,27 +21,36 @@ int	validate_tokens(char **tokens, t_envp *envp)
 
 int	is_special_token(char *token)
 {
-	return (is_special_operator(token[0]) || is_double_symbol(token, 0));
-}
-
-int	is_double_symbol(char *input, int pos)
-{
-	if (!input[pos] || !input[pos + 1])
+	if (!token || !token[0])
 		return (0);
-	return ((input[pos] == '<' && input[pos + 1] == '<')
-		|| (input[pos] == '>' && input[pos + 1] == '>'));
+	if (token[0] == '<' && token[1] == '<')
+		return (1);
+	if (token[0] == '>' && token[1] == '>')
+		return (1);
+	return (token[0] == '<' || token[0] == '>' || token[0] == '|');
 }
 
-int	is_special_operator(char c)
+int	is_single_operator(char c)
 {
 	return (c == '<' || c == '>' || c == '|');
 }
 
-void	skip_quoted_section(char *input, int *pos, char quote)
+
+void	update_quote_flags(char c, int *sq_flag, int *dq_flag)
 {
-	(*pos)++;
-	while (input[*pos] && input[*pos] != quote)
-		(*pos)++;
-	if (input[*pos] == quote)
-		(*pos)++;
+	if (c == '\'' && !(*dq_flag))
+		*sq_flag = !(*sq_flag);
+	else if (c == '"' && !(*sq_flag))
+		*dq_flag = !(*dq_flag);
+}
+
+int	handle_special_token(const char *input, int i, int *count, int *special)
+{
+	if (*special)
+		(*count)++;
+	i++;
+	if (input[i] == input[i - 1])
+		i++;
+	*special = 0;
+	return (i);
 }
