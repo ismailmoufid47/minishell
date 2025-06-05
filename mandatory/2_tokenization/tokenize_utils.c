@@ -35,7 +35,6 @@ int	is_single_operator(char c)
 	return (c == '<' || c == '>' || c == '|');
 }
 
-
 void	update_quote_flags(char c, int *sq_flag, int *dq_flag)
 {
 	if (c == '\'' && !(*dq_flag))
@@ -46,8 +45,7 @@ void	update_quote_flags(char c, int *sq_flag, int *dq_flag)
 
 int	handle_special_token(const char *input, int i, int *count, int *special)
 {
-	if (*special)
-		(*count)++;
+	(*count)++;
 	i++;
 	if (input[i] == input[i - 1])
 		i++;

@@ -29,8 +29,7 @@ int	token_count(char *input)
 	return (count);
 }
 
-
-int	token_length(char *input, int *i)
+int	get_token_length(char *input, int *i)
 {
 	int	start;
 	int	sq_flag;
@@ -41,17 +40,18 @@ int	token_length(char *input, int *i)
 	{
 		(*i)++;
 		if (input[*i] == input[*i -1])
-		{
-			(*i)++;
-			return (2);
-		}
+			return (((*i)++), 2);
 		return (1);
 	}
 	while (input[*i])
 	{
-		update_quote_flags(input[*i], &sq_flag, &dq_flag);
-		if ((!sq_flag && !dq_flag && input[*i] == ' ')
-			|| (!sq_flag && !dq_flag && is_special_token(input + *i)))
+		if (input[*i] == '\'' && !dq_flag)
+			sq_flag = !sq_flag;
+		else if (input[*i] == '"' && !sq_flag)
+			dq_flag = !dq_flag;
+		else if (!sq_flag && !dq_flag && input[*i] == ' ')
+			break ;
+		if (!sq_flag && !dq_flag && is_special_token(input + *i))
 			break ;
 		(*i)++;
 	}
@@ -69,22 +69,21 @@ char	*allocate_token(char *input, int start, int lgth)
 	sq_flg = ((tok = malloc(lgth + 1)), (j = 0), (i = start), (dq_flg = 0), 0);
 	if (!tok)
 		return (NULL);
-	if (input[start] == '"' || input[start] == '\'')
-	{
-		tok[j] = input[start];
-		update_quote_flags(input[start], &sq_flg, &dq_flg);
-		i = ((j++), 1 + 1);
-	}
+	if (input[start] == '\'')
+		j = ((i++), (sq_flg = 1), (tok[j] = input[start]), 1);
+	if (input[start] == '"')
+		j = ((i++), (dq_flg = 1), (tok[j] = input[start]), 1);
 	while (i < start + lgth)
 	{
 		update_quote_flags(input[i], &sq_flg, &dq_flg);
 		tok[j] = 0;
-		if ((input[i] != '\'' && input[i] != '"')
-			|| (input[i] == '\'' && dq_flg) || (input[i] == '"' && sq_flg))
+		if ((input[i] == '\'' && dq_flg) || (input[i] == '"' && sq_flg)
+			|| (input[i] != '\'' && input[i] != '"'))
 			tok[j++] = input[i];
 		i++;
 	}
-	return ((tok[j] = '\0'), tok);
+	tok[j] = '\0';
+	return (tok);
 }
 
 char	**extract_tokens(char **tokens, char *input)
@@ -103,7 +102,7 @@ char	**extract_tokens(char **tokens, char *input)
 		if (!input[i])
 			break ;
 		start = i;
-		length = token_length(input, &i);
+		length = get_token_length(input, &i);
 		tokens[j++] = allocate_token(input, start, length);
 	}
 	tokens[j] = NULL;
