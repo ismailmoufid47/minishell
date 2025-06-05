@@ -6,8 +6,9 @@ char	**ft_split_and_add_quotes(char *var, int is_here_doc)
 	char	*tmp;
 	int		i;
 
-	result = ft_split(var, ' ');
-	i = -1;
+	result = ((i = -1), ft_split(var, ' '));
+	if (!result || !*result)
+		return ((free (result)), NULL);
 	while (result[++i])
 	{
 		if (!is_here_doc)
@@ -21,10 +22,9 @@ char	**ft_split_and_add_quotes(char *var, int is_here_doc)
 			result[i] = ((tmp = result[i]), ft_strjoin(result[i], " "));
 		free(tmp);
 		if (!is_here_doc)
-		{
 			result[i] = ((tmp = result[i]), ft_strjoin(result[i], "\""));
+		if (!is_here_doc)
 			free(tmp);
-		}
 	}
 	return (result);
 }
@@ -36,22 +36,22 @@ char	*join_split_result(char *cmd, char **split_result, int start, int varln)
 	char	*result;
 
 	i = 0;
+	if (!split_result || !*split_result)
+		return (ft_strdup(cmd));
 	while (split_result && split_result[i])
 	{
 		if (i == 0)
 			result = ft_strjoin(cmd, split_result[i]);
 		else
 		{
-			tmp = result;
-			result = ft_strjoin(result, split_result[i]);
+			result = ((tmp = result), ft_strjoin(result, split_result[i]));
 			free(tmp);
 		}
 		i++;
 	}
 	if (i)
 	{
-		tmp = result;
-		result = ft_strjoin(result, cmd + start + varln);
+		result = ((tmp = result), ft_strjoin(result, cmd + start + varln));
 		free(tmp);
 	}
 	ft_free_split(split_result);
@@ -105,8 +105,6 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp, int is_here_doc)
 		return (result);
 	}
 	split_result = ft_split_and_add_quotes(var, is_here_doc);
-	if (!split_result)
-		return (free(var), ft_strdup(cmd));
 	return (join_split_result(cmd, split_result, start, variable_name_len));
 }
 
@@ -173,7 +171,6 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 	char	*tmp;
 
 	here_doc_is_prev = ((i = 0), (sq_flag = 0), 0);
-	printf("Expanding env variables in: %s\n", cmd_line);
 	while (cmd_line && cmd_line[i])
 	{
 		handle_hdoc_del(&cmd_line, &sq_flag, &i, &here_doc_is_prev);
@@ -188,7 +185,6 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 				free(tmp);
 			}
 		}
-	printf("cmd line address: %p\n", cmd_line);
 		if (cmd_line && cmd_line[i])
 			i++;
 	}
