@@ -29,22 +29,22 @@ char	**ft_split_and_add_quotes(char *var, int is_here_doc)
 	return (result);
 }
 
-char	*join_split_result(char *cmd, char **split_result, int start, int varln)
+char	*join_split_result(char *cmd, char **split, int start, int varln)
 {
 	int		i;
 	char	*tmp;
 	char	*result;
 
 	i = 0;
-	if (!split_result || !*split_result)
-		return (ft_strjoin(cmd, cmd + start + varln));
-	while (split_result && split_result[i])
+	if (!split || !*split)
+		return (ft_free_split(split), ft_strjoin(cmd, cmd + start + varln));
+	while (split[i])
 	{
 		if (i == 0)
-			result = ft_strjoin(cmd, split_result[i]);
+			result = ft_strjoin(cmd, split[i]);
 		else
 		{
-			result = ((tmp = result), ft_strjoin(result, split_result[i]));
+			result = ((tmp = result), ft_strjoin(result, split[i]));
 			free(tmp);
 		}
 		i++;
@@ -54,6 +54,6 @@ char	*join_split_result(char *cmd, char **split_result, int start, int varln)
 		result = ((tmp = result), ft_strjoin(result, cmd + start + varln));
 		free(tmp);
 	}
-	ft_free_split(split_result);
+	ft_free_split(split);
 	return (result);
 }

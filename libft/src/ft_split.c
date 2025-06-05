@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: isel-mou <isel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 23:07:48 by isel-mou          #+#    #+#             */
-/*   Updated: 2025/06/05 21:12:31 by isel-mou         ###   ########.fr       */
+/*   Updated: 2025/06/05 20:35:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,6 @@ void	*fill_table(char *string, char delimiter, char **table)
 			end++;
 	}
 	table[i] = NULL;
-	if (!table[0])
-		return (free(table), NULL);
 	return (table);
 }
 
@@ -98,5 +96,8 @@ char	**ft_split(char const *string, char c)
 	table = malloc((count_substring((char *)string, c) + 1) * sizeof(char *));
 	if (!table)
 		return (NULL);
-	return (fill_table((char *)string, c, table));
+	table = fill_table((char *)string, c, table);
+	if (!table[0])
+		table[0] = ft_strdup("");
+	return (table);
 }
