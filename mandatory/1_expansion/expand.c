@@ -105,6 +105,8 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp, int is_here_doc)
 		return (result);
 	}
 	split_result = ft_split_and_add_quotes(var, is_here_doc);
+	if (!split_result)
+		return (free(var), ft_strdup(cmd));
 	return (join_split_result(cmd, split_result, start, variable_name_len));
 }
 
@@ -171,6 +173,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 	char	*tmp;
 
 	here_doc_is_prev = ((i = 0), (sq_flag = 0), 0);
+	printf("Expanding env variables in: %s\n", cmd_line);
 	while (cmd_line && cmd_line[i])
 	{
 		handle_hdoc_del(&cmd_line, &sq_flag, &i, &here_doc_is_prev);
@@ -185,6 +188,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 				free(tmp);
 			}
 		}
+	printf("cmd line address: %p\n", cmd_line);
 		if (cmd_line && cmd_line[i])
 			i++;
 	}
