@@ -7,9 +7,8 @@ void	builtin_here_doc(char *delimiter, t_envp *envp)
 	char	*input;
 	char	*tmp;
 
-	input = "NULL";
 	fd1 = open_wrapper("read_line", O_W | O_C | O_T, 0600);
-	fd2 = open_wrapper("read_line", O_RDONLY, 0);
+	fd2 = ((input = "NULL"), open_wrapper("read_line", O_RDONLY, 0));
 	unlink("read_line");
 	tmp = readline("> ");
 	while (tmp && ft_strcmp(tmp, delimiter))

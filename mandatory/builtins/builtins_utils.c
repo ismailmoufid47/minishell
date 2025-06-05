@@ -75,8 +75,7 @@ int	is_numeric(char *arg)
 	int		sign;
 	long	res;
 
-	i = 0;
-	sign = 1;
+	sign = ((i = 0), 1);
 	if (arg[i] == '+' || arg[i] == '-')
 	{
 		if (arg[i] == '-')
@@ -94,8 +93,7 @@ int	is_numeric(char *arg)
 			return (0);
 		if (sign == -1 && (res * 10 + (arg[i] - '0')) * sign > res * sign)
 			return (0);
-		res = res * 10 + (arg[i] - '0');
-		i++;
+		res = ((i++), res * 10 + (arg[i] - '0'));
 	}
 	return (i);
 }
