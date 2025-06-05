@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 23:07:48 by isel-mou          #+#    #+#             */
-/*   Updated: 2025/06/05 20:35:48 by codespace        ###   ########.fr       */
+/*   Updated: 2025/06/05 20:39:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,11 @@ char	**ft_split(char const *string, char c)
 		return (NULL);
 	table = fill_table((char *)string, c, table);
 	if (!table[0])
+	{
+		ft_free_split(table);
+		table = malloc(sizeof(char *) * 2);
 		table[0] = ft_strdup("");
+		table[1] = NULL;
+	}
 	return (table);
 }
