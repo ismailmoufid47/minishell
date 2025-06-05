@@ -39,7 +39,7 @@ char	*join_split_result(char *cmd, char **split_result, int start, int varln)
 
 	i = 0;
 	if (!split_result || !*split_result)
-		return (ft_strdup(cmd));
+		return (ft_strjoin(cmd, cmd + start + varln));
 	while (split_result && split_result[i])
 	{
 		if (i == 0)
