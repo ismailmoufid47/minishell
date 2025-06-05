@@ -30,7 +30,7 @@ int	token_count(char *input)
 }
 
 
-int	get_token_length(char *input, int *i)
+int	token_length(char *input, int *i)
 {
 	int	start;
 	int	sq_flag;
@@ -103,7 +103,7 @@ char	**extract_tokens(char **tokens, char *input)
 		if (!input[i])
 			break ;
 		start = i;
-		length = get_token_length(input, &i);
+		length = token_length(input, &i);
 		tokens[j++] = allocate_token(input, start, length);
 	}
 	tokens[j] = NULL;
