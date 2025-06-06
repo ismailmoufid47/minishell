@@ -36,10 +36,10 @@
 // 		else
 // 		{
 // 			printf("       CMD:  %s, quote: %d", list->value, list->quote_type);
-// 			if (list->is_redirected)
+// 			if (list->redirected)
 // 			{
 // 				printf(",  REDIRECTIONS:\n");
-// 				print_list(list->redirections, tab_count + 1);
+// 				print_list(list->redirs, tab_count + 1);
 // 			}
 // 			printf(" args: \n");
 // 			print_tokens(list->args);
@@ -86,33 +86,32 @@ t_list	*handle_cmd_red(t_list *head, t_node_type type, int *changed)
 	return (head);
 }
 
-// the cmd is always after the redirections
+// the cmd is always after the redirs
 t_list	*remove_red_and_add_it_to_cmd(t_list *head)
 {
-	t_list	*current;
+	t_list	*cr;
 	t_list	*prev;
 	t_list	*cmd;
 
-	current = ((prev = NULL), head);
-	while (current)
+	cr = ((prev = NULL), head);
+	while (cr)
 	{
-		cmd = closest_cmd(current);
-		if (current->type == IN || current->type == OUT
-			|| current->type == APP || current->type == HDOC)
+		cmd = closest_cmd(cr);
+		if (cr->type == IN || cr->type == OUT
+			|| cr->type == APP || cr->type == HDOC)
 		{
 			if (prev)
 				prev->next = cmd;
-			if (head == current)
+			if (head == cr)
 				head = cmd;
-			cmd->is_redirected = 1;
-			current = ((cmd->redirections = redirections(current, cmd)), cmd);
+			cr = ((cmd->redirected = 1), (cmd->redirs = redirs(cr, cmd)), cmd);
 		}
 		else if (cmd->value == NULL)
 			cmd = ((free(cmd)), NULL);
-		prev = current;
-		if (current == cmd)
-			cmd->redirections = keep_only_redirections(cmd->redirections);
-		current = current->next;
+		prev = cr;
+		if (cr == cmd)
+			cmd->redirs = keep_only_redirections(cmd->redirs);
+		cr = cr->next;
 	}
 	return (head);
 }
@@ -192,8 +191,8 @@ t_list	*create_list(char **tokens)
 		else
 		{
 			node = token_to_node(&head, &nav, tokens[i], CMD);
-			node->is_redirected = 0;
-			node->redirections = NULL;
+			node->redirected = 0;
+			node->redirs = NULL;
 			node->pid = 0;
 		}
 		if (tokens[i][0] == '\'')

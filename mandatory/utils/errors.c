@@ -40,38 +40,10 @@ void	identifier_error(char *cmd, char *identifier, t_envp *envp)
 
 void	exec_error(t_list **cmd)
 {
-	struct stat	buf;
-
-	stat((*cmd)->args[0], &buf);
-	if (ft_strchr((*cmd)->args[0], '/') && ft_strcmp((*cmd)->args[0], "." )
-		&& ft_strcmp((*cmd)->args[0], "..") && S_ISDIR(buf.st_mode))
-	{
-		ft_putstr_fd("Minishell: ", 2);
-		ft_putstr_fd((*cmd)->args[0], 2);
-		ft_putstr_fd(": is a directory\n", 2);
-		free_list(*cmd);
-		exit (126);
-	}
-	if (ft_strchr((*cmd)->args[0], '/') && access((*cmd)->args[0], F_OK) == -1)
-	{
-		ft_putstr_fd("Minishell: ", 2);
-		ft_putstr_fd((*cmd)->args[0], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		free_list(*cmd);
-		exit (127);
-	}
-	if (ft_strchr((*cmd)->args[0], '/') && !access((*cmd)->args[0], F_OK)
-		&& access((*cmd)->args[0], X_OK))
-	{
-		ft_putstr_fd("Minishell: ", 2);
-		ft_putstr_fd((*cmd)->args[0], 2);
-		ft_putstr_fd(": Permission denied\n", 2);
-		free_list(*cmd);
-		exit (126);
-	}
-	ft_putstr_fd("Minishell: ", 2);
-	ft_putstr_fd((*cmd)->args[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
-	free_list(*cmd);
-	exit (127);
+	if (!cmd || !*cmd)
+		return ;
+	is_directory_error(*cmd);
+	no_such_file_error(*cmd);
+	permission_denied_error(*cmd);
+	command_not_found_error(*cmd);
 }

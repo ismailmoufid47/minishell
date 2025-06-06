@@ -9,7 +9,7 @@ void	redirect(t_list *cmd)
 	int		herdoc_visited;
 
 	herdoc_visited = 0;
-	current = cmd->redirections;
+	current = cmd->redirs;
 	while (current)
 	{
 		file = current->next->value;
@@ -86,7 +86,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		ft_dup2(cmd->next->pipe_fds[1], STDOUT_FILENO);
 		close(cmd->next->pipe_fds[0]);
 	}
-	if (cmd->is_redirected)
+	if (cmd->redirected)
 		redirect(cmd);
 	if (cmd->value == NULL)
 		exit (0);

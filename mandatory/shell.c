@@ -52,7 +52,7 @@ int	set_cmd_here_doc(t_list *list, t_envp *envp)
 
 	tcgetattr(STDIN_FILENO, &old);
 	file_fd[0] = 0;
-	current = list->redirections;
+	current = list->redirs;
 	while (current)
 	{
 		if (current->type == HDOC)
@@ -101,7 +101,7 @@ int	handle_here_docs(t_envp *envp, t_list *list)
 {
 	while (list)
 	{
-		if (list->type == CMD && list->is_redirected)
+		if (list->type == CMD && list->redirected)
 		{
 			if (!set_cmd_here_doc(list, envp))
 				return (0);

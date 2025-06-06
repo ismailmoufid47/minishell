@@ -57,8 +57,8 @@ typedef struct s_list
 	t_node_type		type;
 	char			*value;
 	t_quotation		quote_type;
-	int				is_redirected;
-	struct s_list	*redirections;
+	int				redirected;
+	struct s_list	*redirs;
 	char			**args;
 	int				pid;
 	int				pipe_fds[2];
@@ -110,12 +110,21 @@ void	ft_dup2(int fd1, int fd2);
 void	close_2(int fd1, int fd2);
 pid_t	fork_wrapper(t_envp *envp);
 
-// Errors: 
+// Errors:
 void	error(char *error_prefix);
 void	exec_error(t_list **cmd);
+void	error_fork(t_envp *envp);
 void	identifier_error(char *cmd, char *identifier, t_envp *envp);
 int		syntax_error(char **tokens, char *error_prefix, t_envp *envp);
-void	error_fork(t_envp *envp);
+void	exit_numeric_error(char *arg, t_envp *envp, int subshell);
+void	exit_with_status(t_envp *envp, int status, int subshell);
+void	exit_too_many_args(t_envp *envp);
+
+// exec errors:
+void	is_directory_error(t_list *cmd);
+void	no_such_file_error(t_list *cmd);
+void	permission_denied_error(t_list *cmd);
+void	command_not_found_error(t_list *cmd);
 
 // expand utils:
 char	**ft_split_and_add_quotes(char *var, int is_here_doc);
@@ -133,7 +142,7 @@ int		validate_tokens(char **tokens, t_envp *envp);
 
 // classed list utils:
 t_list	*keep_only_redirections(t_list *head);
-t_list	*redirections(t_list *node, t_list *cmd);
+t_list	*redirs(t_list *node, t_list *cmd);
 t_list	*closest_cmd(t_list *head);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 

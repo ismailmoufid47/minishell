@@ -8,7 +8,7 @@ void	redirect_builtins(t_list *current)
 	int	stdout_fd;
 	int	stdin_fd;
 
-	if (!current->is_redirected)
+	if (!current->redirected)
 		return ;
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);
@@ -162,50 +162,26 @@ void	exit_cmd(char **args, t_envp *envp, t_list *current, t_list *prev)
 	int	subshell;
 
 	redirect_builtins(current);
-	subshell = (prev && prev->type == PIPE)
-		|| (current->next && current->next->type == PIPE);
-	ft_putendl_fd("exit", 1);
+	subshell = ((ft_putendl_fd("exit", 1)), (prev && prev->type == PIPE)
+			|| (current->next && current->next->type == PIPE));
 	if (!args[1])
 	{
 		free(envp->value);
 		envp->value = ft_strdup("0");
 		if (!subshell)
 			exit(0);
+		return ;
 	}
-	else if (!args[2])
+	if (!args[2])
 	{
 		if (is_numeric(args[1]))
-		{
-			free(envp->value);
-			envp->value = ft_itoa(ft_atoi(args[1]) % 256);
-			if (!subshell)
-				exit(ft_atoi(args[1]) % 256);
-		}
+			exit_with_status(envp, ft_atoi(args[1]) % 256, subshell);
 		else
-		{
-			ft_putstr_fd("Minishell: exit: ", 2);
-			ft_putstr_fd(args[1], 2);
-			ft_putendl_fd(": numeric argument required", 2);
-			free(envp->value);
-			envp->value = ft_strdup("255");
-			if (!subshell)
-				exit(255);
-		}
+			exit_numeric_error(args[1], envp, subshell);
+		return ;
 	}
-	else if (is_numeric(args[1]))
-	{
-		free(envp->value);
-		envp->value = ft_strdup("1");
-		ft_putendl_fd("Minishell: exit: too many arguments", 2);
-	}
+	if (is_numeric(args[1]))
+		exit_too_many_args(envp);
 	else
-	{
-		ft_putstr_fd("Minishell: exit: ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putendl_fd(": numeric argument required", 2);
-		free(envp->value);
-		envp->value = ft_strdup("255");
-		if (!subshell)
-			exit(255);
-	}
+		exit_numeric_error(args[1], envp, subshell);
 }

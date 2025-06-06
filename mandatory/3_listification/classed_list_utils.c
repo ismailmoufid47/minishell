@@ -13,7 +13,7 @@ t_list	*create_list_node(char *token, int type)
 	return (node);
 }
 
-t_list	*redirections(t_list *node, t_list *cmd)
+t_list	*redirs(t_list *node, t_list *cmd)
 {
 	t_list	*head;
 
