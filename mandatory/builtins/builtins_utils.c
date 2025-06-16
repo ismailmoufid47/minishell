@@ -1,5 +1,19 @@
 #include "../include/shell.h"
 
+void	redirect_builtins(t_list *current)
+{
+	int	stdout_fd;
+	int	stdin_fd;
+
+	if (!current->redirected)
+		return ;
+	stdin_fd = dup(STDIN_FILENO);
+	stdout_fd = dup(STDOUT_FILENO);
+	redirect(current);
+	ft_dup2(stdout_fd, STDOUT_FILENO);
+	ft_dup2(stdin_fd, STDIN_FILENO);
+}
+
 void	handle_simple_builtins(t_list *cmd, t_envp *envp)
 {
 	char	*cwd;
@@ -38,22 +52,6 @@ void	is_bin(t_list *cmd, t_envp *envp)
 		export(cmd->args, envp, cmd, NULL);
 		exit (0);
 	}
-}
-
-int	is_valid_export_argument(char *arg)
-{
-	int	i;
-
-	i = 0;
-	if (ft_isdigit(arg[0]) || arg[0] == '=')
-		return (0);
-	while (arg[i] && arg[i] != '=')
-	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
 }
 
 int	is_valid_unset_argument(char *arg)

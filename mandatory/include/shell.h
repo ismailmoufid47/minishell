@@ -150,10 +150,12 @@ t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 void	redirect(t_list *cmd);
 
 // Handle here-documents:
+int		set_cmd_here_doc(t_list *list, t_envp *envp);
 void	handle_here_doc(t_list *file, t_envp *envp, int out);
 
 // Built-ins utils:
 void	is_bin(t_list *cmd, t_envp *envp);
+void	redirect_builtins(t_list *current);
 int		is_valid_export_argument(char *arg);
 int		is_valid_unset_argument(char *arg);
 int		is_numeric(char *arg);

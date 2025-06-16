@@ -4,16 +4,16 @@ CC = cc
 
 FSANITIZE = -fsanitize=address -g
 
-CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-		 -I /usr/include -I /home/codespace -I ../libft
-
-LFLAGS = -L../libft -l ft -l readline -l ncurses
-
 # CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+# 		 -I /usr/include -I /home/codespace -I ../libft
 
-# LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-# 		 -l ft -l readline -l ncurses
+# LFLAGS = -L../libft -l ft -l readline -l ncurses
+
+CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
+		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+
+LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
+		 -l ft -l readline -l ncurses
 
 
 LIBFT = ../libft/libft.a
@@ -75,9 +75,12 @@ SRC = 1_expansion/expand.c \
 	4_execution/execute_utils.c \
 	builtins/bins.c \
 	builtins/builtins.c \
+	builtins/export.c \
+	builtins/cd.c \
 	builtins/builtins_utils.c \
 	utils/cmdline_utils.c \
 	utils/envp_handler.c \
+	utils/here_doc_handler.c \
 	utils/envp_handler_utils.c \
 	utils/signal_handlers.c \
 	utils/free_resources.c \

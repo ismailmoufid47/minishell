@@ -39,64 +39,6 @@ void	handle_here_doc(t_list *file, t_envp *envp, int out)
 	exit (0);
 }
 
-int	set_cmd_here_doc(t_list *list, t_envp *envp)
-{
-	pid_t			pid;
-	t_list			*current;
-	static int		here_doc_count = 0;
-	int				file_fd[2];
-	char			*file_name;
-	int				status;
-	char			*tmp;
-	struct termios	old;
-
-	tcgetattr(STDIN_FILENO, &old);
-	file_fd[0] = 0;
-	current = list->redirs;
-	while (current)
-	{
-		if (current->type == HDOC)
-		{
-			tmp = ft_itoa(here_doc_count);
-			file_name = ft_strjoin("/tmp/.here_doc_", tmp);
-			free(tmp);
-			unlink(file_name);
-			if (file_fd[0])
-				close(file_fd[0]);
-			file_fd[1] = open_wrapper(file_name, O_W | O_C | O_T, 0666);
-			file_fd[0] = open_wrapper(file_name, O_RDONLY, 0);
-			unlink(file_name);
-			free(file_name);
-			here_doc_count++;
-			list->here_doc = file_fd[0];
-			pid = fork_wrapper(envp);
-			if (pid == 0)
-				handle_here_doc(current->next, envp, file_fd[1]);
-			else
-			{
-				signal(SIGINT, SIG_IGN);
-				waitpid(pid, &status, 0);
-				tcsetattr(STDIN_FILENO, TCSANOW, &old);
-				signal(SIGINT, print_prompt);
-				close(file_fd[1]);
-				if (WIFEXITED(status))
-				{
-					free(envp->value);
-					envp->value = ft_itoa(WEXITSTATUS(status));
-				}
-				else if (WIFSIGNALED(status))
-				{
-					free(envp->value);
-					envp->value = ft_itoa(WTERMSIG(status) + 128);
-					return (0);
-				}
-			}
-		}
-		current = current->next;
-	}
-	return (1);
-}
-
 int	handle_here_docs(t_envp *envp, t_list *list)
 {
 	while (list)
@@ -137,19 +79,44 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	return (list);
 }
 
-int	main(void)
+int	handle_cmdline(t_envp *envp, int history_fd, char **cmd_line)
 {
-	char	*cmd_line;
-	t_list	*list;
-	int		history_fd;
-	t_envp	*envp;
 	char	*prompt;
 	int		re;
 
+	prompt = get_prompt(envp);
+	*cmd_line = readline(prompt);
+	if (g_signal == SIGINT)
+		envp->value = ((g_signal = 0), (free(envp->value)), ft_strdup("1"));
+	free(prompt);
+	if (!*cmd_line)
+	{
+		re = ft_atoi(ft_get_env_val(envp, "?"));
+		free_envp(envp);
+		(printf("exit\n") && close(history_fd));
+		exit(re);
+	}
+	if (!**cmd_line)
+		return (free(*cmd_line), 0);
+	if (**cmd_line)
+	{
+		add_history(*cmd_line);
+		write(history_fd, *cmd_line, strlen(*cmd_line));
+		write(history_fd, "\n", 1);
+	}
+	return (1);
+}
+
+int	main(void)
+{
+	t_list	*list;
+	int		history_fd;
+	t_envp	*envp;
+	char	*cmd_line;
+
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, print_prompt);
-	rl_catch_signals = 0;
-	envp = set_envp();
+	envp = ((rl_catch_signals = 0), set_envp());
 	if (ft_get_env_val(envp, "HOME"))
 		cmd_line = ft_strjoin(ft_get_env_val(envp, "HOME"), "/.bash_history");
 	else
@@ -159,37 +126,12 @@ int	main(void)
 	free(cmd_line);
 	while (1)
 	{
-		prompt = get_prompt(envp);
-		cmd_line = readline(prompt);
-		if (g_signal == SIGINT)
-		{
-			g_signal = 0;
-			free(envp->value);
-			envp->value = ft_strdup("1");
-		}
-		free(prompt);
-		if (cmd_line == NULL)
-		{
-			re = ft_atoi(ft_get_env_val(envp, "?"));
-			free_envp(envp);
-			return (printf("exit\n"), re);
-		}
-		if (*cmd_line == 0)
-		{
-			free(cmd_line);
+		if (!handle_cmdline(envp, history_fd, &cmd_line))
 			continue ;
-		}
-		if (*cmd_line)
-		{
-			add_history(cmd_line);
-			write(history_fd, cmd_line, strlen(cmd_line));
-			write(history_fd, "\n", 1);
-		}
 		list = parse(cmd_line, envp);
 		if (list)
 			execute(list, &envp);
 		free_list(list);
 	}
-	close(history_fd);
-	return (0);
+	return ((close(history_fd)), 0);
 }
