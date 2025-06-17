@@ -93,7 +93,8 @@ int	handle_cmdline(t_envp *envp, int history_fd, char **cmd_line)
 	{
 		re = ft_atoi(ft_get_env_val(envp, "?"));
 		free_envp(envp);
-		(printf("exit\n") && close(history_fd));
+		printf("exit\n");
+		close(history_fd);
 		exit(re);
 	}
 	if (!**cmd_line)

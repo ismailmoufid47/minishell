@@ -25,7 +25,8 @@
 # include <sys/wait.h>			
 # include <termios.h>
 
-extern char	**environ;
+extern char				**environ;
+typedef struct termios	t_term;
 
 typedef struct s_envp
 {
@@ -65,6 +66,8 @@ typedef struct s_list
 	int				here_doc;
 	struct s_list	*next;
 }	t_list;
+
+
 
 //to be deleted
 void	print_tokens(char **tokens);
