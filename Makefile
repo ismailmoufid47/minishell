@@ -50,26 +50,35 @@ LIBFT_SRC =  libft/include/libft.h \
 		libft/src/putptr.c \
 		libft/src/putstr.c
 
-MANDATORY_FILES = mandatory/shell.c \
-				mandatory/utils/errors.c \
-				mandatory/utils/signal_handlers.c \
-				mandatory/utils/envp_handler.c \
-				mandatory/utils/wrappers.c \
-				mandatory/utils/free_resources.c \
-				mandatory/utils/envp_handler_utils.c \
-				mandatory/utils/cmdline_utils.c \
+MANDATORY_FILES = mandatory/1_expansion/expand.c \
+				mandatory/1_expansion/expand_utils.c \
+				mandatory/2_tokenization/tokenize.c \
+				mandatory/2_tokenization/tokenize_utils.c \
+				mandatory/3_listification/classed_list.c \
+				mandatory/3_listification/classed_list_redirections.c \
+				mandatory/3_listification/classed_list_utils.c \
+				mandatory/4_execution/execute.c \
+				mandatory/4_execution/execute_utils.c \
 				mandatory/builtins/bins.c \
+				mandatory/builtins/builtins.c \
+				mandatory/builtins/builtins_utils.c \
+				mandatory/builtins/cd.c \
+				mandatory/builtins/exit.c \
+				mandatory/builtins/export.c \
 				mandatory/include/shell.h \
 				mandatory/Makefile \
-				mandatory/2_tokenization/tokenize_utils.c \
-				mandatory/2_tokenization/tokenize.c \
-				mandatory/1_expansion/expand.c \
-				mandatory/builtins/builtins_utils.c \
-				mandatory/builtins/builtins.c \
-				mandatory/3_listification/classed_list.c \
-				mandatory/3_listification/classed_list_utils.c \
-				mandatory/4_execution/execute_utils.c \
-				mandatory/4_execution/execute.c 
+				mandatory/shell.c \
+				mandatory/utils/cmdline_utils.c \
+				mandatory/utils/envp_handler.c \
+				mandatory/utils/envp_handler_utils.c \
+				mandatory/utils/errors.c \
+				mandatory/utils/exec_errors.c \
+				mandatory/utils/free_resources.c \
+				mandatory/utils/here_doc_handler.c \
+				mandatory/utils/signal_handlers.c \
+				mandatory/utils/string_utils.c \
+				mandatory/utils/wrappers.c \
+
 
 
 
