@@ -4,21 +4,21 @@ CC = cc
 
 FSANITIZE = -fsanitize=address -g
 
-CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-		 -I /usr/include -I /home/codespace -I ../libft
-
-LFLAGS = -L../libft -l ft -l readline -l ncurses
-
 # CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
 # 		 -I /usr/include -I /home/codespace -I ../libft
 
 # LFLAGS = -L../libft -l ft -l readline -l ncurses
 
 # CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+# 		 -I /usr/include -I /home/codespace -I ../libft
 
-# LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-# 		 -l ft -l readline -l ncurses
+# LFLAGS = -L../libft -l ft -l readline -l ncurses
+
+CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
+		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+
+LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
+		 -l ft -l readline -l ncurses
 
 
 LIBFT = ../libft/libft.a
@@ -76,10 +76,12 @@ SRC = 1_expansion/expand.c \
 	2_tokenization/tokenize_utils.c \
 	3_listification/classed_list.c \
 	3_listification/classed_list_utils.c \
+	3_listification/classed_list_redirections.c \
 	4_execution/execute.c \
 	4_execution/execute_utils.c \
 	builtins/bins.c \
 	builtins/builtins.c \
+	builtins/exit.c \
 	builtins/export.c \
 	builtins/cd.c \
 	builtins/builtins_utils.c \

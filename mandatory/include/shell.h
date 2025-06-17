@@ -67,8 +67,6 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-
-
 //to be deleted
 void	print_tokens(char **tokens);
 void	print_list(t_list *list, int tab_count);
@@ -83,7 +81,7 @@ char	**tokenize(char *cmd);
 t_list	*create_list(char **tokens);
 
 // Execute:
-void	execute(t_list *list, t_envp **envp);
+void	execute(t_list *list, t_envp *envp);
 
 // Built-ins:
 char	*get_cwd(t_envp *envp);
@@ -144,13 +142,18 @@ void	update_quote_flags(char c, int *sq_flag, int *dq_flag);
 int		validate_tokens(char **tokens, t_envp *envp);
 
 // classed list utils:
+int		handle_special_node(char *token, t_list **head, t_list **nav);
+t_list	*remove_red_and_add_it_to_cmd(t_list *head);
+t_list	*handle_cmd_red(t_list *head, t_node_type type, int *changed);
 t_list	*keep_only_redirections(t_list *head);
 t_list	*redirs(t_list *node, t_list *cmd);
 t_list	*closest_cmd(t_list *head);
+int		count_args(t_list *cmd);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
 void	redirect(t_list *cmd);
+void	close_obsolete_fds(t_list *current, t_list *prev);
 
 // Handle here-documents:
 int		set_cmd_here_doc(t_list *list, t_envp *envp);
@@ -158,6 +161,7 @@ void	handle_here_doc(t_list *file, t_envp *envp, int out);
 
 // Built-ins utils:
 void	is_bin(t_list *cmd, t_envp *envp);
+void	execute_builtin(t_list *current, t_envp *envp, t_list *prev, int *b);
 void	redirect_builtins(t_list *current);
 int		is_valid_export_argument(char *arg);
 int		is_valid_unset_argument(char *arg);

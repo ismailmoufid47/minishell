@@ -131,7 +131,7 @@ int	main(void)
 			continue ;
 		list = parse(cmd_line, envp);
 		if (list)
-			execute(list, &envp);
+			execute(list, envp);
 		free_list(list);
 	}
 	return ((close(history_fd)), 0);

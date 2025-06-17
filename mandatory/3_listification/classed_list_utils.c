@@ -8,42 +8,26 @@ t_list	*create_list_node(char *token, int type)
 	node->value = token;
 	node->type = type;
 	node->quote_type = UNQUOTED;
+	node->redirected = 0;
+	node->redirs = NULL;
+	node->args = NULL;
+	node->pid = 0;
 	node->next = NULL;
 	node->here_doc = 0;
 	return (node);
 }
 
-t_list	*redirs(t_list *node, t_list *cmd)
+int	count_args(t_list *cmd)
 {
-	t_list	*head;
+	int	count;
 
-	head = node;
-	while (node->next && node->next != cmd && node->next != PIPE)
-		node = node->next;
-	node->next = NULL;
-	return (head);
-}
-
-t_list	*keep_only_redirections(t_list *head)
-{
-	t_list	*current;
-	t_list	*prev;
-
-	current = head;
-	prev = NULL;
-	while (current)
+	count = 0;
+	while (cmd && cmd->type == CMD)
 	{
-		if (current->type != FIL && current->type != IN && current->type != OUT
-			&& current->type != APP && current->type != HDOC)
-		{
-			if (prev)
-				prev->next = NULL;
-			return (head);
-		}
-		prev = current;
-		current = current->next;
+		count++;
+		cmd = cmd->next;
 	}
-	return (head);
+	return (count + 1);
 }
 
 t_list	*closest_cmd(t_list *head)

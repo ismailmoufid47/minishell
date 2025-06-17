@@ -3,7 +3,7 @@
 #define FOUND_PWD     1
 #define FOUND_OLDPWD  2 
 
-void	set_pwds(t_envp *envp, t_envp *prev, int missing, char *old_pwd)
+void	set_missing(t_envp *envp, t_envp *prev, int missing, char *old_pwd)
 {
 	char	*path;
 
@@ -46,7 +46,28 @@ int	validate_path(t_envp *envp, char *path)
 	return (1);
 }
 
-void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
+void	update_pwds(t_envp *envp, t_envp **prev, int *missing, char *old_pwd)
+{
+	while (envp)
+	{
+		if (!ft_strcmp(envp->name, "PWD"))
+		{
+			*missing |= FOUND_PWD;
+			free(envp->value);
+			envp->value = getcwd(NULL, 0);
+		}
+		if (!ft_strcmp(envp->name, "OLDPWD"))
+		{
+			*missing |= FOUND_OLDPWD;
+			free(envp->value);
+			envp->value = ft_strdup(old_pwd);
+		}
+		*prev = envp;
+		envp = envp->next;
+	}
+}
+
+void	cd(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	char		*path;
 	char		*old_pwd;
@@ -67,22 +88,6 @@ void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev)
 	old_pwd = get_cwd(envp);
 	chdir(path);
 	vars_found = 0;
-	while (envp)
-	{
-		if (!ft_strcmp(envp->name, "PWD"))
-		{
-			vars_found |= FOUND_PWD;
-			free(envp->value);
-			envp->value = getcwd(NULL, 0);
-		}
-		if (!ft_strcmp(envp->name, "OLDPWD"))
-		{
-			vars_found |= FOUND_OLDPWD;
-			free(envp->value);
-			envp->value = ft_strdup(old_pwd);
-		}
-		prev_envp = envp;
-		envp = envp->next;
-	}
-	set_pwds(envp, prev_envp, vars_found, old_pwd);
+	update_pwds(envp, &prev_envp, &vars_found, old_pwd);
+	set_missing(envp, prev_envp, vars_found, old_pwd);
 }

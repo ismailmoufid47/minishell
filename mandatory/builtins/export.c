@@ -44,7 +44,6 @@ int	handle_export_args(t_envp *envp, char **args, int io[2], int *i)
 	return (1);
 }
 
-
 void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int		i;
