@@ -1,4 +1,4 @@
-#include "include/shell.h"
+#include "include/shell_bonus.h"
 
 int	g_signal = 0;
 
@@ -28,12 +28,15 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 		free(cmd_line);
 		return (NULL);
 	}
+	//printf("\nCMDLINE AFTER EXPANSION: %s\n\n", cmd_line);
 	tokens = tokenize(cmd_line);
 	free(cmd_line);
 	if (!validate_tokens(tokens, envp))
 		return (NULL);
+	// print_tokens(tokens);
 	list = create_list(tokens);
 	free(tokens);
+	// print_list(list, 0);
 	if (!handle_here_docs(envp, list))
 		return (free_list(list), NULL);
 	return (list);

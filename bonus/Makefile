@@ -70,36 +70,36 @@ LIBFT_SRC =  ../libft/include/libft.h \
 		../libft/src/putptr.c \
 		../libft/src/putstr.c
 
-SRC = 1_expansion/expand.c \
-	1_expansion/expand_utils.c \
-	2_tokenization/tokenize.c \
-	2_tokenization/tokenize_utils.c \
-	3_listification/classed_list.c \
-	3_listification/classed_list_utils.c \
-	3_listification/classed_list_redirections.c \
-	4_execution/execute.c \
-	4_execution/execute_utils.c \
-	builtins/builtins.c \
-	builtins/exit.c \
-	builtins/export.c \
-	builtins/cd.c \
-	builtins/builtins_utils.c \
-	utils/cmdline_utils.c \
-	utils/envp_handler.c \
-	utils/here_doc_handler.c \
-	utils/envp_handler_utils.c \
-	utils/signal_handlers.c \
-	utils/free_resources.c \
-	utils/wrappers.c \
-	utils/errors.c \
-	utils/exec_errors.c \
-	utils/string_utils.c \
-	shell.c
+SRC = 1_expansion/expand_bonus.c \
+	1_expansion/expand_utils_bonus.c \
+	2_tokenization/tokenize_bonus.c \
+	2_tokenization/tokenize_utils_bonus.c \
+	3_listification/classed_list_bonus.c \
+	3_listification/classed_list_utils_bonus.c \
+	3_listification/classed_list_redirections_bonus.c \
+	4_execution/execute_bonus.c \
+	4_execution/execute_utils_bonus.c \
+	builtins/builtins_bonus.c \
+	builtins/exit_bonus.c \
+	builtins/export_bonus.c \
+	builtins/cd_bonus.c \
+	builtins/builtins_utils_bonus.c \
+	utils/cmdline_utils_bonus.c \
+	utils/envp_handler_bonus.c \
+	utils/here_doc_handler_bonus.c \
+	utils/envp_handler_utils_bonus.c \
+	utils/signal_handlers_bonus.c \
+	utils/free_resources_bonus.c \
+	utils/wrappers_bonus.c \
+	utils/errors_bonus.c \
+	utils/exec_errors_bonus.c \
+	utils/string_utils_bonus.c \
+	shell_bonus.c
 
 
 all: $(NAME)
 
-$(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
+$(NAME): include/shell_bonus.h $(LIBFT) $(LIBFT_SRC) $(SRC)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) 
 
 $(LIBFT):
@@ -114,7 +114,7 @@ fclean: clean
 
 re: fclean all
 
-m :fclean include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
+m :fclean include/shell_bonus.h $(LIBFT) $(LIBFT_SRC) $(SRC)
 	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) $(FSANITIZE)
 
 .PHONY: all clean fclean re bonus

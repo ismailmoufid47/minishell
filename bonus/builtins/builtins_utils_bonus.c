@@ -1,4 +1,4 @@
-#include "../include/shell.h"
+#include "../include/shell_bonus.h"
 
 void	redirect_builtins(t_list *current)
 {

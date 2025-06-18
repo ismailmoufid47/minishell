@@ -1,7 +1,10 @@
 NAME = minishell
 
-# use this command to copy all the files in mandatory:
-#find mandatory -type f | pbcopy
+#\
+find mandatory -type f | pbcopy
+
+#\
+find bonus -type f | pbcopy
 
 LIBFT_SRC =  libft/include/libft.h \
 		libft/Makefile \
@@ -50,24 +53,23 @@ LIBFT_SRC =  libft/include/libft.h \
 		libft/src/putptr.c \
 		libft/src/putstr.c
 
-MANDATORY_FILES = mandatory/1_expansion/expand.c \
+MANDATORY_FILES = mandatory/shell.c \
+				mandatory/include/shell.h \
+				mandatory/Makefile \
+				mandatory/1_expansion/expand.c \
 				mandatory/1_expansion/expand_utils.c \
 				mandatory/2_tokenization/tokenize.c \
 				mandatory/2_tokenization/tokenize_utils.c \
 				mandatory/3_listification/classed_list.c \
-				mandatory/3_listification/classed_list_redirections.c \
 				mandatory/3_listification/classed_list_utils.c \
+				mandatory/3_listification/classed_list_redirections.c \
 				mandatory/4_execution/execute.c \
 				mandatory/4_execution/execute_utils.c \
-				mandatory/builtins/bins.c \
-				mandatory/builtins/builtins.c \
-				mandatory/builtins/builtins_utils.c \
 				mandatory/builtins/cd.c \
 				mandatory/builtins/exit.c \
 				mandatory/builtins/export.c \
-				mandatory/include/shell.h \
-				mandatory/Makefile \
-				mandatory/shell.c \
+				mandatory/builtins/builtins.c \
+				mandatory/builtins/builtins_utils.c \
 				mandatory/utils/cmdline_utils.c \
 				mandatory/utils/envp_handler.c \
 				mandatory/utils/envp_handler_utils.c \
@@ -77,12 +79,36 @@ MANDATORY_FILES = mandatory/1_expansion/expand.c \
 				mandatory/utils/here_doc_handler.c \
 				mandatory/utils/signal_handlers.c \
 				mandatory/utils/string_utils.c \
-				mandatory/utils/wrappers.c \
+				mandatory/utils/wrappers.c
 
-
-
-
-BONUS_FILES = 
+			
+BONUS_FILES = bonus/shell_bonus.c \
+			bonus/include/shell_bonus.h \
+			bonus/Makefile \
+			bonus/1_expansion/expand_bonus.c \
+			bonus/1_expansion/expand_utils_bonus.c \
+			bonus/2_tokenization/tokenize_bonus.c \
+			bonus/2_tokenization/tokenize_utils_bonus.c \
+			bonus/3_listification/classed_list_bonus.c \
+			bonus/3_listification/classed_list_utils_bonus.c \
+			bonus/3_listification/classed_list_redirections_bonus.c \
+			bonus/4_execution/execute_bonus.c \
+			bonus/4_execution/execute_utils_bonus.c \
+			bonus/builtins/cd_bonus.c \
+			bonus/builtins/exit_bonus.c \
+			bonus/builtins/export_bonus.c \
+			bonus/builtins/builtins_bonus.c \
+			bonus/builtins/builtins_utils_bonus.c \
+			bonus/utils/cmdline_utils_bonus.c \
+			bonus/utils/envp_handler_bonus.c \
+			bonus/utils/envp_handler_utils_bonus.c \
+			bonus/utils/errors_bonus.c \
+			bonus/utils/exec_errors_bonus.c \
+			bonus/utils/free_resources_bonus.c \
+			bonus/utils/here_doc_handler_bonus.c \
+			bonus/utils/signal_handlers_bonus.c \
+			bonus/utils/string_utils_bonus.c \
+			bonus/utils/wrappers_bonus.c
 
 all: $(NAME)
 
@@ -92,18 +118,22 @@ $(NAME): $(MANDATORY_FILES) $(LIBFT_SRC)
 
 bonus: $(BONUS_FILES)
 	make -C bonus
-	cp bonus/minishell $(NAME)
+	mv bonus/minishell .
 
 clean:
 	make -C mandatory clean
-# 	make -C bonus clean
+	make -C bonus clean
 m:
 	make m -C mandatory
 	mv mandatory/minishell .
 
+mb:
+	make m -C bonus
+	mv bonus/minishell .
+
 fclean:
 	make -C mandatory fclean
-# 	make -C bonus fclean
+	make -C bonus fclean
 	rm -f $(NAME)
 
 re: fclean all

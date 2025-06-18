@@ -1,5 +1,5 @@
-#ifndef SHELL_H
-# define SHELL_H
+#ifndef SHELL_BONUS_H
+# define SHELL_BONUS_H
 
 # define O_W O_WRONLY
 # define O_C O_CREAT
@@ -137,6 +137,7 @@ int		is_special_token(char *token);
 int		handle_special_token(const char *input,
 			int i, int *count, int *special);
 void	update_quote_flags(char c, int *sq_flag, int *dq_flag);
+
 int		validate_tokens(char **tokens, t_envp *envp);
 
 // classed list utils:
