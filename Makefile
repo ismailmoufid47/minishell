@@ -114,22 +114,22 @@ all: $(NAME)
 
 $(NAME): $(MANDATORY_FILES) $(LIBFT_SRC)
 	make -C mandatory
-	mv mandatory/minishell .
+	mv -f mandatory/minishell .
 
-bonus: $(BONUS_FILES)
+bonus: $(BONUS_FILES) $(LIBFT_SRC)
 	make -C bonus
-	mv bonus/minishell .
+	mv -f bonus/minishell .
 
 clean:
 	make -C mandatory clean
 	make -C bonus clean
 m:
 	make m -C mandatory
-	mv mandatory/minishell .
+	mv -f mandatory/minishell .
 
 mb:
 	make m -C bonus
-	mv bonus/minishell .
+	mv -f bonus/minishell .
 
 fclean:
 	make -C mandatory fclean
