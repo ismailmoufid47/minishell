@@ -9,16 +9,16 @@ FSANITIZE = -fsanitize=address -g
 
 # LFLAGS = -L../libft -l ft -l readline -l ncurses
 
-CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-		 -I /usr/include -I /home/codespace -I ../libft
-
-LFLAGS = -L../libft -l ft -l readline -l ncurses
-
 # CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+# 		 -I /usr/include -I /home/codespace -I ../libft
 
-# LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-# 		 -l ft -l readline -l ncurses
+# LFLAGS = -L../libft -l ft -l readline -l ncurses
+
+CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
+		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+
+LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
+		 -l ft -l readline -l ncurses
 
 
 LIBFT = ../libft/libft.a
@@ -74,11 +74,11 @@ SRC = 1_expansion/expand_bonus.c \
 	1_expansion/expand_utils_bonus.c \
 	2_tokenization/tokenize_bonus.c \
 	2_tokenization/tokenize_utils_bonus.c \
-	3_listification/classed_list_bonus.c \
-	3_listification/classed_list_utils_bonus.c \
-	3_listification/classed_list_redirections_bonus.c \
-	4_execution/execute_bonus.c \
-	4_execution/execute_utils_bonus.c \
+	4_listification/classed_list_bonus.c \
+	4_listification/classed_list_utils_bonus.c \
+	4_listification/classed_list_redirections_bonus.c \
+	5_execution/execute_bonus.c \
+	5_execution/execute_utils_bonus.c \
 	builtins/builtins_bonus.c \
 	builtins/exit_bonus.c \
 	builtins/export_bonus.c \

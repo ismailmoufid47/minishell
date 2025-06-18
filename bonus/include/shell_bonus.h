@@ -149,6 +149,7 @@ t_list	*redirs(t_list *node, t_list *cmd);
 t_list	*closest_cmd(t_list *head);
 int		count_args(t_list *cmd);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
+t_list	*create_list_node(char *token, int type);
 
 // execute utils:
 void	redirect(t_list *cmd);

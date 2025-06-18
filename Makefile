@@ -89,11 +89,11 @@ BONUS_FILES = bonus/shell_bonus.c \
 			bonus/1_expansion/expand_utils_bonus.c \
 			bonus/2_tokenization/tokenize_bonus.c \
 			bonus/2_tokenization/tokenize_utils_bonus.c \
-			bonus/3_listification/classed_list_bonus.c \
-			bonus/3_listification/classed_list_utils_bonus.c \
-			bonus/3_listification/classed_list_redirections_bonus.c \
-			bonus/4_execution/execute_bonus.c \
-			bonus/4_execution/execute_utils_bonus.c \
+			bonus/4_listification/classed_list_bonus.c \
+			bonus/4_listification/classed_list_utils_bonus.c \
+			bonus/4_listification/classed_list_redirections_bonus.c \
+			bonus/5_execution/execute_bonus.c \
+			bonus/5_execution/execute_utils_bonus.c \
 			bonus/builtins/cd_bonus.c \
 			bonus/builtins/exit_bonus.c \
 			bonus/builtins/export_bonus.c \

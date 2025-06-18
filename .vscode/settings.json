@@ -3,6 +3,7 @@
         "*.exp": "note",
         "shell.h": "c",
         "sstream": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "shell_bonus.h": "c"
     }
 }

@@ -9,16 +9,16 @@ FSANITIZE = -fsanitize=address -g
 
 # LFLAGS = -L../libft -l ft -l readline -l ncurses
 
-CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-		 -I /usr/include -I /home/codespace -I ../libft
-
-LFLAGS = -L../libft -l ft -l readline -l ncurses
-
 # CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+# 		 -I /usr/include -I /home/codespace -I ../libft
 
-# LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-# 		 -l ft -l readline -l ncurses
+# LFLAGS = -L../libft -l ft -l readline -l ncurses
+
+CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
+		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+
+LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
+		 -l ft -l readline -l ncurses
 
 
 LIBFT = ../libft/libft.a
