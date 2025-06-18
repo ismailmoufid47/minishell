@@ -58,7 +58,8 @@ char	**get_cwd_files(void)
 	entry = readdir(dir);
 	while (entry)
 	{
-		files[i++] = ft_strdup(entry->d_name);
+		if ((entry->d_name)[0] != '.')
+			files[i++] = ft_strdup(entry->d_name);
 		entry = readdir(dir);
 	}
 	files[i] = NULL;
@@ -66,19 +67,7 @@ char	**get_cwd_files(void)
 }
 
 
-void	print_tokens(char **tokens)
-{
-	int	i;
 
-	i = 0;
-	printf("\n		TOKENS\n\n");
-	while (tokens[i])
-	{
-		printf("	%d: %s\n", i, tokens[i]);
-		i++;
-	}
-	printf("\n");
-}
 
 t_list	*tokens_to_list(char **tokens)
 {
@@ -89,25 +78,30 @@ t_list	*tokens_to_list(char **tokens)
 	if (!tokens || !tokens[0])
 		return (NULL);
 	head = create_list_node(tokens[0], CMD);
+	head->value = ft_strdup(head->value);
 	nav = head;
 	i = 0;
 	while (tokens[++i])
 	{
 		nav->next = create_list_node(tokens[i], CMD);
+		nav->next->value = ft_strdup(nav->next->value);
 		nav = nav->next;
 	}
-	//! free(tokens);
+	ft_free_split(tokens);
 	return (head);
 }
 
 void	replace_match(t_list **prev, t_list *current, char **files)
 {
 	int		i;
-	t_list	*node;
 	t_list *last;
 
 	last = current->next;
-	free(current); //!free value
+	if (current != *prev)
+	{
+		free(current->value);
+		free(current);
+	}
 	current = *prev;
 	i = 0; 
 	while (files[i])
@@ -115,6 +109,7 @@ void	replace_match(t_list **prev, t_list *current, char **files)
 		if (files[i][0])
 		{
 			current->next = create_list_node(files[i], CMD);
+			current->next->value = ft_strdup(current->next->value);
 			current = current->next;
 		}
 		i++;
@@ -127,7 +122,6 @@ char	**list_to_char(t_list *list)
 	int		count;
 	t_list	*current;
 	char	**result;
-	char	*tmp;
 
 	count = 0;
 	current = list;
@@ -152,7 +146,6 @@ char	**list_to_char(t_list *list)
 
 char	**match_wild_card(t_list *head)
 {
-	int		i;
 	t_list	*nav;
 	t_list	*prev;
 	int		j;
@@ -162,7 +155,6 @@ char	**match_wild_card(t_list *head)
 	prev = head;
 	while (nav)
 	{
-		printf("nav value: %s\n", nav->value);
 		files = get_cwd_files();
 		j = 0;
 		while (files[j] && nav->value[0] != '"'
@@ -173,11 +165,17 @@ char	**match_wild_card(t_list *head)
 			j++;
 		}
 		if (j)
+		{
 			replace_match(&prev, nav, files);
+			nav =prev->next;
+
+		}
+		ft_free_split(files);
 		prev = nav;
 		nav = nav->next;
 	}
-	return (list_to_char(head));
+	files = list_to_char(head);
+	return (free_list(head), files);
 }
 
 void	print_files(char **files)
@@ -188,5 +186,17 @@ void	print_files(char **files)
 }
 int	main(int argc, char **argv)
 {
-	print_files(match_wild_card(tokens_to_list(++argv)));
+	char **argv2;
+	char **res;
+	int i = 0;
+	argv2 = malloc((argc  +  1) * sizeof(char *));
+	while (argv[i])
+	{
+		argv2[i] = ft_strdup(argv[i]);
+		i++;
+	}
+	argv2[i] = NULL;
+	res = match_wild_card(tokens_to_list(argv2));
+	print_files(res);
+	ft_free_split(res);
 }
