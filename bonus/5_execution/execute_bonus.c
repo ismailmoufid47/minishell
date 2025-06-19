@@ -99,6 +99,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		exit (0);
 	envp_char = envp_to_char(envp);
 	is_bin(cmd, envp);
+	cmd->args = match_wild_card(tokens_to_list(cmd->args));
 	cmd_path = get_cmd_path(cmd->args[0], envp);
 	if (cmd_path)
 		execve(cmd_path, cmd->args, envp_char);

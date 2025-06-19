@@ -77,6 +77,10 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
 // tokenize:
 char	**tokenize(char *cmd);
 
+// wildcards
+char	**match_wild_card(t_list *head);
+t_list	*tokens_to_list(char **tokens);
+
 //classed list:
 t_list	*create_list(char **tokens);
 

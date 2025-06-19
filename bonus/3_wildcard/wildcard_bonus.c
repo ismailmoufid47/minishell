@@ -41,33 +41,27 @@ char	**get_cwd_files(void)
 	DIR				*dir;
 	struct dirent	*entry;
 	char			**files;
-	int				i;
+	int				count;
 
 	dir = opendir(".");
 	entry = readdir(dir);
-	i = 1;
+	count = 1;
 	while (entry)
-	{
-		i++;
-		entry = readdir(dir);
-	}
+		entry = ((count++), readdir(dir));
 	closedir(dir);
 	dir = opendir(".");
-	files = malloc(i * sizeof(char *));
-	i = 0;
+	files = malloc(count * sizeof(char *));
+	count = 0;
 	entry = readdir(dir);
 	while (entry)
 	{
 		if ((entry->d_name)[0] != '.')
-			files[i++] = ft_strdup(entry->d_name);
+			files[count++] = ft_strdup(entry->d_name);
 		entry = readdir(dir);
 	}
-	files[i] = NULL;
+	files[count] = NULL;
 	return ((closedir(dir)), files);
 }
-
-
-
 
 t_list	*tokens_to_list(char **tokens)
 {
@@ -91,11 +85,13 @@ t_list	*tokens_to_list(char **tokens)
 	return (head);
 }
 
-void	replace_match(t_list **prev, t_list *current, char **files)
+int	replace_match(t_list **prev, t_list *current, char **files)
 {
 	int		i;
-	t_list *last;
+	t_list	*last;
+	int		matched;
 
+	matched = 0;
 	last = current->next;
 	if (current != *prev)
 	{
@@ -103,18 +99,19 @@ void	replace_match(t_list **prev, t_list *current, char **files)
 		free(current);
 	}
 	current = *prev;
-	i = 0; 
-	while (files[i])
+	i = -1; 
+	while (files[++i])
 	{
 		if (files[i][0])
 		{
 			current->next = create_list_node(files[i], CMD);
 			current->next->value = ft_strdup(current->next->value);
 			current = current->next;
+			matched = 1;
 		}
-		i++;
 	}
 	current->next = last;
+	return (matched);
 }
 
 char	**list_to_char(t_list *list)
@@ -166,9 +163,12 @@ char	**match_wild_card(t_list *head)
 		}
 		if (j)
 		{
-			replace_match(&prev, nav, files);
-			nav =prev->next;
-
+			if (replace_match(&prev, nav, files))
+			{
+				if (nav == head)
+					head = head->next;
+			}
+			nav = prev->next;
 		}
 		ft_free_split(files);
 		prev = nav;
@@ -178,25 +178,20 @@ char	**match_wild_card(t_list *head)
 	return (free_list(head), files);
 }
 
-void	print_files(char **files)
-{
-	int i = 0;
-	while (files[i])
-		printf("--> %s\n", files[i++]);
-}
-int	main(int argc, char **argv)
-{
-	char **argv2;
-	char **res;
-	int i = 0;
-	argv2 = malloc((argc  +  1) * sizeof(char *));
-	while (argv[i])
-	{
-		argv2[i] = ft_strdup(argv[i]);
-		i++;
-	}
-	argv2[i] = NULL;
-	res = match_wild_card(tokens_to_list(argv2));
-	print_files(res);
-	ft_free_split(res);
-}
+
+// int	main(int argc, char **argv)
+// {
+// 	char **argv2;
+// 	char **res;
+// 	int i = 0;
+// 	argv2 = malloc((argc  +  1) * sizeof(char *));
+// 	while (argv[i])
+// 	{
+// 		argv2[i] = ft_strdup(argv[i]);
+// 		i++;
+// 	}
+// 	argv2[i] = NULL;
+// 	res = match_wild_card(tokens_to_list(argv2));
+// 	print_files(res);
+// 	ft_free_split(res);
+// }
