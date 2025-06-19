@@ -121,11 +121,13 @@ t_list	*create_list(char **tokens)
 		else
 			node = token_to_node(&head, &nav, tokens[i], CMD);
 		if (tokens[i][0] == '\'')
-			node->quote_type = ((tmp = node->value), (node->value
-						= ft_strdup(++node->value)), (free(tmp)), SIQUOTED);
+			node->quote_type = ((tmp = tokens[i]), (tokens[i]
+						= ft_strdup(++tokens[i])), node->value = tokens[i],
+					(free(tmp)), SIQUOTED);
 		else if (tokens[i][0] == '"')
-			node->quote_type = ((tmp = node->value), (node->value
-						= ft_strdup(++node->value)), (free(tmp)), DOQUOTED);
+			node->quote_type = ((tmp = tokens[i]), (tokens[i]
+						= ft_strdup(++tokens[i])), node->value = tokens[i],
+					(free(tmp)), DOQUOTED);
 	}
 	return (reform_list(head, &i));
 }

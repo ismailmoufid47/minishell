@@ -5,8 +5,7 @@ int	wildcard_match(char *pattern, char *file)
 	char	*last_star;
 	char	*last_match;
 
-	last_star = NULL;
-	last_match = NULL;
+	last_match = ((last_star = NULL), NULL);
 	while (*file)
 	{
 		if (*pattern == '*')
@@ -15,19 +14,12 @@ int	wildcard_match(char *pattern, char *file)
 				pattern++;
 			if (!*pattern)
 				return (1);
-			last_star = pattern;
-			last_match = file;
+			last_match = ((last_star = pattern), file);
 		}
 		else if (*pattern == *file)
-		{
-			pattern++;
-			file++;
-		}
+			file = ((pattern++), file + 1);
 		else if (last_star)
-		{
-			pattern = last_star;
-			file = ++last_match;
-		}
+			file = ((pattern = last_star), ++last_match);
 		else
 			return (0);
 	}
@@ -36,7 +28,7 @@ int	wildcard_match(char *pattern, char *file)
 	return (*pattern == '\0');
 }
 
-char	**get_cwd_files(void)
+char	**get_cwd_files(int show_hidden)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -55,7 +47,7 @@ char	**get_cwd_files(void)
 	entry = readdir(dir);
 	while (entry)
 	{
-		if ((entry->d_name)[0] != '.')
+		if ((entry->d_name)[0] != '.' || show_hidden)
 			files[count++] = ft_strdup(entry->d_name);
 		entry = readdir(dir);
 	}
@@ -63,82 +55,32 @@ char	**get_cwd_files(void)
 	return ((closedir(dir)), files);
 }
 
-t_list	*tokens_to_list(char **tokens)
+t_list	*get_matchs(char **files)
 {
 	int		i;
-	t_list	*nav;
 	t_list	*head;
+	t_list	*current;
 
-	if (!tokens || !tokens[0])
-		return (NULL);
-	head = create_list_node(tokens[0], CMD);
-	head->value = ft_strdup(head->value);
-	nav = head;
-	i = 0;
-	while (tokens[++i])
-	{
-		nav->next = create_list_node(tokens[i], CMD);
-		nav->next->value = ft_strdup(nav->next->value);
-		nav = nav->next;
-	}
-	ft_free_split(tokens);
-	return (head);
-}
-
-int	replace_match(t_list **prev, t_list *current, char **files)
-{
-	int		i;
-	t_list	*last;
-	int		matched;
-
-	matched = 0;
-	last = current->next;
-	if (current != *prev)
-	{
-		free(current->value);
-		free(current);
-	}
-	current = *prev;
-	i = -1; 
+	head = ((i = -1), (current = NULL), NULL);
 	while (files[++i])
 	{
 		if (files[i][0])
 		{
-			current->next = create_list_node(files[i], CMD);
-			current->next->value = ft_strdup(current->next->value);
-			current = current->next;
-			matched = 1;
+			if (!head)
+			{
+				head = create_list_node(files[i], CMD);
+				head->value = ft_strdup(head->value);
+				current = head;
+			}
+			else
+			{
+				current->next = create_list_node(files[i], CMD);
+				current->next->value = ft_strdup(current->next->value);
+				current = current->next;
+			}
 		}
 	}
-	current->next = last;
-	return (matched);
-}
-
-char	**list_to_char(t_list *list)
-{
-	int		count;
-	t_list	*current;
-	char	**result;
-
-	count = 0;
-	current = list;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	result = malloc((count + 1) * sizeof(char *));
-	count = 0;
-
-	while (list)
-	{
-		result[count] = list->value;
-		current = list;
-		list = list->next;
-		count++;
-	}
-	result[count] = NULL;
-	return (result);
+	return (head);
 }
 
 char	**match_wild_card(t_list *head)
@@ -149,10 +91,10 @@ char	**match_wild_card(t_list *head)
 	char	**files;
 
 	nav = head;
-	prev = head;
+	prev = NULL;
 	while (nav)
 	{
-		files = get_cwd_files();
+		files = get_cwd_files(nav->value[0] == '.');
 		j = 0;
 		while (files[j] && nav->value[0] != '"'
 			&& nav->value[0] != '\'' && ft_strchr(nav->value, '*'))
@@ -162,36 +104,10 @@ char	**match_wild_card(t_list *head)
 			j++;
 		}
 		if (j)
-		{
-			if (replace_match(&prev, nav, files))
-			{
-				if (nav == head)
-					head = head->next;
-			}
-			nav = prev->next;
-		}
+			head = link_matchs(head, &prev, &nav, get_matchs(files));
 		ft_free_split(files);
-		prev = nav;
-		nav = nav->next;
+		nav = ((prev = nav), nav->next);
 	}
 	files = list_to_char(head);
 	return (free_list(head), files);
 }
-
-
-// int	main(int argc, char **argv)
-// {
-// 	char **argv2;
-// 	char **res;
-// 	int i = 0;
-// 	argv2 = malloc((argc  +  1) * sizeof(char *));
-// 	while (argv[i])
-// 	{
-// 		argv2[i] = ft_strdup(argv[i]);
-// 		i++;
-// 	}
-// 	argv2[i] = NULL;
-// 	res = match_wild_card(tokens_to_list(argv2));
-// 	print_files(res);
-// 	ft_free_split(res);
-// }

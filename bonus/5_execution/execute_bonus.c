@@ -5,24 +5,27 @@ extern int	g_signal;
 void	redirect(t_list *cmd)
 {
 	t_list	*current;
-	char	*file;
+	char	**files;
 	int		herdoc_visited;
 
-	herdoc_visited = 0;
-	current = cmd->redirs;
+	current = ((herdoc_visited = 0), cmd->redirs);
 	while (current)
 	{
-		file = current->next->value;
-		if (current->type == IN)
-			ft_dup2(open_wrapper(file, O_RDONLY, 0), 0);
-		if (current->type == OUT)
-			ft_dup2(open_wrapper(file, O_W | O_C, 0666), 1);
-		if (current->type == APP)
-			ft_dup2(open_wrapper(file, O_W | O_C | O_APPEND, 0666), 1);
 		if (cmd->here_doc && current->type == HDOC && !herdoc_visited)
 		{
 			herdoc_visited = 1;
 			ft_dup2(cmd->here_doc, 0);
+		}
+		if (current->type != HDOC)
+		{
+			files = match_files(current->next->value);
+			if (current->type == IN)
+				ft_dup2(open_wrapper(files[0], O_RDONLY, 0), 0);
+			if (current->type == OUT)
+				ft_dup2(open_wrapper(files[0], O_W | O_C, 0666), 1);
+			if (current->type == APP)
+				ft_dup2(open_wrapper(files[0], O_W | O_C | O_APPEND, 0666), 1);
+			ft_free_split(files);
 		}
 		current = current->next->next;
 	}
@@ -99,7 +102,6 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		exit (0);
 	envp_char = envp_to_char(envp);
 	is_bin(cmd, envp);
-	cmd->args = match_wild_card(tokens_to_list(cmd->args));
 	cmd_path = get_cmd_path(cmd->args[0], envp);
 	if (cmd_path)
 		execve(cmd_path, cmd->args, envp_char);

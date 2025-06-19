@@ -1,8 +1,14 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
-
+a.c
+a.out
+dir
+ffl_lh.c
+file1.c
+file1.txt
+file2.c
+file2.txt
+hh
+main.c
+to_fix.md
 void	error(char *error_prefix)
 {
 	

@@ -79,7 +79,6 @@ char	**tokenize(char *cmd);
 
 // wildcards
 char	**match_wild_card(t_list *head);
-t_list	*tokens_to_list(char **tokens);
 
 //classed list:
 t_list	*create_list(char **tokens);
@@ -155,9 +154,15 @@ int		count_args(t_list *cmd);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 t_list	*create_list_node(char *token, int type);
 
+// wildcard utils:
+t_list	*tokens_to_list(char **tokens);
+char	**list_to_char(t_list *list);
+t_list	*link_matchs(t_list *head, t_list **prv, t_list **nav, t_list *matchs);
+
 // execute utils:
 void	redirect(t_list *cmd);
 void	close_obsolete_fds(t_list *current, t_list *prev);
+char	**match_files(char *file);
 
 // Handle here-documents:
 int		handle_here_docs(t_envp *envp, t_list *list);
