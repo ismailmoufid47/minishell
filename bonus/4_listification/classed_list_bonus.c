@@ -103,31 +103,31 @@ t_list	*reform_list(t_list *head, int *i)
 	return (head);
 }
 
-t_list	*create_list(char **tokens)
+t_list	*create_list(t_list *head, t_list *nav, char **tokens)
 {
 	char	*tmp;
-	t_list	*nav;
-	t_list	*head;
+	char	*prev_token;
 	t_list	*node;
 	int		i;
 
-	nav = ((i = -1), (head = NULL), NULL);
+	nav = ((i = -1), (prev_token = NULL), (head = NULL), NULL);
 	while (tokens[++i])
 	{
 		if (handle_special_node(tokens[i], &head, &nav))
 			;
-		else if (i && is_special_token(tokens[i - 1]) && *tokens[i - 1] != '|')
+		else if (i && is_special_token(prev_token) && *prev_token != '|')
 			node = token_to_node(&head, &nav, tokens[i], FIL);
 		else
 			node = token_to_node(&head, &nav, tokens[i], CMD);
+		prev_token = (free(prev_token), (ft_strdup(tokens[i])));
 		if (tokens[i][0] == '\'')
 			node->quote_type = ((tmp = tokens[i]), (tokens[i]
-						= ft_strdup(++tokens[i])), node->value = tokens[i],
+						= ft_strdup(tokens[i] + 1)), node->value = tokens[i],
 					(free(tmp)), SIQUOTED);
 		else if (tokens[i][0] == '"')
 			node->quote_type = ((tmp = tokens[i]), (tokens[i]
-						= ft_strdup(++tokens[i])), node->value = tokens[i],
+						= ft_strdup(tokens[i] + 1)), node->value = tokens[i],
 					(free(tmp)), DOQUOTED);
 	}
-	return (reform_list(head, &i));
+	return (free(prev_token), reform_list(head, &i));
 }

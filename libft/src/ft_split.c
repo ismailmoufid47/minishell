@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 23:07:48 by isel-mou          #+#    #+#             */
-/*   Updated: 2025/06/05 20:39:54 by codespace        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:12:51 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_free_split(char **split)
 	int	i;
 
 	i = 0;
-	while (split &&  split[i])
+	while (split && split[i])
 	{
 		free(split[i]);
 		i++;

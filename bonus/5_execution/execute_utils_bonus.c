@@ -48,8 +48,11 @@ void	builtin_here_doc(char *delimiter, t_envp *envp)
 void	execute_builtin(t_list *current, t_envp *envp, t_list *prev, int *built)
 {
 	*built = 1;
-	current->args = match_wild_card(tokens_to_list(current->args));
-	current->value = current->args[0];
+	if (current->type == CMD && current->value)
+	{
+		current->args = match_wild_card(tokens_to_list(current->args));
+		current->value = current->args[0];
+	}
 	if (!ft_strcmp(current->value, "cd"))
 		cd(current->args, envp, current, prev);
 	else if (!prev && !current->next && !ft_strcmp(current->value, "export"))

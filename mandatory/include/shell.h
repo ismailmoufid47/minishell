@@ -78,7 +78,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
 char	**tokenize(char *cmd);
 
 //classed list:
-t_list	*create_list(char **tokens);
+t_list	*create_list(t_list *head, t_list *nav, char **tokens);
 
 // Execute:
 void	execute(t_list *list, t_envp *envp);

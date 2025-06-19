@@ -32,7 +32,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	free(cmd_line);
 	if (!validate_tokens(tokens, envp))
 		return (NULL);
-	list = create_list(tokens);
+	list = create_list(NULL, NULL, tokens);
 	free(tokens);
 	if (!handle_here_docs(envp, list))
 		return (free_list(list), NULL);

@@ -81,7 +81,7 @@ char	**tokenize(char *cmd);
 char	**match_wild_card(t_list *head);
 
 //classed list:
-t_list	*create_list(char **tokens);
+t_list	*create_list(t_list *head, t_list *nav, char **tokens);
 
 // Execute:
 void	execute(t_list *list, t_envp *envp);
