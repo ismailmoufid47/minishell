@@ -25,12 +25,25 @@ void	unset(char **args, t_envp *envp, t_list *current, t_list *prev)
 	}
 }
 
+int	dash_n(char *str)
+{
+	if (*str == '-')
+	{
+		str++;
+		while (*str == 'n')
+			str++;
+	}
+	if (*str == '\0')
+		return (1);
+	return (0);
+}
+
 void	echo_cmd(char **argv)
 {
 	int	i;
 
 	i = 1;
-	if (!ft_strcmp(argv[1], "-n"))
+	if (dash_n(argv[1]))
 		i = 2;
 	while (argv[i])
 	{
@@ -39,7 +52,7 @@ void	echo_cmd(char **argv)
 			printf(" ");
 		i++;
 	}
-	if (ft_strcmp(argv[1], "-n"))
+	if (!dash_n(argv[1]))
 		printf("\n");
 }
 

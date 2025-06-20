@@ -116,16 +116,16 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 	while (cmd_line && cmd_line[i])
 	{
 		handle_hdoc_del(&cmd_line, &sq_flag, &i, &here_doc_is_prev);
-		if (cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
+		if ((cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
+			&& (cmd_line[i + 1] && (ft_strchr("_'\"?", cmd_line[i + 1])
+					|| ft_isalpha(cmd_line[i + 1]))
+				&& !(i && ft_strchr("'\" ", cmd_line[i + 1]))
+				&& ft_strchr("'\" ", cmd_line[i - 1])))
 		{
-			if (cmd_line[i + 1] && (ft_strchr("_?", cmd_line[i + 1]) //7ydna single wdouble mn strchr
-					|| ft_isalpha(cmd_line[i + 1])))
-			{
-				tmp = cmd_line;
-				cmd_line
-					= search_and_replace(cmd_line, i + 1, envp, is_here_doc);
-				free(tmp);
-			}
+			tmp = cmd_line;
+			cmd_line
+				= search_and_replace(cmd_line, i + 1, envp, is_here_doc);
+			free(tmp);
 		}
 		if (cmd_line && cmd_line[i])
 			i++;
