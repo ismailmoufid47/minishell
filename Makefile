@@ -51,6 +51,7 @@ MANDATORY_FILES = mandatory/shell.c \
 				mandatory/include/shell.h \
 				mandatory/Makefile \
 				mandatory/1_expansion/expand.c \
+				mandatory/1_expansion/expand_heredoc.c \
 				mandatory/1_expansion/expand_utils.c \
 				mandatory/2_tokenization/tokenize.c \
 				mandatory/2_tokenization/tokenize_utils.c \
@@ -81,6 +82,7 @@ BONUS_FILES = bonus/shell_bonus.c \
 			bonus/Makefile \
 			bonus/1_expansion/expand_bonus.c \
 			bonus/1_expansion/expand_utils_bonus.c \
+			bonus/1_expansion/expand_heredoc_bonus.c \
 			bonus/2_tokenization/tokenize_bonus.c \
 			bonus/2_tokenization/tokenize_utils_bonus.c \
 			bonus/3_wildcard/wildcard_bonus.c \

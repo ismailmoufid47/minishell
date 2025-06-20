@@ -61,6 +61,7 @@ LIBFT_SRC =  ../libft/include/libft.h \
 
 SRC = 1_expansion/expand.c \
 	1_expansion/expand_utils.c \
+	1_expansion/expand_heredoc.c \
 	2_tokenization/tokenize.c \
 	2_tokenization/tokenize_utils.c \
 	3_listification/classed_list.c \
