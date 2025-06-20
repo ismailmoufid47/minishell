@@ -119,8 +119,8 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 		if ((cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
 			&& (cmd_line[i + 1] && (ft_strchr("_'\"?", cmd_line[i + 1])
 					|| ft_isalpha(cmd_line[i + 1]))
-				&& !(i && ft_strchr("'\" ", cmd_line[i + 1]))
-				&& ft_strchr("'\" ", cmd_line[i - 1])))
+				&& !(i && ft_strchr("'\" ", cmd_line[i + 1])
+					&& ft_strchr("'\" ", cmd_line[i - 1]))))
 		{
 			tmp = cmd_line;
 			cmd_line
@@ -132,3 +132,5 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 	}
 	return (cmd_line);
 }
+
+
