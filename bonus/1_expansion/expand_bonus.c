@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                         :::      ::::::::  */
+/*   expand_bonus.c                                      :+:      :+:    :+:  */
+/*                                                     +:+ +:+         +:+    */
+/*   By: Jbelkerf && isel-mou <minishell>            +#+  +:+       +#+       */
+/*                                                 +#+#+#+#+#+   +#+          */
+/*   Created: 2025/06/20 13:02:27 by Jbelkerf && isel-mou #+#    #+#          */
+/*   Updated: 2025/06/20 13:06:51 by Jbelkerf && isel-mou ###   ########.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/shell_bonus.h"
 
 int	extract_variable_value(t_envp *envp, char *cmd, char **var, int start)
@@ -132,4 +144,3 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 	}
 	return (cmd_line);
 }
-
