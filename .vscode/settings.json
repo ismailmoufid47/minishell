@@ -5,5 +5,6 @@
         "sstream": "c",
         "libft.h": "c",
         "shell_bonus.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

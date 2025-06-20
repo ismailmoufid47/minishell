@@ -30,11 +30,11 @@ void	redirect(t_list *cmd)
 		}
 		if (current->type != HDOC)
 		{
-			files = match_files(current->next->value);
+			files = match_files(current->next);
 			if (current->type == IN)
 				ft_dup2(open_wrapper(files[0], O_RDONLY, 0), 0);
 			if (current->type == OUT)
-				ft_dup2(open_wrapper(files[0], O_W | O_C, 0666), 1);
+				ft_dup2(open_wrapper(files[0], O_W | O_C | O_TRUNC, 0666), 1);
 			if (current->type == APP)
 				ft_dup2(open_wrapper(files[0], O_W | O_C | O_APPEND, 0666), 1);
 			ft_free_split(files);

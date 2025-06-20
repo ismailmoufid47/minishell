@@ -57,6 +57,7 @@ MANDATORY_FILES = mandatory/shell.c \
 				mandatory/include/shell.h \
 				mandatory/Makefile \
 				mandatory/1_expansion/expand.c \
+				mandatory/1_expansion/expand_heredoc.c \
 				mandatory/1_expansion/expand_utils.c \
 				mandatory/2_tokenization/tokenize.c \
 				mandatory/2_tokenization/tokenize_utils.c \
@@ -89,6 +90,8 @@ BONUS_FILES = bonus/shell_bonus.c \
 			bonus/1_expansion/expand_utils_bonus.c \
 			bonus/2_tokenization/tokenize_bonus.c \
 			bonus/2_tokenization/tokenize_utils_bonus.c \
+			bonus/3_wildcard/wildcard_bonus.c \
+			bonus/3_wildcard/wildcard_utils_bonus.c \
 			bonus/4_listification/classed_list_bonus.c \
 			bonus/4_listification/classed_list_utils_bonus.c \
 			bonus/4_listification/classed_list_redirections_bonus.c \
@@ -112,13 +115,22 @@ BONUS_FILES = bonus/shell_bonus.c \
 
 all: $(NAME)
 
-$(NAME): $(MANDATORY_FILES) $(LIBFT_SRC)
+.mn_made: $(MANDATORY_FILES) $(LIBFT_SRC)
 	make -C mandatory
 	mv -f mandatory/minishell .
+	rm -f .bn_made
+	touch .mn_made
 
-bonus: $(BONUS_FILES) $(LIBFT_SRC)
+.bn_made: $(BONUS_FILES) $(LIBFT_SRC)
 	make -C bonus
 	mv -f bonus/minishell .
+	rm -f .mn_made
+	touch .bn_made
+
+$(NAME): .mn_made
+
+
+bonus: .bn_made
 
 clean:
 	make -C mandatory clean
