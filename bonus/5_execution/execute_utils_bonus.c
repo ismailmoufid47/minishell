@@ -12,19 +12,25 @@
 
 #include "../include/shell_bonus.h"
 
-char	**match_files(char *file)
+char	**match_files(t_list *file)
 {
 	char	**files;
+	t_list	*list;
 
-	files = match_wild_card(tokens_to_list(ft_split(file, '\x81')));
+	if (file->quote_type != UNQUOTED)
+		return (ft_split(file->value, '\x81'));
+	list = tokens_to_list(ft_split(file->value, '\x81'));
+	files = match_wild_card(list);
 	if (files[1])
 	{
 		ft_free_split(files);
 		ft_putstr_fd("Minishell: ", 2);
-		ft_putstr_fd(file, 2);
+		ft_putstr_fd(file->value, 2);
+
 		ft_putendl_fd(": Ambiguous redirect", 2);
 		exit(1);
 	}
+	// free(list);
 	return (files);
 }
 

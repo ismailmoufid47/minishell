@@ -173,7 +173,7 @@ t_list	*link_matchs(t_list *head, t_list **prv, t_list **nav, t_list *matchs);
 // execute utils:
 void	redirect(t_list *cmd);
 void	close_obsolete_fds(t_list *current, t_list *prev);
-char	**match_files(char *file);
+char	**match_files(t_list *file);
 
 // Handle here-documents:
 int		handle_here_docs(t_envp *envp, t_list *list);
