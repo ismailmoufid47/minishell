@@ -12,85 +12,96 @@
 
 #include "../include/shell_bonus.h"
 
-// void	print_list(t_list *list, int tab_count)
-// {
-// 	int	i;
+void print_args(t_list *list)
+{
+	int i;
+	i = 0;
+	printf("\nARGS:\n");
+	while(list->args[i])
+	{
+		printf("%d: %s\n", i, list->args[i]);
+		i++;
+	}
+	printf("\n\n");
+}
+void	print_list2(t_list *list, int tab_count)
+{
+	int	i;
 
-// 	i = 0;
-// 	if (tab_count == 0)
-// 	{
-// 		printf("\n");
-// 		while (i++ < tab_count)
-// 			printf("		");
-// 		printf("		LIST\n\n");
-// 	}
-// 	while (list)
-// 	{
-// 		i = 0;
-// 		while (i++ < tab_count)
-// 			printf("		");
-// 		if (list->type == HDOC)
-// 			printf("      HEREDOC");
-// 		else if (list->type == APP)
-// 			printf("       APPEND");
-// 		else if (list->type == IN)
-// 			printf("	 IN");
-// 		else if (list->type == OUT)
-// 			printf("	 OUT");
-// 		else if (list->type == PIPE)
-// 		{
-// 			printf("       PIPE  FDS:\n");
-// 			printf("		IN:%d\n", list->pipe_fds[0]);
-// 			printf("		OUT:%d\n", list->pipe_fds[1]);
-// 		}
-// 		else if (list->type == FIL)
-// 			printf("      FILE: %s, quote: %d", list->value, list->quote_type);
-// 		else
-// 		{
-// 			printf("       CMD:  %s, quote: %d", list->value, list->quote_type);
-// 			if (list->redirected)
-// 			{
-// 				printf(",  REDIRECTIONS:\n");
-// 				print_list(list->redirs, tab_count + 1);
-// 			}
-// 			printf(" args: \n");
-// 			print_tokens(list->args);
-// 		}
-// 		list = list->next;
-// 		if (list)
-// 		{
-// 			i = 0;
-// 			printf("\n");
-// 			while (i++ < tab_count)
-// 				printf("		");
-// 			printf("	  ↓\n");
-// 		}
-// 	}
-// 	printf("\n\n");
-// }
+	i = 0;
+	if (tab_count == 0)
+	{
+		printf("\n");
+		while (i++ < tab_count)
+			printf("		");
+		printf("		LIST\n\n");
+	}
+	while (list)
+	{
+		i = 0;
+		while (i++ < tab_count)
+			printf("		");
+		if (list->type == HDOC)
+			printf("      HEREDOC");
+		else if (list->type == APP)
+			printf("       APPEND");
+		else if (list->type == IN)
+			printf("	 IN");
+		else if (list->type == OUT)
+			printf("	 OUT");
+		else if (list->type == PIPE)
+		{
+			printf("       PIPE  FDS:\n");
+			printf("		IN:%d\n", list->pipe_fds[0]);
+			printf("		OUT:%d\n", list->pipe_fds[1]);
+		}
+		else if (list->type == FIL)
+			printf("      FILE: %s, quote: %d", list->value, list->quote_type);
+		else
+		{
+			printf("       CMD:  %s, quote: %d", list->value, list->quote_type);
+			if (list->redirected)
+			{
+				printf(",  REDIRECTIONS:\n");
+				print_list2(list->redirs, tab_count + 1);
+			}
+			printf(" args: \n");
+			if (list->args)
+				print_args(list);
+			else
+				printf("		No args\n");
+		}
+		list = list->next;
+		if (list)
+		{
+			i = 0;
+			printf("\n");
+			while (i++ < tab_count)
+				printf("		");
+			printf("	  ↓\n");
+		}
+	}
+	printf("\n\n");
+}
+
 
 t_list	*extract_args_and_remove_them(t_list *head)
 {
 	t_list	*cur;
-	t_list	*cmd;
-	int		i;
+	t_list	*head_cmd;
 
 	cur = head;
 	while (cur)
 	{
 		if (cur->type == CMD)
 		{
-			cur->args = ((i = 0), malloc(sizeof(char *) * (count_args(cur))));
-			cmd = cur;
+			cur->args = match_wild_card(cur);
+			head_cmd = cur;
 			while (cur && cur->type == CMD)
 			{
-				cmd->args[i] = cur->value;
-				if (cur != cmd)
-					cur = ((cmd->next = cur->next), (free(cur)), cmd);
-				i++;
+				head_cmd->next = cur->next;
 				cur = cur->next;
 			}
-			cmd->args[i] = NULL;
 		}
 		if (cur)
 			cur = cur->next;

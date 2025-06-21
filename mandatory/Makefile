@@ -2,13 +2,11 @@ NAME = minishell
 
 CC = cc
 
-
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
 LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 		 -l ft -l readline -l ncurses
-
 
 LIBFT = ../libft/libft.a
 
@@ -84,7 +82,6 @@ SRC = 1_expansion/expand.c \
 	utils/exec_errors.c \
 	utils/string_utils.c \
 	shell.c
-
 
 all: $(NAME)
 

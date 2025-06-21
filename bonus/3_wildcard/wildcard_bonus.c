@@ -104,11 +104,11 @@ char	**match_wild_card(t_list *head)
 
 	nav = head;
 	prev = NULL;
-	while (nav)
+	while (nav && nav->value && nav->type != PIPE)
 	{
 		files = get_cwd_files(nav->value[0] == '.');
 		j = 0;
-		while (files[j] && nav->value[0] != '"'
+		while (files[j] && nav->value[0] != '"' && nav->quote_type == UNQUOTED
 			&& nav->value[0] != '\'' && ft_strchr(nav->value, '*'))
 		{
 			if (!wildcard_match(nav->value, files[j]))
@@ -121,5 +121,5 @@ char	**match_wild_card(t_list *head)
 		nav = ((prev = nav), nav->next);
 	}
 	files = list_to_char(head);
-	return (free_list(head), files);
+	return (files);
 }

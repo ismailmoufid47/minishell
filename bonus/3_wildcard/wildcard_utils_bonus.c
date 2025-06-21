@@ -42,14 +42,14 @@ char	**list_to_char(t_list *list)
 
 	count = 0;
 	current = list;
-	while (current)
+	while (current && current->type != PIPE)
 	{
 		count++;
 		current = current->next;
 	}
 	result = malloc((count + 1) * sizeof(char *));
 	count = 0;
-	while (list)
+	while (list && list->type != PIPE)
 	{
 		result[count] = list->value;
 		current = list;
