@@ -18,9 +18,9 @@ void	exit_numeric_error(char *arg, t_envp *envp, int subshell)
 	ft_putstr_fd(arg, 2);
 	ft_putendl_fd(": numeric argument required", 2);
 	free(envp->value);
-	envp->value = ft_strdup("255");
+	envp->value = ft_strdup("2");
 	if (!subshell)
-		exit(255);
+		exit(2);
 }
 
 void	exit_too_many_args(t_envp *envp)

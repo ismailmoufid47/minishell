@@ -17,25 +17,21 @@
 # define O_C O_CREAT
 # define O_T O_TRUNC
 
+# include <stdio.h>
+# include <stdlib.h>      	
+# include <sys/stat.h>
+# include <unistd.h>
+# include <signal.h>
+# include <dirent.h>
+# include <sys/types.h>
+# include <fcntl.h>
+# include <termios.h>        	     	
+# include <errno.h>       	
+# include <sys/wait.h>
 # include "../../libft/include/libft.h"
-# include <stdio.h>    		    
-# include <stdlib.h>        	
-# include <sys/stat.h>       	
 # include "readline/readline.h" 
 # include "readline/history.h"  
-# include "ncurses/ncurses.h"	
-# include <unistd.h>         	
-# include <string.h>         	
-# include <signal.h>         	
-# include <dirent.h>         	
-# include <sys/types.h>      	
-# include <fcntl.h>          	
-# include <sys/ioctl.h>      	
-# include <termios.h>        	
-# include <term.h>           	
-# include <errno.h>          	
-# include <sys/wait.h>			
-# include <termios.h>
+# include "ncurses/ncurses.h"
 
 extern char				**environ;
 typedef struct termios	t_term;
@@ -79,9 +75,9 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-// //to be deleted
-// void	print_tokens(char **tokens);
-// void	print_list(t_list *list, int tab_count);
+//to be deleted
+void	print_tokens(char **tokens);
+void	print_list(t_list *list, int tab_count);
 
 //expander:
 char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
@@ -99,6 +95,7 @@ void	execute(t_list *list, t_envp *envp);
 char	*get_cwd(t_envp *envp);
 void	env_cmd(char **envp);
 void	echo_cmd(char **argv);
+void	pwd(t_envp *envp, t_list *current, t_list *prev);
 void	cd(char **args, t_envp	*envp, t_list *current, t_list *prev);
 void	export(char **args, t_envp *envp, t_list *current, t_list *prev);
 void	unset(char **args, t_envp *envp, t_list *current, t_list *prev);
@@ -141,6 +138,9 @@ void	command_not_found_error(t_list *cmd);
 // expand utils:
 char	**ft_split_and_add_quotes(char *var, int is_here_doc);
 char	*join_split_result(char *cmd, char **split, int start, int varln);
+int		extract_variable_value(t_envp *envp, char *cmd, char **var, int start);
+char	*search_and_replace_in_heredoc(char *cmd, int start, t_envp *envp);
+char	*expand_env_variable_in_heredoc(char *line, t_envp *envp);
 
 //tokenize utils:
 int		is_single_operator(char c);

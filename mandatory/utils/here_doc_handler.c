@@ -24,7 +24,7 @@ void	handle_here_doc(t_list *file, t_envp *envp, int out)
 	{
 		input = tmp;
 		if (file->quote_type == UNQUOTED)
-			input = expand_env_variable(tmp, envp, 1);
+			input = expand_env_variable_in_heredoc(tmp, envp);
 		ft_putendl_fd(input, out);
 		free(input);
 		tmp = readline("> ");
