@@ -13,6 +13,7 @@
 #include "../include/shell_bonus.h"
 
 char	**match_files(t_list *file)
+char	**match_files(t_list *file)
 {
 	char	**files;
 	t_list	*list;
