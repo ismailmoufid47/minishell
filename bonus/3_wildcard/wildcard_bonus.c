@@ -95,14 +95,14 @@ t_list	*get_matchs(char **files)
 	return (head);
 }
 
-char	**match_wild_card(t_list *head)
+char	**match_wild_card(t_list **head)
 {
 	t_list	*nav;
 	t_list	*prev;
 	int		j;
 	char	**files;
 
-	nav = head;
+	nav = *head;
 	prev = NULL;
 	while (nav && nav->value && nav->type != PIPE)
 	{
@@ -116,10 +116,10 @@ char	**match_wild_card(t_list *head)
 			j++;
 		}
 		if (j)
-			head = link_matchs(head, &prev, &nav, get_matchs(files));
+			*head = link_matchs(head, &prev, &nav, get_matchs(files));
 		ft_free_split(files);
 		nav = ((prev = nav), nav->next);
 	}
-	files = list_to_char(head);
+	files = list_to_char(*head);
 	return (files);
 }

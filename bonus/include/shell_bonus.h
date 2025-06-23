@@ -86,7 +86,7 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
 char	**tokenize(char *cmd);
 
 // wildcards
-char	**match_wild_card(t_list *head);
+char	**match_wild_card(t_list **head);
 
 //classed list:
 t_list	*create_list(t_list *head, t_list *nav, char **tokens);
@@ -168,7 +168,7 @@ t_list	*create_list_node(char *token, int type);
 // wildcard utils:
 t_list	*tokens_to_list(char **tokens);
 char	**list_to_char(t_list *list);
-t_list	*link_matchs(t_list *head, t_list **prv, t_list **nav, t_list *matchs);
+t_list	*link_matchs(t_list **head, t_list **prev, t_list **nav, t_list *matchs);
 
 // execute utils:
 void	redirect(t_list *cmd);

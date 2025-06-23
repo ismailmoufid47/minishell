@@ -3,10 +3,15 @@ NAME = minishell
 CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+		 -I /usr/include -I /home/codespace -I ../libft
 
-LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-		 -l ft -l readline -l ncurses
+LFLAGS = -L../libft -l ft -l readline -l ncurses
+
+# CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
+# 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+
+# LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
+# 		 -l ft -l readline -l ncurses
 
 LIBFT = ../libft/libft.a
 
@@ -58,8 +63,8 @@ LIBFT_SRC =  ../libft/include/libft.h \
 		../libft/src/putstr.c
 
 SRC = 1_expansion/expand.c \
-	1_expansion/expand_utils.c \
 	1_expansion/expand_heredoc.c \
+	1_expansion/expand_utils.c \
 	2_tokenization/tokenize.c \
 	2_tokenization/tokenize_utils.c \
 	3_listification/classed_list.c \
@@ -87,7 +92,7 @@ SRC = 1_expansion/expand.c \
 all: $(NAME)
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) 
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) -fsanitize=address -g
 
 $(LIBFT):
 	make -C ../libft
