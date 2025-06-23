@@ -8,6 +8,7 @@ CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
 LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 		 -l ft -l readline -l ncurses
 
+
 LIBFT = ../libft/libft.a
 
 LIBFT_SRC =  ../libft/include/libft.h \
@@ -89,7 +90,7 @@ SRC = 1_expansion/expand_bonus.c \
 all: $(NAME)
 
 $(NAME): include/shell_bonus.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) #-fsanitize=address -g
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
 
 $(LIBFT):
 	make -C ../libft

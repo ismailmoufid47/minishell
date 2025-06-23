@@ -87,7 +87,7 @@ SRC = 1_expansion/expand.c \
 all: $(NAME)
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) -fsanitize=address -g
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
 
 $(LIBFT):
 	make -C ../libft
