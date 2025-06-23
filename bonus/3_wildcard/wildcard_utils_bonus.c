@@ -42,14 +42,14 @@ char	**list_to_char(t_list *list)
 
 	count = 0;
 	current = list;
-	while (current)
+	while (current && current->type != PIPE)
 	{
 		count++;
 		current = current->next;
 	}
 	result = malloc((count + 1) * sizeof(char *));
 	count = 0;
-	while (list)
+	while (list && list->type != PIPE)
 	{
 		result[count] = list->value;
 		current = list;
@@ -60,29 +60,27 @@ char	**list_to_char(t_list *list)
 	return (result);
 }
 
-t_list	*link_matchs(t_list *head, t_list **prev, t_list **nav, t_list *matchs)
+t_list	*link_matchs(t_list **head, t_list **prev, t_list **nav, t_list *matchs)
 {
 	t_list	*last;
 
 	if (!matchs)
-		return (head);
+		return (*head);
 	if (!*prev)
 	{
-		last = head->next;
-		free(head->value);
-		free(head);
-		head = matchs;
+		last = (*head)->next;
+		(*head) = matchs;
 	}
 	else
 	{
 		last = (*prev)->next->next;
-		free((*prev)->next->value);
-		free((*prev)->next);
 		(*prev)->next = matchs;
 	}
 	while (matchs->next)
 		matchs = matchs->next;
 	matchs->next = last;
+	free((*nav)->value);
+	free(*nav);
 	*nav = matchs;
-	return (head);
+	return ((*head));
 }

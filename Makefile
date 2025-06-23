@@ -1,11 +1,14 @@
 NAME = minishell
 
+<<<<<<< HEAD
 #\
 find mandatory -type f | pbcopy
 
 #\
 find bonus -type f | pbcopy
 
+=======
+>>>>>>> master
 LIBFT_SRC =  libft/include/libft.h \
 		libft/Makefile \
 		libft/src/ft_atoi.c \
@@ -88,6 +91,7 @@ BONUS_FILES = bonus/shell_bonus.c \
 			bonus/Makefile \
 			bonus/1_expansion/expand_bonus.c \
 			bonus/1_expansion/expand_utils_bonus.c \
+			bonus/1_expansion/expand_heredoc_bonus.c \
 			bonus/2_tokenization/tokenize_bonus.c \
 			bonus/2_tokenization/tokenize_utils_bonus.c \
 			bonus/3_wildcard/wildcard_bonus.c \
@@ -135,18 +139,11 @@ bonus: .bn_made
 clean:
 	make -C mandatory clean
 	make -C bonus clean
-m:
-	make m -C mandatory
-	mv -f mandatory/minishell .
-
-mb:
-	make m -C bonus
-	mv -f bonus/minishell .
 
 fclean:
 	make -C mandatory fclean
 	make -C bonus fclean
-	rm -f $(NAME)
+	rm -f $(NAME) .bn_made .mn_made
 
 re: fclean all
 

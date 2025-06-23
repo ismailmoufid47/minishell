@@ -29,19 +29,6 @@ t_list	*create_list_node(char *token, int type)
 	return (node);
 }
 
-int	count_args(t_list *cmd)
-{
-	int	count;
-
-	count = 0;
-	while (cmd && cmd->type == CMD)
-	{
-		count++;
-		cmd = cmd->next;
-	}
-	return (count + 1);
-}
-
 t_list	*closest_cmd(t_list *head)
 {
 	t_list	*current;

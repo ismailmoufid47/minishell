@@ -2,24 +2,11 @@ NAME = minishell
 
 CC = cc
 
-FSANITIZE = -fsanitize=address -g
-
-# CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I /usr/include -I /home/codespace -I ../libft
-
-# LFLAGS = -L../libft -l ft -l readline -l ncurses
-
-# CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I /usr/include -I /home/codespace -I ../libft
-
-# LFLAGS = -L../libft -l ft -l readline -l ncurses
-
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
 LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
 		 -l ft -l readline -l ncurses
-
 
 LIBFT = ../libft/libft.a
 
@@ -97,11 +84,10 @@ SRC = 1_expansion/expand.c \
 	utils/string_utils.c \
 	shell.c
 
-
 all: $(NAME)
 
 $(NAME): include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) 
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
 
 $(LIBFT):
 	make -C ../libft
@@ -115,7 +101,5 @@ fclean: clean
 
 re: fclean all
 
-m :fclean include/shell.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) $(FSANITIZE)
 
 .PHONY: all clean fclean re bonus

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/shell.h"
+#include "../include/shell_bonus.h"
 
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
@@ -25,7 +25,6 @@ char	*search_and_replace_in_heredoc(char *cmd, int start, t_envp *envp)
 	if (varname_len == 0)
 		return (ft_strdup(cmd));
 	cmd[start - 1] = '\0';
-	printf("cmd: %s\n", cmd);
 	if (!var || !*var || ft_isdigit(cmd[start]) || cmd[start] == '\"'
 		|| cmd[start] == '\'')
 	{

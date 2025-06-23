@@ -15,58 +15,28 @@
 char	**match_files(t_list *file)
 {
 	char	**files;
+	t_list	*list;
 
 	if (file->quote_type != UNQUOTED)
 		return (ft_split(file->value, '\x81'));
-	files = match_wild_card(tokens_to_list(ft_split(file->value, '\x81')));
+	list = tokens_to_list(ft_split(file->value, '\x81'));
+	files = match_wild_card(&list);
 	if (files[1])
 	{
 		ft_free_split(files);
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd(file->value, 2);
+		free_list(list);
 		ft_putendl_fd(": Ambiguous redirect", 2);
 		exit(1);
 	}
+	free_list(list);
 	return (files);
-}
-
-void	builtin_here_doc(char *delimiter, t_envp *envp)
-{
-	int		fd1;
-	int		fd2;
-	char	*input;
-	char	*tmp;
-
-	fd1 = open_wrapper("read_line", O_W | O_C | O_T, 0600);
-	fd2 = ((input = "NULL"), open_wrapper("read_line", O_RDONLY, 0));
-	unlink("read_line");
-	tmp = readline("> ");
-	while (tmp && ft_strcmp(tmp, delimiter))
-	{
-		input = expand_env_variable(tmp, envp, 0);
-		ft_putendl_fd(input, fd1);
-		free(tmp);
-		free(input);
-		tmp = readline("> ");
-	}
-	if (!input)
-	{
-		close_2(fd1, fd2);
-		ft_putendl_fd("Minishell: here_doc:  EOF - CTL + D", 2);
-		exit(1);
-	}
-	free(tmp);
-	close(fd1);
 }
 
 void	execute_builtin(t_list *current, t_envp *envp, t_list *prev, int *built)
 {
 	*built = 1;
-	if (current->type == CMD && current->value)
-	{
-		current->args = match_wild_card(tokens_to_list(current->args));
-		current->value = current->args[0];
-	}
 	if (!ft_strcmp(current->value, "cd"))
 		cd(current->args, envp, current, prev);
 	else if (!prev && !current->next && !ft_strcmp(current->value, "export"))

@@ -2,18 +2,6 @@ NAME = minishell
 
 CC = cc
 
-FSANITIZE = -fsanitize=address -g
-
-# CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I /usr/include -I /home/codespace -I ../libft
-
-# LFLAGS = -L../libft -l ft -l readline -l ncurses
-
-# CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I /usr/include -I /home/codespace -I ../libft
-
-# LFLAGS = -L../libft -l ft -l readline -l ncurses
-
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
@@ -71,6 +59,10 @@ LIBFT_SRC =  ../libft/include/libft.h \
 		../libft/src/putstr.c
 
 SRC = 1_expansion/expand_bonus.c \
+<<<<<<< HEAD
+=======
+	1_expansion/expand_heredoc_bonus.c \
+>>>>>>> master
 	1_expansion/expand_utils_bonus.c \
 	2_tokenization/tokenize_bonus.c \
 	2_tokenization/tokenize_utils_bonus.c \
@@ -98,11 +90,10 @@ SRC = 1_expansion/expand_bonus.c \
 	utils/string_utils_bonus.c \
 	shell_bonus.c
 
-
 all: $(NAME)
 
 $(NAME): include/shell_bonus.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) 
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
 
 $(LIBFT):
 	make -C ../libft
@@ -115,8 +106,5 @@ fclean: clean
 	make -C ../libft fclean
 
 re: fclean all
-
-m :fclean include/shell_bonus.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS)  -o $(NAME) $(FSANITIZE)
 
 .PHONY: all clean fclean re bonus
