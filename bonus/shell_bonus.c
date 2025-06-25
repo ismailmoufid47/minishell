@@ -34,7 +34,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	t_list	*list;
 
 	list = NULL;
-	cmd_line = expand_env_variable(cmd_line, envp, 0);
+	cmd_line = expand_env_variable(cmd_line, envp);
 	if (!cmd_line || !*cmd_line)
 	{
 		free(cmd_line);

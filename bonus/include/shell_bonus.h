@@ -31,7 +31,7 @@
 # include "../../libft/include/libft.h"
 # include "readline/readline.h" 
 # include "readline/history.h"  
-# include "ncurses/ncurses.h"
+// # include "ncurses.h"
 
 extern char				**environ;
 typedef struct termios	t_term;

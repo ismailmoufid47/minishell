@@ -31,7 +31,7 @@
 # include "../../libft/include/libft.h"
 # include "readline/readline.h" 
 # include "readline/history.h"  
-# include "ncurses/ncurses.h"
+// # include "ncurses.h"
 
 extern char				**environ;
 typedef struct termios	t_term;
@@ -65,13 +65,14 @@ typedef struct s_list
 {
 	t_node_type		type;
 	char			*value;
-	t_quotation		quote_type;
+	char			**args;
 	int				redirected;
 	struct s_list	*redirs;
-	char			**args;
+	int				here_doc;
+	char			*cmd_path;
+	t_quotation		quote_type;
 	int				pid;
 	int				pipe_fds[2];
-	int				here_doc;
 	struct s_list	*next;
 }	t_list;
 
@@ -80,7 +81,7 @@ void	print_tokens(char **tokens);
 void	print_list(t_list *list, int tab_count);
 
 //expander:
-char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
+char	*expand_env_variable(char *cmd_line, t_envp *envp);
 
 // tokenize:
 char	**tokenize(char *cmd);
@@ -136,7 +137,7 @@ void	permission_denied_error(t_list *cmd);
 void	command_not_found_error(t_list *cmd);
 
 // expand utils:
-char	**ft_split_and_add_quotes(char *var, int is_here_doc);
+char	**ft_split_and_add_quotes(char *var);
 char	*join_split_result(char *cmd, char **split, int start, int varln);
 int		extract_variable_value(t_envp *envp, char *cmd, char **var, int start);
 char	*search_and_replace_in_heredoc(char *cmd, int start, t_envp *envp);
@@ -185,5 +186,7 @@ void	free_list(t_list *list);
 
 // string utils:
 int		skip_spaces(const char *input, int i);
+void	fill_table_merciful(char **table, char **str);
+char	**ft_split_merciful(char *str);
 
 #endif

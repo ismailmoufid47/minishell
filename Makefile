@@ -1,14 +1,5 @@
 NAME = minishell
 
-<<<<<<< HEAD
-#\
-find mandatory -type f | pbcopy
-
-#\
-find bonus -type f | pbcopy
-
-=======
->>>>>>> master
 LIBFT_SRC =  libft/include/libft.h \
 		libft/Makefile \
 		libft/src/ft_atoi.c \

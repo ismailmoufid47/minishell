@@ -24,6 +24,7 @@ t_list	*create_list_node(char *token, int type)
 	node->redirs = NULL;
 	node->args = NULL;
 	node->pid = 0;
+	node->cmd_path = NULL;
 	node->next = NULL;
 	node->here_doc = 0;
 	return (node);

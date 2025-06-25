@@ -24,7 +24,7 @@ void	redirect(t_list *cmd)
 	current = cmd->redirs;
 	while (current)
 	{
-		file = current->next->value;
+		file = current->next->value;///code here 
 		if (current->type == IN)
 			ft_dup2(open_wrapper(file, O_RDONLY, 0), 0);
 		if (current->type == OUT)
@@ -78,9 +78,10 @@ char	*get_cmd_path(char *cmd, t_envp *envp)
 		free(cmd_path);
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
-		if (!access(cmd_path, X_OK))
-			return (cmd_path);
-		return (free(cmd_path), NULL);
+		return (cmd_path);
+		// if (!access(cmd_path, X_OK))
+		// 	return (cmd_path);
+		// return (free(cmd_path), NULL);
 	}
 	find_binary(ft_get_env_val(envp, "PATH"), &cmd_path, cmd);
 	if (cmd_path && !access(cmd_path, X_OK))
@@ -91,7 +92,6 @@ char	*get_cmd_path(char *cmd, t_envp *envp)
 void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
-	char	*cmd_path;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -111,9 +111,9 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		exit (0);
 	envp_char = envp_to_char(envp);
 	is_bin(cmd, envp);
-	cmd_path = get_cmd_path(cmd->args[0], envp);
-	if (cmd_path)
-		execve(cmd_path, cmd->args, envp_char);
+	cmd->cmd_path = get_cmd_path(cmd->args[0], envp);
+	if (cmd->cmd_path)
+		execve(cmd->cmd_path, cmd->args, envp_char);
 	exec_error(&cmd);
 }
 

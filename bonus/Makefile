@@ -59,10 +59,7 @@ LIBFT_SRC =  ../libft/include/libft.h \
 		../libft/src/putstr.c
 
 SRC = 1_expansion/expand_bonus.c \
-<<<<<<< HEAD
-=======
 	1_expansion/expand_heredoc_bonus.c \
->>>>>>> master
 	1_expansion/expand_utils_bonus.c \
 	2_tokenization/tokenize_bonus.c \
 	2_tokenization/tokenize_utils_bonus.c \

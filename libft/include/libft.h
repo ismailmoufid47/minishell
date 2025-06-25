@@ -100,4 +100,5 @@ int		ft_strchr2(const char *line, int c);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_substr2(char *line, unsigned int start, size_t len);
 char	*get_next_line(int fd);
+int		count_substring(char *string, char delimiter);
 #endif
