@@ -2,11 +2,6 @@ NAME = minishell
 
 CC = cc
 
-# CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-# 		 -I /usr/include -I /home/codespace -I ../libft
-
-# LFLAGS = -L../libft -l ft -l readline -l ncurses
-
 CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
 		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
 
@@ -95,7 +90,7 @@ SRC = 1_expansion/expand_bonus.c \
 all: $(NAME)
 
 $(NAME): include/shell_bonus.h $(LIBFT) $(LIBFT_SRC) $(SRC)
-	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME) -g -fsanitize=address
+	$(CC) $(CFLAGS) $(SRC) $(LFLAGS) -o $(NAME)
 
 $(LIBFT):
 	make -C ../libft

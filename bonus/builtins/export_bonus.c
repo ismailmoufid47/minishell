@@ -81,4 +81,3 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 	ft_dup2(io[0], STDIN_FILENO);
 	ft_dup2(io[1], STDOUT_FILENO);
 }
-

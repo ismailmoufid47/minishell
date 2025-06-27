@@ -163,8 +163,7 @@ t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
 void	redirect(t_list *list, t_list *cmd, t_envp *envp);
-void	close_obsolete_fds(t_list *current, t_list *prev);
-void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current);
+void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *cur);
 int		check_ambiguous(char *src, char **files, t_list *list);
 
 // Handle here-documents:
@@ -185,6 +184,8 @@ void	load_history(int fd);
 // Free resources:
 void	free_envp(t_envp *envp);
 void	free_list(t_list *list);
+void	free_pipes_hrdc_fds(t_list *list);
+void	close_obsolete_fds(t_list *current, t_list *prev);
 
 // string utils:
 int		skip_spaces(const char *input, int i);

@@ -62,7 +62,7 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp)
 	return (join_split_result(cmd, split_result, start, variable_name_len));
 }
 
-void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start, int redir)
+void	check_delimiter_quotes(char **cmd, char *dlmtr, int dl_start, int redir)
 {
 	int		i;
 	int		quote_flag;
@@ -71,25 +71,26 @@ void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start, int
 
 	i = 0;
 	quote_flag = 0;
-	while (delimiter[i] && !is_single_operator(delimiter[i])
-		&& delimiter[i] != ' ')
+	while (dlmtr[i] && !is_single_operator(dlmtr[i])
+		&& dlmtr[i] != ' ')
 	{
-		if (delimiter[i] == '\'' || delimiter[i] == '"')
+		if (dlmtr[i] == '\'' || dlmtr[i] == '"')
 			quote_flag = 1;
 		i++;
 	}
 	i = 0;
 	if (quote_flag && redir == 2)
 	{
-		tmp = ft_substr(*cmd_line, 0, del_start);
+		tmp = ft_substr(*cmd, 0, dl_start);
 		tmp2 = ft_strjoin(tmp, "\"\"");
 		free(tmp);
-		tmp = ft_strjoin(tmp2, delimiter);
+		tmp = ft_strjoin(tmp2, dlmtr);
 		free(tmp2);
-		free(*cmd_line);
-		*cmd_line = tmp;
+		free(*cmd);
+		*cmd = tmp;
 	}
 }
+
 void	handle_hdoc_del(char **line, int *sq_flag, int *i, int *redir_is_prev)
 {
 	static int		dq_flag;

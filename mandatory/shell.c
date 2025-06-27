@@ -28,63 +28,6 @@ void	print_tokens(char **tokens)
 	printf("\n");
 }
 
-void	print_list(t_list *list, int tab_count)
-{
-	int	i;
-
-	i = 0;
-	if (tab_count == 0)
-	{
-		printf("\n");
-		while (i++ < tab_count)
-			printf("		");
-		printf("		LIST\n\n");
-	}
-	while (list)
-	{
-		i = 0;
-		while (i++ < tab_count)
-			printf("		");
-		if (list->type == HDOC)
-			printf("      HEREDOC");
-		else if (list->type == APP)
-			printf("       APPEND");
-		else if (list->type == IN)
-			printf("	 IN");
-		else if (list->type == OUT)
-			printf("	 OUT");
-		else if (list->type == PIPE)
-		{
-			printf("       PIPE  FDS:\n");
-			printf("		IN:%d\n", list->pipe_fds[0]);
-			printf("		OUT:%d\n", list->pipe_fds[1]);
-		}
-		else if (list->type == FIL)
-			printf("      FILE: %s, quote: %d", list->value, list->quote_type);
-		else
-		{
-			printf("       CMD:  %s, quote: %d", list->value, list->quote_type);
-			if (list->redirected)
-			{
-				printf(",  REDIRECTIONS:\n");
-				print_list(list->redirs, tab_count + 1);
-			}
-			printf(" args: \n");
-			print_tokens(list->args);
-		}
-		list = list->next;
-		if (list)
-		{
-			i = 0;
-			printf("\n");
-			while (i++ < tab_count)
-				printf("		");
-			printf("	  ↓\n");
-		}
-	}
-	printf("\n\n");
-}
-
 t_list	*parse(char *cmd_line, t_envp *envp)
 {
 	char	**tokens;
@@ -92,7 +35,6 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 
 	list = NULL;
 	cmd_line = expand_env_variable(cmd_line, envp);
-	// printf("%s\n", cmd_line);
 	if (!cmd_line || !*cmd_line)
 	{
 		free(cmd_line);
@@ -103,7 +45,6 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	if (!validate_tokens(tokens, envp))
 		return (NULL);
 	list = create_list(NULL, NULL, tokens);
-	// print_list(list, 0);
 	free(tokens);
 	if (!handle_here_docs(envp, list))
 		return (free_list(list), NULL);

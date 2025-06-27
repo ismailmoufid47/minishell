@@ -42,3 +42,23 @@ void	free_list(t_list *list)
 		free(temp);
 	}
 }
+
+void	free_pipes_hrdc_fds(t_list *list)
+{
+	while (list)
+	{
+		if (list->type == PIPE)
+		{
+			if (list->pipe_fds[0])
+				close(list->pipe_fds[0]);
+			if (list->pipe_fds[1])
+				close(list->pipe_fds[1]);
+		}
+		if (list->type == CMD)
+		{
+			if (list->here_doc)
+				close(list->here_doc);
+		}
+		list = list->next;
+	}
+}

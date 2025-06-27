@@ -12,7 +12,6 @@
 
 #include "../include/shell.h"
 
-
 void	execute_builtin(t_list *current, t_envp *envp, t_list *prev, int *built)
 {
 	*built = 1;

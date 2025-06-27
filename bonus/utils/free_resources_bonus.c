@@ -42,3 +42,33 @@ void	free_list(t_list *list)
 		free(temp);
 	}
 }
+
+void	free_pipes_hrdc_fds(t_list *list)
+{
+	while (list)
+	{
+		if (list->type == PIPE)
+		{
+			if (list->pipe_fds[0])
+				close(list->pipe_fds[0]);
+			if (list->pipe_fds[1])
+				close(list->pipe_fds[1]);
+		}
+		if (list->type == CMD)
+		{
+			if (list->here_doc)
+				close(list->here_doc);
+		}
+		list = list->next;
+	}
+}
+
+void	close_obsolete_fds(t_list *current, t_list *prev)
+{
+	if (current->here_doc)
+		close(current->here_doc);
+	if (prev)
+		close(prev->pipe_fds[0]);
+	if (current->next)
+		close(current->next->pipe_fds[1]);
+}

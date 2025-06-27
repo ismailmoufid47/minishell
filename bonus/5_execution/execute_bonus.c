@@ -30,15 +30,11 @@ void	redirect(t_list *list, t_list *cmd, t_envp *envp)
 			herdoc_visited = ((ft_dup2(cmd->here_doc, 0)), 1);
 		if (current->type != HDOC)
 		{
-			current->next->value = (free(current->next->value), ft_strdup(files[0]));
+			current->next->value
+				= (free(current->next->value), ft_strdup(files[0]));
 			ft_free_split(files);
 			files = match_files(current->next);
-			if (current->type == IN)
-				ft_dup2(open_wrapper(files[0], O_RDONLY, 0), 0);
-			if (current->type == OUT)
-				ft_dup2(open_wrapper(files[0], O_W | O_C | O_TRUNC, 0666), 1);
-			if (current->type == APP)
-				ft_dup2(open_wrapper(files[0], O_W | O_C | O_APPEND, 0666), 1);
+			redirect_file(current->type, files[0]);
 			ft_free_split(files);
 		}
 		current = current->next->next;

@@ -169,12 +169,12 @@ t_list	*create_list_node(char *token, int type);
 // wildcard utils:
 t_list	*tokens_to_list(char **tokens);
 char	**list_to_char(t_list *list);
-t_list	*link_matchs(t_list **head, t_list **prev, t_list **nav, t_list *matchs);
+t_list	*link_matchs(t_list **head, t_list **prev, t_list **nav, t_list *mat);
 
 // execute utils:
 void	redirect(t_list *list, t_list *cmd, t_envp *envp);
-void	close_obsolete_fds(t_list *current, t_list *prev);
-void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current);
+void	redirect_file(t_node_type type, char *file);
+void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *cur);
 int		check_ambiguous(char *src, char **files, t_list *list);
 char	**match_files(t_list *file);
 
@@ -196,6 +196,8 @@ void	load_history(int fd);
 // Free resources:
 void	free_envp(t_envp *envp);
 void	free_list(t_list *list);
+void	free_pipes_hrdc_fds(t_list *list);
+void	close_obsolete_fds(t_list *current, t_list *prev);
 
 // string utils:
 int		skip_spaces(const char *input, int i);

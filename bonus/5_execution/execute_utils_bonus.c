@@ -12,6 +12,16 @@
 
 #include "../include/shell_bonus.h"
 
+void	redirect_file(t_node_type type, char *file)
+{
+	if (type == IN)
+		ft_dup2(open_wrapper(file, O_RDONLY, 0), 0);
+	if (type == OUT)
+		ft_dup2(open_wrapper(file, O_W | O_C | O_TRUNC, 0666), 1);
+	if (type == APP)
+		ft_dup2(open_wrapper(file, O_W | O_C | O_APPEND, 0666), 1);
+}
+
 char	**match_files(t_list *file)
 {
 	char	**files;
@@ -49,16 +59,6 @@ void	execute_builtin(t_list *current, t_envp *envp, t_list *prev, int *built)
 		*built = 0;
 }
 
-void	close_obsolete_fds(t_list *current, t_list *prev)
-{
-	if (current->here_doc)
-		close(current->here_doc);
-	if (prev)
-		close(prev->pipe_fds[0]);
-	if (current->next)
-		close(current->next->pipe_fds[1]);
-}
-
 int	check_ambiguous(char *src, char **files, t_list *list)
 {
 	if (files && ((!files[0] || files[1]) || files[0][0] == 0))
@@ -76,7 +76,6 @@ int	check_ambiguous(char *src, char **files, t_list *list)
 	}
 	return (0);
 }
-
 
 void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current)
 {

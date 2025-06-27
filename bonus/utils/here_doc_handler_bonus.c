@@ -70,26 +70,6 @@ int	parent_heredoc(t_envp *envp, pid_t pid, int heredoc_out, t_term *old)
 	return (1);
 }
 
-void	free_pipes_hrdc_fds(t_list *list)
-{
-	while (list)
-	{
-		if (list->type == PIPE)
-		{
-			if (list->pipe_fds[0])
-				close(list->pipe_fds[0]);
-			if (list->pipe_fds[1])
-				close(list->pipe_fds[1]);
-		}
-		if (list->type == CMD)
-		{
-			if (list->here_doc)
-				close(list->here_doc);
-		}
-		list = list->next;
-	}
-}
-
 int	set_cmd_here_doc(t_list *list, t_envp *envp)
 {
 	pid_t			pid;
