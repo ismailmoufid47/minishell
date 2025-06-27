@@ -77,6 +77,7 @@ int	check_ambiguous(char *src, char **files, t_list *list)
 	return (0);
 }
 
+
 void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current)
 {
 	char	*duplicate;
@@ -85,7 +86,9 @@ void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current)
 	duplicate = ft_strdup(file->value);
 	if (file->quote_type != SIQUOTED && current->type != HDOC)
 	{
-		*files = tokenize(expand_env_variable(file->value, envp));
+		tmp = expand_env_variable(file->value, envp);
+		*files = tokenize(tmp);
+		free(tmp);
 		if ((*files)[0] && (*files)[0][0] == '"')
 		{
 			tmp = ft_strdup((*files)[0] + 1);

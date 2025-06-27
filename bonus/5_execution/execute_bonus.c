@@ -31,6 +31,7 @@ void	redirect(t_list *list, t_list *cmd, t_envp *envp)
 		if (current->type != HDOC)
 		{
 			current->next->value = (free(current->next->value), ft_strdup(files[0]));
+			ft_free_split(files);
 			files = match_files(current->next);
 			if (current->type == IN)
 				ft_dup2(open_wrapper(files[0], O_RDONLY, 0), 0);
