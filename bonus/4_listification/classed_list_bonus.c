@@ -17,7 +17,7 @@ t_list	*extract_args_and_remove_them(t_list *head)
 	t_list	*cur;
 	t_list	*tmp;
 	t_list	*tmp2;
-	char 	**args;
+	char	**args;
 
 	cur = head;
 	while (cur)
@@ -25,20 +25,13 @@ t_list	*extract_args_and_remove_them(t_list *head)
 		if (cur->type == CMD)
 		{
 			if (cur == head)
-			{
-				args = match_wild_card(&cur);
-				head = cur;
-			}
+				head = ((args = match_wild_card(&cur)), cur);
 			else
 				args = match_wild_card(&cur);
 			cur->args = args;
 			tmp = cur->next;
 			while (tmp && tmp->type == CMD)
-			{
-				tmp2 = tmp->next;
-				free(tmp);
-				tmp = tmp2;
-			}
+				tmp = ((tmp2 = tmp->next), (free(tmp)), tmp2);
 			cur->next = tmp;
 		}
 		if (cur)

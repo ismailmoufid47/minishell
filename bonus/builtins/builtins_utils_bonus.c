@@ -12,7 +12,7 @@
 
 #include "../include/shell_bonus.h"
 
-void	redirect_builtins(t_list *current)
+void	redirect_builtins(t_list *current, t_envp *envp)
 {
 	int	stdout_fd;
 	int	stdin_fd;
@@ -21,7 +21,7 @@ void	redirect_builtins(t_list *current)
 		return ;
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);
-	redirect(current);
+	redirect(NULL, current, envp);
 	ft_dup2(stdout_fd, STDOUT_FILENO);
 	ft_dup2(stdin_fd, STDIN_FILENO);
 }
@@ -59,8 +59,6 @@ void	is_bin(t_list *cmd, t_envp *envp)
 	handle_simple_builtins(cmd, envp);
 	if (!ft_strcmp(cmd->value, "export"))
 	{
-		if (!cmd->args[1])
-			return ;
 		export(cmd->args, envp, cmd, NULL);
 		exit (0);
 	}

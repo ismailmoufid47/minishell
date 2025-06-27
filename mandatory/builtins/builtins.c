@@ -16,25 +16,29 @@ void	unset(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int		i;
 
-	redirect_builtins(current);
+	redirect_builtins(current, envp);
 	i = 1;
-	if (args[i] && !is_valid_unset_argument(args[i]))
-		return (identifier_error("unset", args[i], envp));
 	free(envp->value);
 	envp->value = ft_strdup("0");
-	if ((prev && prev->type == PIPE)
-		|| (current->next && current->next->type == PIPE))
-		return ;
-	while (args[i])
+	if (args[i] && !is_valid_unset_argument(args[i]))
+		return (identifier_error("unset", args[i], envp));
+	if (!prev && !current->next)
 	{
-		if (!ft_strcmp(args[i], "?"))
+		while (args[i])
 		{
+			if (!ft_strcmp(args[i], "?"))
+			{
+				i++;
+				continue ;
+			}
+			remove_envp_var(envp, args[i]);
 			i++;
-			continue ;
 		}
-		remove_envp_var(envp, args[i]);
-		i++;
 	}
+	else if (current->next)
+		close(current->next->pipe_fds[1]);
+	if (prev)
+		close(prev->pipe_fds[0]);
 }
 
 int	dash_n(char *str)

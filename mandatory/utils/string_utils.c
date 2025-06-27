@@ -61,3 +61,15 @@ char	**ft_split_merciful(char *str)
 	re[i] = NULL;
 	return (re);
 }
+
+char	**char_to_double_char(char *str)
+{
+	char	**result;
+
+	result = malloc(sizeof(char *) * 2);
+	if (!result)
+		return (NULL);
+	result[0] = ft_strdup(str);
+	result[1] = NULL;
+	return (result);
+}

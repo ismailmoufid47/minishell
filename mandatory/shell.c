@@ -28,7 +28,6 @@ void	print_tokens(char **tokens)
 	printf("\n");
 }
 
-
 void	print_list(t_list *list, int tab_count)
 {
 	int	i;
@@ -93,7 +92,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 
 	list = NULL;
 	cmd_line = expand_env_variable(cmd_line, envp);
-	printf("%s\n", cmd_line);
+	// printf("%s\n", cmd_line);
 	if (!cmd_line || !*cmd_line)
 	{
 		free(cmd_line);
@@ -104,7 +103,7 @@ t_list	*parse(char *cmd_line, t_envp *envp)
 	if (!validate_tokens(tokens, envp))
 		return (NULL);
 	list = create_list(NULL, NULL, tokens);
-	print_list(list, 0);
+	// print_list(list, 0);
 	free(tokens);
 	if (!handle_here_docs(envp, list))
 		return (free_list(list), NULL);
@@ -163,7 +162,7 @@ int	main(void)
 			continue ;
 		list = parse(cmd_line, envp);
 		if (list)
-			execute(list, envp);
+			execute(list, list, envp);
 		free_list(list);
 	}
 	return ((close(history_fd)), 0);

@@ -14,7 +14,7 @@
 
 extern int	g_signal;
 
-void	redirect(t_list *cmd)
+void	redirect(t_list *list, t_list *cmd, t_envp *envp)
 {
 	t_list	*current;
 	char	**files;
@@ -23,13 +23,14 @@ void	redirect(t_list *cmd)
 	current = ((herdoc_visited = 0), cmd->redirs);
 	while (current)
 	{
+		expand_files(current->next, &files, envp, current);
+		if (check_ambiguous(current->next->value, files, list))
+			break ;
 		if (cmd->here_doc && current->type == HDOC && !herdoc_visited)
-		{
-			herdoc_visited = 1;
-			ft_dup2(cmd->here_doc, 0);
-		}
+			herdoc_visited = ((ft_dup2(cmd->here_doc, 0)), 1);
 		if (current->type != HDOC)
 		{
+			current->next->value = (free(current->next->value), ft_strdup(files[0]));
 			files = match_files(current->next);
 			if (current->type == IN)
 				ft_dup2(open_wrapper(files[0], O_RDONLY, 0), 0);
@@ -81,9 +82,7 @@ char	*get_cmd_path(char *cmd, t_envp *envp)
 		free(cmd_path);
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
-		if (!access(cmd_path, X_OK))
-			return (cmd_path);
-		return (free(cmd_path), NULL);
+		return (cmd_path);
 	}
 	find_binary(ft_get_env_val(envp, "PATH"), &cmd_path, cmd);
 	if (cmd_path && !access(cmd_path, X_OK))
@@ -91,10 +90,9 @@ char	*get_cmd_path(char *cmd, t_envp *envp)
 	return (free(cmd_path), NULL);
 }
 
-void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
+void	execute_cmd(t_list *list, t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
-	char	*cmd_path;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -109,18 +107,18 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		close(cmd->next->pipe_fds[0]);
 	}
 	if (cmd->redirected)
-		redirect(cmd);
+		redirect(list, cmd, envp);
 	if (cmd->value == NULL)
 		exit (0);
 	envp_char = envp_to_char(envp);
 	is_bin(cmd, envp);
-	cmd_path = get_cmd_path(cmd->args[0], envp);
-	if (cmd_path)
-		execve(cmd_path, cmd->args, envp_char);
+	cmd->cmd_path = get_cmd_path(cmd->args[0], envp);
+	if (cmd->cmd_path)
+		execve(cmd->cmd_path, cmd->args, envp_char);
 	exec_error(&cmd);
 }
 
-void	execute(t_list *current, t_envp *envp)
+void	execute(t_list *list, t_list *current, t_envp *envp)
 {
 	t_list	*prev;
 	int		status;
@@ -134,7 +132,7 @@ void	execute(t_list *current, t_envp *envp)
 		{
 			current->pid = fork_wrapper(envp);
 			if (current->pid == 0)
-				execute_cmd(current, envp, prev);
+				execute_cmd(list, current, envp, prev);
 			close_obsolete_fds(current, prev);
 		}
 		current = ((prev = current), current->next);

@@ -126,6 +126,8 @@ char	**tokenize(char *input)
 	int		count;
 	char	**tokens;
 
+	if (!input)
+		return (char_to_double_char(NULL));
 	count = token_count(input);
 	tokens = malloc(sizeof(char *) * (count + 1));
 	if (!tokens)

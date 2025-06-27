@@ -23,6 +23,8 @@ t_list	*create_list_node(char *token, int type)
 	node->redirected = 0;
 	node->redirs = NULL;
 	node->args = NULL;
+	node->pipe_fds[0] = -1;
+	node->pipe_fds[1] = -1;
 	node->pid = 0;
 	node->cmd_path = NULL;
 	node->next = NULL;

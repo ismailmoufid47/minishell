@@ -32,8 +32,8 @@ void	free_list(t_list *list)
 		list = list->next;
 		if (temp->type == CMD)
 		{
-			if (temp->args)
-				ft_free_split(temp->args);
+			free(temp->cmd_path);
+			ft_free_split(temp->args);
 			if (temp->redirected)
 				free_list(temp->redirs);
 		}

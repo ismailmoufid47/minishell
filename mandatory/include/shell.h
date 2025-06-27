@@ -90,7 +90,7 @@ char	**tokenize(char *cmd);
 t_list	*create_list(t_list *head, t_list *nav, char **tokens);
 
 // Execute:
-void	execute(t_list *list, t_envp *envp);
+void	execute(t_list *list, t_list *current, t_envp *envp);
 
 // Built-ins:
 char	*get_cwd(t_envp *envp);
@@ -162,8 +162,10 @@ int		count_args(t_list *cmd);
 t_list	*token_to_node(t_list **head, t_list **nav, char *token, int type);
 
 // execute utils:
-void	redirect(t_list *cmd);
+void	redirect(t_list *list, t_list *cmd, t_envp *envp);
 void	close_obsolete_fds(t_list *current, t_list *prev);
+void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current);
+int		check_ambiguous(char *src, char **files, t_list *list);
 
 // Handle here-documents:
 int		handle_here_docs(t_envp *envp, t_list *list);
@@ -171,7 +173,7 @@ int		handle_here_docs(t_envp *envp, t_list *list);
 // Built-ins utils:
 void	is_bin(t_list *cmd, t_envp *envp);
 void	execute_builtin(t_list *current, t_envp *envp, t_list *prev, int *b);
-void	redirect_builtins(t_list *current);
+void	redirect_builtins(t_list *current, t_envp *envp);
 int		is_valid_export_argument(char *arg);
 int		is_valid_unset_argument(char *arg);
 int		is_numeric(char *arg);
@@ -186,7 +188,7 @@ void	free_list(t_list *list);
 
 // string utils:
 int		skip_spaces(const char *input, int i);
-void	fill_table_merciful(char **table, char **str);
 char	**ft_split_merciful(char *str);
+char	**char_to_double_char(char *str);
 
 #endif

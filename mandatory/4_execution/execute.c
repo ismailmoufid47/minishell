@@ -14,28 +14,27 @@
 
 extern int	g_signal;
 
-void	redirect(t_list *cmd)
+void	redirect(t_list *list, t_list *cmd, t_envp *envp)
 {
 	t_list	*current;
-	char	*file;
+	char	**files;
 	int		herdoc_visited;
 
-	herdoc_visited = 0;
-	current = cmd->redirs;
+	current = ((herdoc_visited = 0), cmd->redirs);
 	while (current)
 	{
-		file = current->next->value;///code here 
-		if (current->type == IN)
-			ft_dup2(open_wrapper(file, O_RDONLY, 0), 0);
-		if (current->type == OUT)
-			ft_dup2(open_wrapper(file, O_W | O_C | O_TRUNC, 0666), 1);
-		if (current->type == APP)
-			ft_dup2(open_wrapper(file, O_W | O_C | O_APPEND, 0666), 1);
+		expand_files(current->next, &files, envp, current);
+		if (check_ambiguous(current->next->value, files, list))
+			break ;
 		if (cmd->here_doc && current->type == HDOC && !herdoc_visited)
-		{
-			herdoc_visited = 1;
-			ft_dup2(cmd->here_doc, 0);
-		}
+			herdoc_visited = ((ft_dup2(cmd->here_doc, 0)), 1);
+		if (current->type == IN)
+			ft_dup2(open_wrapper(files[0], O_RDONLY, 0), 0);
+		if (current->type == OUT)
+			ft_dup2(open_wrapper(files[0], O_W | O_C | O_TRUNC, 0666), 1);
+		if (current->type == APP)
+			ft_dup2(open_wrapper(files[0], O_W | O_C | O_APPEND, 0666), 1);
+		ft_free_split(files);
 		current = current->next->next;
 	}
 }
@@ -79,9 +78,6 @@ char	*get_cmd_path(char *cmd, t_envp *envp)
 		cmd_path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		return (cmd_path);
-		// if (!access(cmd_path, X_OK))
-		// 	return (cmd_path);
-		// return (free(cmd_path), NULL);
 	}
 	find_binary(ft_get_env_val(envp, "PATH"), &cmd_path, cmd);
 	if (cmd_path && !access(cmd_path, X_OK))
@@ -89,7 +85,7 @@ char	*get_cmd_path(char *cmd, t_envp *envp)
 	return (free(cmd_path), NULL);
 }
 
-void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
+void	execute_cmd(t_list *list, t_list *cmd, t_envp *envp, t_list *prev)
 {
 	char	**envp_char;
 
@@ -106,7 +102,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 		close(cmd->next->pipe_fds[0]);
 	}
 	if (cmd->redirected)
-		redirect(cmd);
+		redirect(list, cmd, envp);
 	if (cmd->value == NULL)
 		exit (0);
 	envp_char = envp_to_char(envp);
@@ -117,7 +113,7 @@ void	execute_cmd(t_list *cmd, t_envp *envp, t_list *prev)
 	exec_error(&cmd);
 }
 
-void	execute(t_list *current, t_envp *envp)
+void	execute(t_list *list, t_list *current, t_envp *envp)
 {
 	t_list	*prev;
 	int		status;
@@ -131,7 +127,7 @@ void	execute(t_list *current, t_envp *envp)
 		{
 			current->pid = fork_wrapper(envp);
 			if (current->pid == 0)
-				execute_cmd(current, envp, prev);
+				execute_cmd(list, current, envp, prev);
 			close_obsolete_fds(current, prev);
 		}
 		current = ((prev = current), current->next);

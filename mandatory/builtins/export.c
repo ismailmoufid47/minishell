@@ -64,7 +64,7 @@ void	export(char **args, t_envp *envp, t_list *current, t_list *prev)
 	io[0] = dup(STDIN_FILENO);
 	io[1] = dup(STDOUT_FILENO);
 	if (!prev && !current->next)
-		redirect(current);
+		redirect(NULL, current, envp);
 	i = 1;
 	if (!handle_export_args(envp, args, io, &i))
 		return ;

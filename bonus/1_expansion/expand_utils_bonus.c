@@ -12,32 +12,41 @@
 
 #include "../include/shell_bonus.h"
 
-char	**ft_split_and_add_quotes(char *var, int is_here_doc)
+char	*add_quotes(char *str, int location)
+{
+	char	*tmp;
+	char	*tmp2;
+
+	tmp = ft_substr(str, 0, location);
+	tmp2 = ft_strjoin(tmp, "\"");
+	free(tmp);
+	tmp = ft_substr(str, location, ft_strlen(str));
+	free(str);
+	str = ft_strjoin(tmp2, tmp);
+	free(tmp);
+	free(tmp2);
+	return (str);
+}
+
+char	**ft_split_and_add_quotes(char *var)
 {
 	char	**result;
 	char	*tmp;
 	int		i;
 
-	result = ((i = -1), ft_split(var, ' '));
+	result = ((i = -1), ft_split_merciful(var));
 	if (!result)
 		return (NULL);
-	while (result[++i])
+	while (result[++i + 1])
 	{
-		if (!is_here_doc)
-		{
-			if (i > 0)
-				result[i] = ((tmp = result[i]), ft_strjoin(" \"", result[i]));
-			else
-				result[i] = ((tmp = result[i]), ft_strjoin("\"", result[i]));
-		}
-		else
-			result[i] = ((tmp = result[i]), ft_strjoin(result[i], " "));
-		free(tmp);
-		if (!is_here_doc)
-			result[i] = ((tmp = result[i]), ft_strjoin(result[i], "\""));
-		if (!is_here_doc)
-			free(tmp);
+		result[i] = add_quotes(result[i], skip_spaces(result[i], 0));
+		tmp = ft_strjoin(result[i], "\"");
+		free(result[i]);
+		result[i] = tmp;
 	}
+	result[i] = add_quotes(result[i], skip_spaces(result[i], 0));
+	result[i] = add_quotes(result[i],
+			ft_strchr(&result[i][skip_spaces(result[i], 0)], ' ') - result[i]);
 	return (result);
 }
 

@@ -42,13 +42,13 @@ void	exit_cmd(char **args, t_envp *envp, t_list *current, t_list *prev)
 {
 	int	subshell;
 
-	redirect_builtins(current);
-	subshell = ((ft_putendl_fd("exit", 1)), (prev && prev->type == PIPE)
-			|| (current->next && current->next->type == PIPE));
+	redirect_builtins(current, envp);
+	subshell = ((ft_putendl_fd("exit", 1)), (prev || current->next));
+	if (subshell)
+		close_obsolete_fds(current, prev);
 	if (!args[1])
 	{
-		free(envp->value);
-		envp->value = ft_strdup("0");
+		envp->value = ((free(envp->value)), ft_strdup("0"));
 		if (!subshell)
 			exit(0);
 		return ;

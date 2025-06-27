@@ -43,6 +43,11 @@ int	validate_path(t_envp *envp, char *path)
 {
 	struct stat	dir;
 
+	if (!path)
+	{
+		ft_putstr_fd("Minishell: cd: HOME not set\n", 2);
+		return (free(envp->value), envp->value = ft_strdup("1"), 0);
+	}
 	stat(path, &dir);
 	if (!S_ISDIR(dir.st_mode))
 	{
@@ -51,9 +56,13 @@ int	validate_path(t_envp *envp, char *path)
 		envp->value = ft_strdup("1");
 		ft_putstr_fd("Minishell: cd: ", 2);
 		perror(path);
-		free(envp->value);
-		envp->value = ft_strdup("1");
-		return (0);
+		return (free(envp->value), envp->value = ft_strdup("1"), 0);
+	}
+	else if (access(path, X_OK) == -1)
+	{
+		ft_putstr_fd("Minishell: cd: ", 2);
+		perror(path);
+		return (free(envp->value), envp->value = ft_strdup("1"), 0);
 	}
 	return (1);
 }
@@ -86,17 +95,17 @@ void	cd(char **args, t_envp *envp, t_list *current, t_list *prev)
 	int			vars_found;
 	t_envp		*prev_envp;
 
-	redirect_builtins(current);
+	redirect_builtins(current, envp);
 	path = args[1];
 	if (!path)
-		path = "/";
+		path = ft_get_env_val(envp, "HOME");
 	if (!validate_path(envp, path))
 		return ;
 	free(envp->value);
 	envp->value = ft_strdup("0");
 	if ((prev && prev->type == PIPE)
 		|| (current->next && current->next->type == PIPE))
-		return ;
+		return (close_obsolete_fds(current, prev));
 	old_pwd = get_cwd(envp);
 	chdir(path);
 	vars_found = 0;

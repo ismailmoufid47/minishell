@@ -65,13 +65,14 @@ typedef struct s_list
 {
 	t_node_type		type;
 	char			*value;
-	t_quotation		quote_type;
+	char			**args;
 	int				redirected;
 	struct s_list	*redirs;
-	char			**args;
+	int				here_doc;
+	char			*cmd_path;
+	t_quotation		quote_type;
 	int				pid;
 	int				pipe_fds[2];
-	int				here_doc;
 	struct s_list	*next;
 }	t_list;
 
@@ -80,7 +81,7 @@ void	print_tokens(char **tokens);
 void	print_list(t_list *list, int tab_count);
 
 //expander:
-char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc);
+char	*expand_env_variable(char *cmd_line, t_envp *envp);
 
 // tokenize:
 char	**tokenize(char *cmd);
@@ -92,7 +93,7 @@ char	**match_wild_card(t_list **head);
 t_list	*create_list(t_list *head, t_list *nav, char **tokens);
 
 // Execute:
-void	execute(t_list *list, t_envp *envp);
+void	execute(t_list *list, t_list *current, t_envp *envp);
 
 // Built-ins:
 char	*get_cwd(t_envp *envp);
@@ -139,7 +140,7 @@ void	permission_denied_error(t_list *cmd);
 void	command_not_found_error(t_list *cmd);
 
 // expand utils:
-char	**ft_split_and_add_quotes(char *var, int is_here_doc);
+char	**ft_split_and_add_quotes(char *var);
 char	*join_split_result(char *cmd, char **split, int start, int varln);
 int		extract_variable_value(t_envp *envp, char *cmd, char **var, int start);
 char	*search_and_replace_in_heredoc(char *cmd, int start, t_envp *envp);
@@ -171,8 +172,10 @@ char	**list_to_char(t_list *list);
 t_list	*link_matchs(t_list **head, t_list **prev, t_list **nav, t_list *matchs);
 
 // execute utils:
-void	redirect(t_list *cmd);
+void	redirect(t_list *list, t_list *cmd, t_envp *envp);
 void	close_obsolete_fds(t_list *current, t_list *prev);
+void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current);
+int		check_ambiguous(char *src, char **files, t_list *list);
 char	**match_files(t_list *file);
 
 // Handle here-documents:
@@ -181,7 +184,7 @@ int		handle_here_docs(t_envp *envp, t_list *list);
 // Built-ins utils:
 void	is_bin(t_list *cmd, t_envp *envp);
 void	execute_builtin(t_list *current, t_envp *envp, t_list *prev, int *b);
-void	redirect_builtins(t_list *current);
+void	redirect_builtins(t_list *current, t_envp *envp);
 int		is_valid_export_argument(char *arg);
 int		is_valid_unset_argument(char *arg);
 int		is_numeric(char *arg);
@@ -196,5 +199,7 @@ void	free_list(t_list *list);
 
 // string utils:
 int		skip_spaces(const char *input, int i);
+char	**ft_split_merciful(char *str);
+char	**char_to_double_char(char *str);
 
 #endif

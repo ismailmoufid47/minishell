@@ -35,7 +35,7 @@ int	extract_variable_value(t_envp *envp, char *cmd, char **var, int start)
 
 // can't start with a digit expample: $12var expands to 2var
 // can only contain alphanumeric characters and underscores
-char	*search_and_replace(char *cmd, int start, t_envp *envp, int is_here_doc)
+char	*search_and_replace(char *cmd, int start, t_envp *envp)
 {
 	char	*var;
 	char	*result;
@@ -58,11 +58,11 @@ char	*search_and_replace(char *cmd, int start, t_envp *envp, int is_here_doc)
 		free(var);
 		return (result);
 	}
-	split_result = ft_split_and_add_quotes(var, is_here_doc);
+	split_result = ft_split_and_add_quotes(var);
 	return (join_split_result(cmd, split_result, start, variable_name_len));
 }
 
-void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start)
+void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start, int redir)
 {
 	int		i;
 	int		quote_flag;
@@ -79,10 +79,10 @@ void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start)
 		i++;
 	}
 	i = 0;
-	if (quote_flag)
+	if (quote_flag && redir == 2)
 	{
 		tmp = ft_substr(*cmd_line, 0, del_start);
-		tmp2 = ft_strjoin(tmp, "''");
+		tmp2 = ft_strjoin(tmp, "\"\"");
 		free(tmp);
 		tmp = ft_strjoin(tmp2, delimiter);
 		free(tmp2);
@@ -90,25 +90,26 @@ void	check_delimiter_quotes(char **cmd_line, char *delimiter, int del_start)
 		*cmd_line = tmp;
 	}
 }
-
-void	handle_hdoc_del(char **line, int *sq_flag, int *i, int *hdoc_is_prev)
+void	handle_hdoc_del(char **line, int *sq_flag, int *i, int *redir_is_prev)
 {
 	static int		dq_flag;
 
-	if (*hdoc_is_prev)
+	if (*redir_is_prev)
 	{
 		while ((*line)[*i] && (*line)[*i] == ' ')
 			(*i)++;
-		check_delimiter_quotes(line, (*line) + *i, *i);
+		check_delimiter_quotes(line, (*line) + *i, *i, *redir_is_prev);
 		while ((*line)[*i] && !is_single_operator((*line)[*i])
 			&& (*line)[*i] != ' ')
 			(*i)++;
-		*hdoc_is_prev = 0;
+		*redir_is_prev = 0;
 	}
-	if ((*line)[*i] == '<' && (*line)[*i + 1] == '<'
+	if (is_special_token(*line + *i)
 		&& !dq_flag && !*sq_flag)
 	{
-		*hdoc_is_prev = 1;
+		*redir_is_prev = 1;
+		if (!ft_strncmp(*line + *i, "<<", 2))
+			*redir_is_prev = 2;
 		(*i)++;
 	}
 	if ((*line)[*i] == '\'' && !dq_flag)
@@ -117,7 +118,7 @@ void	handle_hdoc_del(char **line, int *sq_flag, int *i, int *hdoc_is_prev)
 		dq_flag = !dq_flag;
 }
 
-char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
+char	*expand_env_variable(char *cmd_line, t_envp *envp)
 {
 	int		i;
 	int		sq_flag;
@@ -130,13 +131,13 @@ char	*expand_env_variable(char *cmd_line, t_envp *envp, int is_here_doc)
 		handle_hdoc_del(&cmd_line, &sq_flag, &i, &here_doc_is_prev);
 		if ((cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
 			&& (cmd_line[i + 1] && (ft_strchr("_'\"?", cmd_line[i + 1])
-					|| ft_isalpha(cmd_line[i + 1]))
+					|| ft_isalnum(cmd_line[i + 1]))
 				&& !(i && ft_strchr("'\" ", cmd_line[i + 1])
 					&& ft_strchr("'\" ", cmd_line[i - 1]))))
 		{
 			tmp = cmd_line;
 			cmd_line
-				= search_and_replace(cmd_line, i + 1, envp, is_here_doc);
+				= search_and_replace(cmd_line, i + 1, envp);
 			free(tmp);
 		}
 		if (cmd_line && cmd_line[i])
