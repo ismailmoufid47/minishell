@@ -64,6 +64,9 @@ void	expand_files(t_list *file, char ***files, t_envp *envp, t_list *current)
 	if (file->quote_type != SIQUOTED && current->type != HDOC)
 	{
 		tmp = expand_env_variable(file->value, envp);
+		if (file->quote_type == DOQUOTED)
+			return (*files = (char_to_double_char(tmp)),
+				(file->value = duplicate), (void)0);
 		*files = tokenize(tmp);
 		free(tmp);
 		if ((*files)[0] && (*files)[0][0] == '"')

@@ -96,7 +96,7 @@ $(LIBFT):
 	make -C ../libft
 
 clean:
-	make -C ../libft clean
+	@make -C ../libft clean
 
 fclean: clean
 	rm -f $(NAME)

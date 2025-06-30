@@ -115,18 +115,6 @@ t_list	*reform_list(t_list *head, int *i)
 	return (head);
 }
 
-// int	should_be_file(t_list *head, t_list *nav)
-// {
-
-// 	while (head->next)
-// 	{
-// 		if (head->next == nav)
-// 			return (head->type != FIL);
-// 		head = head->next;
-// 	}
-// 	return (0);
-// }
-
 t_list	*create_list(t_list *head, t_list *nav, char **tokens)
 {
 	char	*tmp;

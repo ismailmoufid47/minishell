@@ -96,29 +96,30 @@ struct s_data
 	int		i;
 	int		sq_flag;
 	int		dq_flag;
-	int		here_doc_is_prev;
+	int		redir_is_prev;
 	char	*tmp;
+
 };
 
-void	handle_hdoc_del(struct s_data *data, char **line)
+void	check_redirection(struct s_data *data, char **line)
 {
-	if (data->here_doc_is_prev)
+	if (data->redir_is_prev)
 	{
 		while ((*line)[data->i] && (*line)[data->i] == ' ')
 			(data->i)++;
 		check_delimiter_quotes(line, (*line) + data->i,
-			data->i, data->here_doc_is_prev);
+			data->i, data->redir_is_prev);
 		while ((*line)[data->i] && !is_single_operator((*line)[data->i])
 			&& (*line)[data->i] != ' ')
 			(data->i)++;
-		data->here_doc_is_prev = 0;
+		data->redir_is_prev = 0;
 	}
 	if (is_special_token(*line + data->i)
 		&& !data->dq_flag && !data->sq_flag)
 	{
-		data->here_doc_is_prev = 1;
+		data->redir_is_prev = 1;
 		if (!ft_strncmp(*line + data->i, "<<", 2))
-			data->here_doc_is_prev = 2;
+			data->redir_is_prev = 2;
 		(data->i)++;
 	}
 	if ((*line)[data->i] == '\'' && !data->dq_flag)
@@ -127,25 +128,54 @@ void	handle_hdoc_del(struct s_data *data, char **line)
 		data->dq_flag = !data->dq_flag;
 }
 
+// char	*expand_env_variable(char *cmd_line, t_envp *envp)
+// {
+// 	struct s_data	data;
+
+// 	data.redir_is_prev = ((data.i = 0), (data.sq_flag = 0), 0);
+// 	data.dq_flag = 0;
+// 	while (cmd_line && cmd_line[data.i])
+// 	{
+// 		check_redirection(&data, &cmd_line);
+// 		if ((cmd_line[data.i] == '$' && !data.sq_flag && !data.redir_is_prev)
+// 			&& (cmd_line[data.i + 1] && (ft_strchr("_'\"?", cmd_line[data.i + 1])
+// 					|| ft_isalnum(cmd_line[data.i + 1]))
+// 				&& !(data.i && ft_strchr("'\" ", cmd_line[data.i + 1])
+// 					&& ft_strchr("'\" ", cmd_line[data.i - 1]))))
+// 		{
+// 			data.tmp = cmd_line;
+// 			cmd_line
+// 				= search_and_replace(cmd_line, data.i + 1, envp);
+// 			free(data.tmp);
+// 		}
+// 		if (cmd_line && cmd_line[data.i])
+// 			data.i++;
+// 	}
+// 	return (cmd_line);
+// }
+
 char	*expand_env_variable(char *cmd_line, t_envp *envp)
 {
 	struct s_data	data;
 
-	data.here_doc_is_prev = ((data.i = 0), (data.sq_flag = 0), 0);
+	data.redir_is_prev = ((data.i = 0), (data.sq_flag = 0), 0);
 	data.dq_flag = 0;
 	while (cmd_line && cmd_line[data.i])
 	{
-		handle_hdoc_del(&data, &cmd_line);
-		if ((cmd_line[data.i] == '$' && !data.sq_flag && !data.here_doc_is_prev)
-			&& (cmd_line[data.i + 1] && (ft_strchr("_'\"?", cmd_line[data.i + 1])
-					|| ft_isalnum(cmd_line[data.i + 1]))
-				&& !(data.i && ft_strchr("'\" ", cmd_line[data.i + 1])
-					&& ft_strchr("'\" ", cmd_line[data.i - 1]))))
+		check_redirection(&data, &cmd_line);
+		if ((cmd_line[data.i] == '$' && !data.sq_flag && !data.redir_is_prev)
+			&& (
+				(cmd_line[data.i + 1]
+					&& (ft_strchr("_'?", cmd_line[data.i + 1])))
+				|| ft_isalnum(cmd_line[data.i + 1])
+				|| (cmd_line[data.i + 1] == '"' && !data.dq_flag)))
 		{
 			data.tmp = cmd_line;
 			cmd_line
 				= search_and_replace(cmd_line, data.i + 1, envp);
 			free(data.tmp);
+			if (data.i && cmd_line[data.i] == '"')
+				data.i--;
 		}
 		if (cmd_line && cmd_line[data.i])
 			data.i++;

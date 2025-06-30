@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 
 #include "../include/shell_bonus.h"
-#define W "\033[0m"
-#define B "\033[1;34m"
-#define R "\033[1;32m"
+#define W "\001\033[0m\002"
+#define B "\001\033[34m\002"
+#define R "\001\033[32m\002"
 
 void	execute_hostname_command(const char *cmd, int fd[2])
 {
