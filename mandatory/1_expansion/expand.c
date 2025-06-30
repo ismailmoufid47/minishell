@@ -91,58 +91,64 @@ void	check_delimiter_quotes(char **cmd, char *dlmtr, int dl_start, int redir)
 	}
 }
 
-void	handle_hdoc_del(char **line, int *sq_flag, int *i, int *redir_is_prev)
+struct s_data
 {
-	static int		dq_flag;
+	int		i;
+	int		sq_flag;
+	int		dq_flag;
+	int		here_doc_is_prev;
+	char	*tmp;
+};
 
-	if (*redir_is_prev)
+void	handle_hdoc_del(struct s_data *data, char **line)
+{
+	if (data->here_doc_is_prev)
 	{
-		while ((*line)[*i] && (*line)[*i] == ' ')
-			(*i)++;
-		check_delimiter_quotes(line, (*line) + *i, *i, *redir_is_prev);
-		while ((*line)[*i] && !is_single_operator((*line)[*i])
-			&& (*line)[*i] != ' ')
-			(*i)++;
-		*redir_is_prev = 0;
+		while ((*line)[data->i] && (*line)[data->i] == ' ')
+			(data->i)++;
+		check_delimiter_quotes(line, (*line) + data->i,
+			data->i, data->here_doc_is_prev);
+		while ((*line)[data->i] && !is_single_operator((*line)[data->i])
+			&& (*line)[data->i] != ' ')
+			(data->i)++;
+		data->here_doc_is_prev = 0;
 	}
-	if (is_special_token(*line + *i)
-		&& !dq_flag && !*sq_flag)
+	if (is_special_token(*line + data->i)
+		&& !data->dq_flag && !data->sq_flag)
 	{
-		*redir_is_prev = 1;
-		if (!ft_strncmp(*line + *i, "<<", 2))
-			*redir_is_prev = 2;
-		(*i)++;
+		data->here_doc_is_prev = 1;
+		if (!ft_strncmp(*line + data->i, "<<", 2))
+			data->here_doc_is_prev = 2;
+		(data->i)++;
 	}
-	if ((*line)[*i] == '\'' && !dq_flag)
-		*sq_flag = !*sq_flag;
-	else if ((*line)[*i] == '"' && !*sq_flag)
-		dq_flag = !dq_flag;
+	if ((*line)[data->i] == '\'' && !data->dq_flag)
+		data->sq_flag = !data->sq_flag;
+	else if ((*line)[data->i] == '"' && !data->sq_flag)
+		data->dq_flag = !data->dq_flag;
 }
 
 char	*expand_env_variable(char *cmd_line, t_envp *envp)
 {
-	int		i;
-	int		sq_flag;
-	int		here_doc_is_prev;
-	char	*tmp;
+	struct s_data	data;
 
-	here_doc_is_prev = ((i = 0), (sq_flag = 0), 0);
-	while (cmd_line && cmd_line[i])
+	data.here_doc_is_prev = ((data.i = 0), (data.sq_flag = 0), 0);
+	data.dq_flag = 0;
+	while (cmd_line && cmd_line[data.i])
 	{
-		handle_hdoc_del(&cmd_line, &sq_flag, &i, &here_doc_is_prev);
-		if ((cmd_line[i] == '$' && !sq_flag && !here_doc_is_prev)
-			&& (cmd_line[i + 1] && (ft_strchr("_'\"?", cmd_line[i + 1])
-					|| ft_isalnum(cmd_line[i + 1]))
-				&& !(i && ft_strchr("'\" ", cmd_line[i + 1])
-					&& ft_strchr("'\" ", cmd_line[i - 1]))))
+		handle_hdoc_del(&data, &cmd_line);
+		if ((cmd_line[data.i] == '$' && !data.sq_flag && !data.here_doc_is_prev)
+			&& (cmd_line[data.i + 1] && (ft_strchr("_'\"?", cmd_line[data.i + 1])
+					|| ft_isalnum(cmd_line[data.i + 1]))
+				&& !(data.i && ft_strchr("'\" ", cmd_line[data.i + 1])
+					&& ft_strchr("'\" ", cmd_line[data.i - 1]))))
 		{
-			tmp = cmd_line;
+			data.tmp = cmd_line;
 			cmd_line
-				= search_and_replace(cmd_line, i + 1, envp);
-			free(tmp);
+				= search_and_replace(cmd_line, data.i + 1, envp);
+			free(data.tmp);
 		}
-		if (cmd_line && cmd_line[i])
-			i++;
+		if (cmd_line && cmd_line[data.i])
+			data.i++;
 	}
 	return (cmd_line);
 }

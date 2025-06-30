@@ -99,19 +99,19 @@ char	**envp_to_char(t_envp *envp)
 	count = 0;
 	current = envp;
 	while (current)
-	{
-		count++;
-		current = current->next;
-	}
+		current = ((count++), current->next);
 	result = malloc((count + 1) * sizeof(char *));
 	count = 0;
 	while (envp)
 	{
+		if (!envp->value)
+		{
+			envp = envp->next;
+			continue ;
+		}
 		tmp = ft_strjoin(envp->name, "=");
 		result[count] = ft_strjoin(tmp, envp->value);
-		free(tmp);
-		count++;
-		envp = envp->next;
+		envp = ((free(tmp)), (count++), envp->next);
 	}
 	result[count] = NULL;
 	return (result);

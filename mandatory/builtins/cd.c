@@ -61,6 +61,7 @@ int	validate_path(t_envp *envp, char *path)
 	else if (access(path, X_OK) == -1)
 	{
 		ft_putstr_fd("Minishell: cd: ", 2);
+		chdir(path);
 		perror(path);
 		return (free(envp->value), envp->value = ft_strdup("1"), 0);
 	}

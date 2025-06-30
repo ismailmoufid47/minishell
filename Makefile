@@ -111,16 +111,16 @@ BONUS_FILES = bonus/shell_bonus.c \
 all: $(NAME)
 
 .mn_made: $(MANDATORY_FILES) $(LIBFT_SRC)
-	make -C mandatory
-	mv -f mandatory/minishell .
-	rm -f .bn_made
-	touch .mn_made
+	@make -C mandatory
+	@mv -f mandatory/minishell .
+	@rm -f .bn_made
+	@touch .mn_made
 
 .bn_made: $(BONUS_FILES) $(LIBFT_SRC)
-	make -C bonus
-	mv -f bonus/minishell .
-	rm -f .mn_made
-	touch .bn_made
+	@make -C bonus
+	@mv -f bonus/minishell .
+	@rm -f .mn_made
+	@touch .bn_made
 
 $(NAME): .mn_made
 
@@ -128,13 +128,13 @@ $(NAME): .mn_made
 bonus: .bn_made
 
 clean:
-	make -C mandatory clean
-	make -C bonus clean
+	@make -C mandatory clean
+	@make -C bonus clean
 
 fclean:
-	make -C mandatory fclean
-	make -C bonus fclean
-	rm -f $(NAME) .bn_made .mn_made
+	@make -C mandatory fclean
+	@make -C bonus fclean
+	@rm -f $(NAME) .bn_made .mn_made
 
 re: fclean all
 

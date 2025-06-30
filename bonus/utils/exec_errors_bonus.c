@@ -32,8 +32,9 @@ void	is_directory_error(t_list *cmd)
 
 void	no_such_file_error(t_list *cmd)
 {
-	if (cmd->cmd_path && ft_strchr(cmd->cmd_path, '/')
-		&& access(cmd->cmd_path, F_OK) == -1)
+	if ((cmd->cmd_path && access(cmd->cmd_path, F_OK) != 0)
+		|| (cmd->args[0] && ft_strchr(cmd->args[0], '/')
+			&& access(cmd->args[0], F_OK)))
 	{
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd(cmd->args[0], 2);

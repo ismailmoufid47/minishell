@@ -28,6 +28,22 @@ int	is_valid_export_argument(char *arg)
 	return (1);
 }
 
+void	tmkrib(t_envp *envp, char *str)
+{
+	t_envp	*new_node;
+
+	if (ft_get_env_val(envp, str))
+		return ;
+	else
+	{
+		new_node = malloc(sizeof(t_envp));
+		new_node->name = ft_strdup(str);
+		new_node->value = NULL;
+		new_node->next = envp->next;
+		envp->next = new_node;
+	}
+}
+
 int	handle_export_args(t_envp *envp, char **args, int io[2], int *i)
 {
 	t_envp	*node;
@@ -48,9 +64,10 @@ int	handle_export_args(t_envp *envp, char **args, int io[2], int *i)
 			*(ft_strchr(args[*i], '=')) = '\0';
 			envp = remove_envp_var(envp, args[*i]);
 			node = create_envp_node(args[*i]);
-			node->next = envp->next;
-			envp->next = node;
+			envp->next = ((node->next = envp->next), node);
 		}
+		else
+			tmkrib(envp, args[*i]);
 		(*i)++;
 	}
 	return (1);
