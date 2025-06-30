@@ -43,6 +43,8 @@ void	unset(char **args, t_envp *envp, t_list *current, t_list *prev)
 
 int	dash_n(char *str)
 {
+	if (*str == '\0')
+		return (0);
 	if (*str == '-')
 	{
 		str++;
