@@ -46,9 +46,10 @@ void	no_such_file_error(t_list *cmd)
 
 void	permission_denied_error(t_list *cmd)
 {
-	if (ft_strchr(cmd->args[0], '/')
-		&& access(cmd->args[0], F_OK) == 0
-		&& access(cmd->args[0], X_OK) != 0)
+	if ((cmd->cmd_path && !access(cmd->cmd_path, F_OK)
+			&& access(cmd->cmd_path, X_OK)) || (ft_strchr(cmd->args[0], '/')
+			&& !access(cmd->args[0], F_OK)
+			&& access(cmd->args[0], X_OK)))
 	{
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd(cmd->args[0], 2);
