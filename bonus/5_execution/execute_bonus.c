@@ -128,6 +128,8 @@ void	execute(t_list *list, t_list *current, t_envp *envp)
 		if (!is_built_in && current->type == CMD)
 		{
 			current->pid = fork_wrapper(envp);
+			if (current->pid < 0)
+				break ;
 			if (current->pid == 0)
 				execute_cmd(list, current, envp, prev);
 			close_obsolete_fds(current, prev);

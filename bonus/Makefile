@@ -2,12 +2,16 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I ../libft/include \
-		 -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
-
-LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib \
-		 -l ft -l readline -l ncurses
-
+OS := $(shell uname -s)
+ifeq ($(OS),Darwin)
+    CFLAGS = -Wall -Wextra -Werror -I ../libft/include -I ~/.brew/opt/readline/include -I ~/.brew/opt/ncurses/include
+    LFLAGS = -L ../libft -L ~/.brew/opt/readline/lib -L ~/.brew/opt/ncurses/lib -lft -lreadline -lncurses
+else ifeq ($(OS),Linux)
+    CFLAGS = -Wall -Wextra -Werror -I ../libft/include
+    LFLAGS = -L ../libft -lft -lreadline -lncurses
+else
+    $(error Unsupported OS: $(OS))
+endif
 
 LIBFT = ../libft/libft.a
 

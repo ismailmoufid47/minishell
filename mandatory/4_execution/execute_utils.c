@@ -39,6 +39,18 @@ void	close_obsolete_fds(t_list *current, t_list *prev)
 
 int	check_ambiguous(char *src, char **files, t_list *list)
 {
+	if (files && (!files[0] || !files[0][0]) && !files[1])
+	{
+		ft_putstr_fd("Minishell: ", 2);
+		ft_putstr_fd(src, 2);
+		ft_putendl_fd(": No such file or directory", 2);
+		if (list)
+		{
+			free_list(list);
+			exit(1);
+		}
+		return (1);
+	}
 	if (files && ((!files[0] || files[1]) || files[0][0] == 0))
 	{
 		ft_putstr_fd("Minishell: ", 2);
